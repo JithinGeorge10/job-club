@@ -7,7 +7,7 @@ function Footer() {
         <div className="flex flex-wrap justify-between">
           {/* About Section */}
           <div className="w-full md:w-1/3 mb-6">
-            <h3 className="font-bold text-xl mb-3">About _JobClub.</h3>
+            <h3 className="font-bold text-xl mb-3">About <span className="text-green-400">{`_jobClub.`}</span></h3>
             <p className="text-gray-400">
               Your trusted platform to find the best jobs and career opportunities in India. Explore thousands of jobs with ease.
             </p>
