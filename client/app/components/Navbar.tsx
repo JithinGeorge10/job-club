@@ -1,6 +1,9 @@
+
+import Link from 'next/link';
 import React from 'react';
 
 function Navbar() {
+   
   return (
     <nav className="bg-black p-4">
       <div className="container mx-auto flex justify-between items-center">
@@ -11,12 +14,16 @@ function Navbar() {
 
         {/* Menu Section - hidden on smaller screens, flex on medium+ screens */}
         <div className="hidden md:flex space-x-4">
-          <button className="border-2 border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
+        <Link href={'/components/login'}>
+          <button  className="border-2 border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
             Login
           </button>
+          </Link>
+          <Link href={'/components/signup'}>
           <button className="border-2 border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
             Signup
           </button>
+          </Link>
           <button className="border-2 border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
             Employers / Post Job
           </button>
