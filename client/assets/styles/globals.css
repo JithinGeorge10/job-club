@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html, body {
+    background-color: black;
+    color: white;
+  }
+  .category-scroll {
+    display: flex;
+    white-space: nowrap;
+    overflow: hidden;
+    width: max-content; /* Ensure content takes only as much space as needed */
+  }
+  
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  
+  .animate-scroll {
+    animation: scroll 40s linear infinite; /* Adjust speed as necessary */
+  }
+  
