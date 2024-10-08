@@ -3,7 +3,9 @@ import React, { useState } from 'react'
 import Navbar from '../Navbar'
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
+import {AUTH_SERVICE_URL} from '@/utils/constants'
 function page() {
+
     type signup = {
         firstName: String
         lastName: String
@@ -16,8 +18,12 @@ function page() {
     const { register, handleSubmit, formState: { errors } } = useForm<signup>();
     const [data, setData] = useState("");
     const onSubmit = (data: signup) => {
+      try {
         console.log(data)
-      
+        axios.post(`${AUTH_SERVICE_URL}/user-signup`,data)
+      } catch (error) {
+        console.log(error);
+      }
     }
     return (
         <>
