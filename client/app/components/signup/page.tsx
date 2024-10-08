@@ -2,20 +2,29 @@
 import React, { useState } from 'react'
 import Navbar from '../Navbar'
 import { useForm, SubmitHandler } from 'react-hook-form';
+import axios from 'axios';
 function page() {
+    type signup = {
+        firstName: String
+        lastName: String
+        email: String
+        password: String
+        confirmPassword: String
+        phone: number
 
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    }
+    const { register, handleSubmit, formState: { errors } } = useForm<signup>();
     const [data, setData] = useState("");
-
+    const onSubmit = (data: signup) => {
+        console.log(data)
+      
+    }
     return (
         <>
             <Navbar />
             <div className="flex justify-center items-center min-h-screen bg-gray-800">
                 <form
-                    onSubmit={handleSubmit((data) => { setData(JSON.stringify(data))
-                        console.log(data)
-                        
-                    })}
+                    onSubmit={handleSubmit(onSubmit)}
 
                     className="w-full max-w-lg bg-black p-8 rounded-lg shadow-lg"
                 >
