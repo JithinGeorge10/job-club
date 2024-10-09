@@ -1,16 +1,14 @@
 import express from 'express'
-import dotenv from 'dotenv';
 import cors from 'cors'
 import morgan from "morgan";
 import userSignupRoute from "./presentation/routes/userSignupRoute";
-
+import {PORT,CLIENT_PORT} from './utils/config'
 const app=express()
-dotenv.config();
 app.use(express.json());
 
 
 app.use(cors({
-    origin: process.env.CLIENT_PORT, 
+    origin: CLIENT_PORT, 
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Role'],
     credentials: true
@@ -22,6 +20,6 @@ app.use(cors({
   app.use("/api/auth-service", userSignupRoute);
 
 
-app.listen(process.env.PORT,()=>{
+app.listen(PORT,()=>{
     console.log('app started')
 })
