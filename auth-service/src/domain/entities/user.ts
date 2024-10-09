@@ -1,13 +1,13 @@
-  
+import { ObjectId } from 'mongodb';
+
 export interface User{
-    _id? : string,
+    _id? : ObjectId,
     firstName : string,
     lastName : string,
     phone:Number,
     email : string,
     password : string,
-    confirmPassword : string,
-    isBlock ? : boolean
-    createAt? :Date,
-    updatedAt? : Date
+    isBlock: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

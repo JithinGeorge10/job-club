@@ -20,7 +20,8 @@ function page() {
     const onSubmit = (data: signup) => {
       try {
         console.log(data)
-        axios.post(`${AUTH_SERVICE_URL}/user-signup`,data)
+        let response=axios.post(`${AUTH_SERVICE_URL}/user-signup`,data)
+        console.log(response)
       } catch (error) {
         console.log(error);
       }
