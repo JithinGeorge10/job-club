@@ -4,6 +4,7 @@ import morgan from "morgan";
 import {connectDB} from "./infrastructure/config/databaseConfig"
 import userSignupRoute from "./presentation/routes/userSignupRoute";
 import {PORT,CLIENT_PORT} from './utils/config'
+import {errorHandler} from './presentation/middleware/errorHandler'
 const app=express()
 app.use(express.json());
 
@@ -17,9 +18,9 @@ app.use(cors({
   
   app.use(morgan("dev")); 
 
-
   app.use("/api/auth-service", userSignupRoute);
 
+  app.use(errorHandler)
 
 app.listen(PORT,()=>{
     console.log('app started')

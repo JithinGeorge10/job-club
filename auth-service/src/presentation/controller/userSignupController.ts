@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { UserService  } from "../../app/useCases/user/user";
+import { UserService } from "../../app/useCases/user/user";
 import { User } from "../../domain/entities/user";
 
 export class UserController {
@@ -9,11 +9,13 @@ export class UserController {
     }
     async userSignupController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const user: User | undefined = await this.userService.createUser(req.body); 
-            res.status(200).send({ user, success: true });
+            const user: User | undefined = await this.userService.createUser(req.body);
+            console.log(user);
+            if (user) {
+                res.status(200).send({ user, success: true });
+            }
         } catch (error) {
-            console.error(error);
-            next(error);
+            next(error)
         }
     }
 }

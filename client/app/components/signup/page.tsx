@@ -1,11 +1,16 @@
 "use client";
 import React, { useState } from 'react'
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Navbar from '../Navbar'
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import {AUTH_SERVICE_URL} from '@/utils/constants'
-function page() {
+import { AUTH_SERVICE_URL } from '@/utils/constants'
 
+
+function page() {
+    
+  
     type signup = {
         firstName: String
         lastName: String
@@ -15,16 +20,27 @@ function page() {
         phone: number
 
     }
-    const { register, handleSubmit, formState: { errors } } = useForm<signup>();
+    const { register, handleSubmit,getValues, formState: { errors } } = useForm<signup>();
     const [data, setData] = useState("");
-    const onSubmit = (data: signup) => {
-      try {
-        console.log(data)
-        let response=axios.post(`${AUTH_SERVICE_URL}/user-signup`,data)
-        console.log(response)
-      } catch (error) {
-        console.log(error);
-      }
+
+    const onSubmit = async (data: signup) => {
+
+        try {
+            let response = await axios.post(`${AUTH_SERVICE_URL}/user-signup`, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            console.log(response.data);
+            if (response.data.success) {
+                toast.success('User Created')
+            } else {
+                toast.error('Email already exists')
+            }
+        } catch (error: any) {
+            console.log(error);
+
+        }
     }
     return (
         <>
@@ -125,7 +141,8 @@ function page() {
                     <div className="mb-6">
                         <input
                             {...register("confirmPassword", {
-                                required: "Enter password",
+                                required: "Confirm Password",
+                                validate: (value) => value === getValues("password") || "Passwords do not match",
                                 pattern: {
                                     value:
                                         /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&*()_+~`|}{[\]:;?><,./-]).{8,}$/,
