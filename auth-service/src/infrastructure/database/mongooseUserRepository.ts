@@ -1,7 +1,10 @@
 import { User } from "../../domain/entities/user";
 import UserModel from './model/userModel';
 
+
 class UserRepository {
+   
+
     async findUserByEmail(email: string): Promise<User | null> {
         try {
             console.log('email: ' + email);
@@ -24,6 +27,8 @@ class UserRepository {
  
         }
     }
+
+   
 }
 
 const getUserRepository = new UserRepository();

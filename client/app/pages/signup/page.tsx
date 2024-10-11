@@ -39,11 +39,10 @@ function page() {
                     router.push('otpPage')
                   }, 3000);
             } else {
-                toast.error('Email already exists')
+                toast.error('User Already exists')
             }
         } catch (error: any) {
             console.log(error);
-
         }
     }
     return (
