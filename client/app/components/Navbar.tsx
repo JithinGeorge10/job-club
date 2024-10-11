@@ -19,7 +19,7 @@ function Navbar() {
             Login
           </button>
           </Link>
-          <Link href={'/components/signup'}>
+          <Link href={'/pages/signup'}>
           <button className="border-2 border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
             Signup
           </button>

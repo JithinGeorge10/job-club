@@ -1,16 +1,17 @@
 "use client";
 import React, { useState } from 'react'
-import {  toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Navbar from '../Navbar'
+import Navbar from '../../components/Navbar'
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { AUTH_SERVICE_URL } from '@/utils/constants'
 
 
 function page() {
-    
-  
+
+
     type signup = {
         firstName: String
         lastName: String
@@ -20,9 +21,9 @@ function page() {
         phone: number
 
     }
-    const { register, handleSubmit,getValues, formState: { errors } } = useForm<signup>();
+    const { register, handleSubmit, getValues, formState: { errors } } = useForm<signup>();
     const [data, setData] = useState("");
-
+    const router = useRouter()
     const onSubmit = async (data: signup) => {
 
         try {
@@ -33,7 +34,10 @@ function page() {
             })
             console.log(response.data);
             if (response.data.success) {
-                toast.success('User Created')
+                toast.info('Verify OTP')
+                setTimeout(() => {
+                    router.push('otpPage')
+                  }, 3000);
             } else {
                 toast.error('Email already exists')
             }
@@ -51,7 +55,7 @@ function page() {
 
                     className="w-full max-w-lg bg-black p-8 rounded-lg shadow-lg"
                 >
-                    <h2 className="text-3xl font-semibold text-white text-center mb-6">Sign Up to start Job hunt</h2>
+                    <h2 className="text-3xl font-semibold text-white text-center mb-6">Sign Up to start <span className="text-green-400">{`Job hunt`}</span></h2>
 
                     <div className="mb-4">
                         <input
