@@ -27,6 +27,8 @@ function page() {
     const onSubmit = async (data: signup) => {
 
         try {
+            localStorage.clear();
+
             let response = await axios.post(`${AUTH_SERVICE_URL}/user-signup`, data, {
                 headers: {
                     'Content-Type': 'application/json'
@@ -36,7 +38,7 @@ function page() {
             if (response.data.success) {
                 toast.info('Verify OTP')
                 setTimeout(() => {
-                    router.push('otpPage')
+                    router.push(`otpPage/${data.email}`)//pass values as params---folder structure :otpPage[userData]
                   }, 3000);
             } else {
                 toast.error('User Already exists')

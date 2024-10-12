@@ -18,4 +18,20 @@ export class UserController {
             next(error)
         }
     }
+
+    async resendOtpController(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { userData } = req.body
+            const decodedEmail = decodeURIComponent(userData);
+            
+            console.log(decodedEmail)
+            const userDetail={
+                email:decodedEmail
+            }
+            await this.userService.resendOTP(userDetail as User)
+        } catch (error) {
+            next(error)
+        }
+    }
+
 }

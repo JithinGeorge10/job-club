@@ -19,4 +19,16 @@ export class UserService {
            throw error
         }
     }
+
+    async resendOTP(userDetail:User){
+        try {
+            const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString()
+             await sendotp(userDetail,generatedOtp)
+
+        } catch (error) {
+           throw error
+        }
+    }
+
+    
 } 
