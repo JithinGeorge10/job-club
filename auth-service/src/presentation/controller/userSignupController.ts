@@ -23,15 +23,26 @@ export class UserController {
         try {
             const { userData } = req.body
             const decodedEmail = decodeURIComponent(userData);
-            
-            console.log(decodedEmail)
-            const userDetail={
-                email:decodedEmail
+            const userDetail = {
+                email: decodedEmail
             }
             await this.userService.resendOTP(userDetail as User)
         } catch (error) {
             next(error)
         }
     }
+
+    async verifyOtpController(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const otp=req.body
+            const userOtp=Number(otp.join(''))
+            console.log(userOtp);
+            
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
 
 }

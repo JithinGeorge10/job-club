@@ -2,9 +2,9 @@ import express from 'express'
 import cors from 'cors'
 import morgan from "morgan";
 import {connectDB} from "./infrastructure/config/databaseConfig"
-import userSignupRoute from "./presentation/routes/userSignupRoute";
 import {PORT,CLIENT_PORT} from './utils/config'
 import {errorHandler} from './presentation/middleware/errorHandler'
+import userRoute from './presentation/routes/userRoute';
 const app=express()
 app.use(express.json());
 
@@ -18,7 +18,7 @@ app.use(cors({
   
   app.use(morgan("dev")); 
 
-  app.use("/api/auth-service", userSignupRoute);
+  app.use("/api/auth-service", userRoute);
 
   app.use(errorHandler)
 
