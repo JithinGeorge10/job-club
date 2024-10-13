@@ -38,7 +38,7 @@ function page() {
             if (response.data.success) {
                 toast.info('Verify OTP')
                 setTimeout(() => {
-                    router.push(`otpPage/${data.email}`)//pass values as params---folder structure :otpPage[userData]
+                    router.push(`otpPage?id=${data.email}`)//pass values as params---folder structure :otpPage[userData]
                   }, 3000);
             } else {
                 toast.error('User Already exists')

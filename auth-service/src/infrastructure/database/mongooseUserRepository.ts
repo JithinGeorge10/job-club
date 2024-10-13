@@ -43,6 +43,7 @@ class UserRepository {
 
     async verifyOtp(userOtp: number, userEmail: string) {
         try {
+
             const userDetails = await userModel.findOne({ email: userEmail })
             const isOtp = await otpModel.findOne({otpCode: userOtp,userId:userDetails?._id })
             if(isOtp){

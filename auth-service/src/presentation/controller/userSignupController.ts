@@ -20,8 +20,8 @@ export class UserController {
 
     async resendOtpController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const { userData } = req.body
-            const decodedEmail = decodeURIComponent(userData);
+            const { email } = req.body
+            const decodedEmail = decodeURIComponent(email);
             const userDetail = {
                 email: decodedEmail
             }
@@ -33,12 +33,11 @@ export class UserController {
 
     async verifyOtpController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-      
-            const { userData } = req.body.params
+            console.log(req.body)
+            const { email } = req.body
             const otp = req.body.otp
             const userOtp = Number(otp.join(''))
-            const decodedEmail = decodeURIComponent(userData);
-            const verifiedUser =await this.userService.verifyOtp(userOtp, decodedEmail)
+            const verifiedUser =await this.userService.verifyOtp(userOtp, email)
             if(verifiedUser){
                 res.status(200).send({ verifiedUser, success: true });
             }

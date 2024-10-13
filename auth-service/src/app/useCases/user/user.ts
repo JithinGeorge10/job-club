@@ -24,6 +24,7 @@ export class UserService {
 
     async resendOTP(userDetail: User) {
         try {
+            console.log(userDetail.email);
             const user_id = await getUserRepository.findUserId(userDetail.email)
             const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString()
             await sendotp(userDetail, generatedOtp)
@@ -35,8 +36,8 @@ export class UserService {
     }
     async verifyOtp(userOtp: number,email:string) {
         try {
+    
             const userDetails=await getUserRepository.verifyOtp(userOtp,email)
-            console.log('gotcha'+userDetails)
             if(userDetails){
                 return userDetails
             }else{

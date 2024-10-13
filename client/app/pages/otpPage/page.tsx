@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
 import { AUTH_SERVICE_URL } from '@/utils/constants'
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function OTPVerification({ params }: { params: { email: string } }) {
     const { register, handleSubmit } = useForm()
@@ -15,7 +15,8 @@ export default function OTPVerification({ params }: { params: { email: string } 
     const [timer, setTimer] = useState(50)
     const [showVerify, setShowVerify] = useState(true)
     const router = useRouter()
-
+    const searchParams = useSearchParams();
+    const email = searchParams.get('id');
     let interval: NodeJS.Timeout;
 
     // Function to calculate time left
@@ -24,10 +25,10 @@ export default function OTPVerification({ params }: { params: { email: string } 
         const currentTime = Date.now()
         if (storedTime) {
             const elapsedTime = Math.floor((currentTime - parseInt(storedTime)) / 1000)
-            const timeLeft = 50 - elapsedTime
+            const timeLeft = 20 - elapsedTime
             return timeLeft > 0 ? timeLeft : 0
         }
-        return 50
+        return 20
     }
 
     useEffect(() => {
@@ -70,19 +71,20 @@ export default function OTPVerification({ params }: { params: { email: string } 
 
     const onSubmit = async (data: any) => {
         try {
-            const {otp}=data
-           
-            let response = await axios.post(`${AUTH_SERVICE_URL}/verify-otp`,{otp,params},{
+            const { otp } = data
+            console.log(email)
+
+            let response = await axios.post(`${AUTH_SERVICE_URL}/verify-otp`, { otp, email }, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
-            if(response.data.success){
+            if (response.data.success) {
                 toast.success('Account created')
                 setTimeout(() => {
-                    router.push(`jobListingPage/${data.verifiedUser}`)//pass values as params---folder structure :jobListingPage[userData]
-                  }, 3000);
-            }else{
+                    router.push(`jobListingPage`)//pass values as params---folder structure :jobListingPage[userData]
+                }, 3000);
+            } else {
                 toast.error('Invalid OTP')
             }
 
@@ -91,10 +93,10 @@ export default function OTPVerification({ params }: { params: { email: string } 
         }
     }
 
-    const handleResend = async() => {
-     
+    const handleResend = async () => {
+
         setShowVerify(true)
-        setTimer(50)
+        setTimer(20)
         localStorage.setItem('otpStartTime', Date.now().toString())
 
         clearInterval(interval)
@@ -110,8 +112,8 @@ export default function OTPVerification({ params }: { params: { email: string } 
                 }
             })
         }, 1000)
-        console.log(params)
-        let response = await axios.post(`${AUTH_SERVICE_URL}/resend-otp`,params,{
+        console.log({email})
+        let response = await axios.post(`${AUTH_SERVICE_URL}/resend-otp`, {email}, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -187,7 +189,7 @@ export default function OTPVerification({ params }: { params: { email: string } 
                     </motion.button>
                 )}
 
-              
+
             </motion.div>
         </div>
     )
