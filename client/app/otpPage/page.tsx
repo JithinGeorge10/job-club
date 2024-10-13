@@ -25,10 +25,10 @@ export default function OTPVerification({ params }: { params: { email: string } 
         const currentTime = Date.now()
         if (storedTime) {
             const elapsedTime = Math.floor((currentTime - parseInt(storedTime)) / 1000)
-            const timeLeft = 20 - elapsedTime
+            const timeLeft = 50 - elapsedTime
             return timeLeft > 0 ? timeLeft : 0
         }
-        return 20
+        return 50
     }
 
     useEffect(() => {
@@ -96,7 +96,7 @@ export default function OTPVerification({ params }: { params: { email: string } 
     const handleResend = async () => {
 
         setShowVerify(true)
-        setTimer(20)
+        setTimer(50)
         localStorage.setItem('otpStartTime', Date.now().toString())
 
         clearInterval(interval)
@@ -151,12 +151,6 @@ export default function OTPVerification({ params }: { params: { email: string } 
                             />
                         ))}
                     </div>
-
-                    {data && (
-                        <p className="text-green-400 text-center mb-4">
-                            Submitted OTP: {data}
-                        </p>
-                    )}
 
                     {showVerify ? (
                         <motion.button

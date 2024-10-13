@@ -23,7 +23,6 @@ function page() {
 
     }
     const { register, handleSubmit, getValues, formState: { errors } } = useForm<signup>();
-    const [data, setData] = useState("");
     const router = useRouter()
     const onSubmit = async (data: signup) => {
 
