@@ -11,3 +11,9 @@ export interface User{
     createdAt?: Date;
     updatedAt?: Date;
 }
+
+export interface OTP{
+    _id? : ObjectId,
+    otpCode:number,
+    createdAt:Date
+}

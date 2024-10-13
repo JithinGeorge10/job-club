@@ -10,7 +10,6 @@ export class UserController {
     async userSignupController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const user: User | undefined = await this.userService.createUser(req.body);
-            console.log(user);
             if (user) {
                 res.status(200).send({ user, success: true });
             }
@@ -34,10 +33,15 @@ export class UserController {
 
     async verifyOtpController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const otp=req.body
-            const userOtp=Number(otp.join(''))
-            console.log(userOtp);
-            
+      
+            const { userData } = req.body.params
+            const otp = req.body.otp
+            const userOtp = Number(otp.join(''))
+            const decodedEmail = decodeURIComponent(userData);
+            const verifiedUser =await this.userService.verifyOtp(userOtp, decodedEmail)
+            if(verifiedUser){
+                res.status(200).send({ verifiedUser, success: true });
+            }
         } catch (error) {
             next(error)
         }

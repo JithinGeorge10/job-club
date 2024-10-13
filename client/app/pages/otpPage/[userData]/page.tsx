@@ -3,14 +3,19 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
 import { AUTH_SERVICE_URL } from '@/utils/constants'
+import { useRouter } from 'next/navigation';
 
 export default function OTPVerification({ params }: { params: { email: string } }) {
     const { register, handleSubmit } = useForm()
     const [data, setData] = useState('')
     const [timer, setTimer] = useState(50)
     const [showVerify, setShowVerify] = useState(true)
+    const router = useRouter()
+
     let interval: NodeJS.Timeout;
 
     // Function to calculate time left
@@ -67,11 +72,20 @@ export default function OTPVerification({ params }: { params: { email: string } 
         try {
             const {otp}=data
            
-            let response = await axios.post(`${AUTH_SERVICE_URL}/verify-otp`,otp,{
+            let response = await axios.post(`${AUTH_SERVICE_URL}/verify-otp`,{otp,params},{
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
+            if(response.data.success){
+                toast.success('Account created')
+                setTimeout(() => {
+                    router.push(`jobListingPage/${data.verifiedUser}`)//pass values as params---folder structure :jobListingPage[userData]
+                  }, 3000);
+            }else{
+                toast.error('Invalid OTP')
+            }
+
         } catch (error) {
             console.log(error)
         }
