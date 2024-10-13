@@ -7,6 +7,7 @@ import Navbar from '../components/Navbar'
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { AUTH_SERVICE_URL } from '@/utils/constants'
+import Link from 'next/link';
 
 
 function page() {
@@ -39,7 +40,7 @@ function page() {
                 toast.info('Verify OTP')
                 setTimeout(() => {
                     router.push(`otpPage?id=${data.email}`)//pass values as params---folder structure :otpPage[userData]
-                  }, 3000);
+                }, 3000);
             } else {
                 toast.error('User Already exists')
             }
@@ -167,9 +168,17 @@ function page() {
                     >
                         Sign Up
                     </button>
+                    <div>
+                            <br />
 
-                    <p className="text-white mt-6 text-center">Already have an account? <a href="#" className="text-green-400 hover:underline">Log in</a></p>
-
+                    <Link href={'/login'}>
+                    Already having an account? 
+                        <button className=" text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
+                          Login
+                        </button>
+                    </Link>
+                    </div>
+                   
 
                 </form>
             </div>

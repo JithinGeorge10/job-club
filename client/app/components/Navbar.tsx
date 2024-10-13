@@ -14,7 +14,7 @@ function Navbar() {
 
         {/* Menu Section - hidden on smaller screens, flex on medium+ screens */}
         <div className="hidden md:flex space-x-4">
-        <Link href={'/components/login'}>
+        <Link href={'/login'}>
           <button  className="border-2 border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
             Login
           </button>
