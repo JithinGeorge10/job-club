@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Navbar from '../../components/Navbar'
+import Navbar from '../components/Navbar'
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { AUTH_SERVICE_URL } from '@/utils/constants'

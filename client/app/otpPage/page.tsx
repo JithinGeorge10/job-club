@@ -82,7 +82,7 @@ export default function OTPVerification({ params }: { params: { email: string } 
             if (response.data.success) {
                 toast.success('Account created')
                 setTimeout(() => {
-                    router.push(`jobListingPage`)//pass values as params---folder structure :jobListingPage[userData]
+                    router.push(`jobListingPage`)//pass values as params---folder structure :jobListingPage
                 }, 3000);
             } else {
                 toast.error('Invalid OTP')
