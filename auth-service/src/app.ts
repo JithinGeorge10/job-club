@@ -5,6 +5,7 @@ import {connectDB} from "./infrastructure/config/databaseConfig"
 import {PORT,CLIENT_PORT} from './utils/config'
 import {errorHandler} from './presentation/middleware/errorHandler'
 import userRoute from './presentation/routes/userRoute';
+import companyRoute from './presentation/routes/companyRoute';
 import cookieParser from 'cookie-parser'
 const app=express()
 app.use(express.json());
@@ -20,6 +21,7 @@ app.use(cors({
   app.use(morgan("dev")); 
 
   app.use("/api/auth-service", userRoute);
+  app.use("/api/auth-service", companyRoute);
 
   app.use(errorHandler)
 

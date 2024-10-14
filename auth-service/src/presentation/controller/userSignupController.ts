@@ -40,6 +40,8 @@ export class UserController {
     async verifyOtpController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { email } = req.body
+            console.log('---==',email);
+            
             const otp = req.body.otp
             const userOtp = Number(otp.join(''))
             const verifiedUser = await this.userService.verifyOtp(userOtp, email)

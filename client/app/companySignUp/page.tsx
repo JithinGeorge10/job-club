@@ -31,22 +31,22 @@ function page() {
 
     try {
       localStorage.clear();
-      console.log(data)
+      console.log('++++++',data)
 
       let response = await axios.post(`${AUTH_SERVICE_URL}/company-register`, data, {
-          headers: {
-              'Content-Type': 'application/json'
-          }
+        headers: {
+          'Content-Type': 'application/json'
+        }
       })
-      // console.log(response.data);
-      // if (response.data.success) {
-      //     toast.info('Verify OTP')
-      //     setTimeout(() => {
-      //         router.push(`otpPage?id=${data.email}`)//pass values as params---folder structure :otpPage[userData]
-      //     }, 3000);
-      // } else {
-      //     toast.error('User Already exists')
-      // }
+      console.log(response.data);
+      if (response.data.success) {
+        toast.info('Verify OTP')
+         setTimeout(() => {
+              router.push(`companyOtpPage?id=${data.email}`)
+          }, 3000);
+      } else {
+        toast.error('Company Already exists')
+      }
     } catch (error: any) {
       console.log(error);
     }
@@ -188,7 +188,7 @@ function page() {
             <p className="text-red-600">{errors.confirmPassword?.message as string}</p>
           </div>
 
-        
+
 
           <div>
             --------------------------------------------------------------------
@@ -197,7 +197,7 @@ function page() {
             type="submit"
             className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
           >
-            Sign Up
+           Register
           </button>
           <div>
             <br />

@@ -72,19 +72,19 @@ export default function OTPVerification({ params }: { params: { email: string } 
     const onSubmit = async (data: any) => {
         try {
             const { otp } = data
-            console.log('---->'+email)
+            console.log('---->' + email)
 
-            let response = await axios.post(`${AUTH_SERVICE_URL}/verify-otp`, { otp, email }, {
+            let response = await axios.post(`${AUTH_SERVICE_URL}/company-verify-otp`, { otp, email }, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
             console.log(response.data);
-            
+
             if (response.data.success) {
                 toast.success('Account created')
-                setTimeout(() => {
-                    router.push(`jobListingPage`)//pass values as params---folder structure :jobListingPage
+                 setTimeout(() => {
+                    router.push(`companyDashboard`)//pass values as params---folder structure :jobListingPage
                 }, 3000);
             } else {
                 toast.error('Invalid OTP')
@@ -114,8 +114,8 @@ export default function OTPVerification({ params }: { params: { email: string } 
                 }
             })
         }, 1000)
-        console.log({email})
-        let response = await axios.post(`${AUTH_SERVICE_URL}/resend-otp`, {email}, {
+        console.log({ email })
+        let response = await axios.post(`${AUTH_SERVICE_URL}/company-resend-otp`, { email }, {
             headers: {
                 'Content-Type': 'application/json'
             }
