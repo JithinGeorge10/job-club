@@ -4,26 +4,34 @@ import sendotp from "../../../infrastructure/helper/sendOTP";
 
 export class CompanyService {
     async createCompany(companyData: Company): Promise<Company | undefined> {
-        const existingCompany = await getCompanyRepository.findCompanyByEmail(companyData.email)
-        if (existingCompany) {
-            throw new Error("Company already existssss");
+        try {
+            const existingCompany = await getCompanyRepository.findCompanyByEmail(companyData.email)
+            if (existingCompany) {
+                throw new Error("Company already existssss");
+            } 
+            const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString()
+            await sendotp(companyData, generatedOtp)
+            const companyDetails = await getCompanyRepository.saveCompany(companyData)
+            await getCompanyRepository.saveOtp(generatedOtp, companyDetails?._id)
+            return companyDetails
+        } catch (error) {
+            console.log(error);
         }
-        const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString()
-        await sendotp(companyData, generatedOtp)
-        const companyDetails = await getCompanyRepository.saveCompany(companyData)
-        await getCompanyRepository.saveOtp(generatedOtp, companyDetails?._id)
-        return companyDetails
-         
     }
 
-    async verifyOtp(userOtp: number,email:string) {
-        const companyDetails=await getCompanyRepository.verifyOtp(userOtp,email)
-            if(companyDetails){
+    async verifyOtp(userOtp: number, email: string) {
+        try {
+            const companyDetails = await getCompanyRepository.verifyOtp(userOtp, email)
+            if (companyDetails) {
                 return companyDetails
-            }else{
+            } else {
                 throw new Error("Invalid Otp");
             }
-            
+        } catch (error) {
+            console.log(error);
+
+        }
+
     }
     async resendOTP(companyDetail: Company) {
         try {
@@ -37,5 +45,5 @@ export class CompanyService {
             throw error
         }
     }
-    
+
 }

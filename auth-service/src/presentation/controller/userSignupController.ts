@@ -50,13 +50,6 @@ export class UserController {
                 const userJwtToken = await this.userJwtService.createJwt(verifiedUser._id, 'user')
                 console.log(userJwtToken);
 
-                // res.cookie('userToken', userJwtToken, {
-                //     httpOnly: true,   // Ensures the cookie can't be accessed via client-side scripts
-                //     secure: process.env.NODE_ENV === 'production', // Sends the cookie only over HTTPS in production
-                //     sameSite: 'strict',  // Prevents CSRF attacks
-                //     maxAge: 60 * 60 * 1000, // 1 hour expiration
-                //   }).send({ verifiedUser, success: true });
-
                 res.status(200).cookie('userToken', userJwtToken, {
                     httpOnly: true,
                     maxAge: 60 * 60 * 24 * 1000
