@@ -50,8 +50,8 @@ function page() {
     return (
         <>
             <Navbar />
-            <div className="flex justify-center items-center min-h-screen bg-gray-800">
-                <form
+            <div className="flex justify-center items-center min-h-screen bg-cover bg-center"
+                style={{ backgroundImage: `url('images/signup.jpeg')` }}>                <form
                     onSubmit={handleSubmit(onSubmit)}
 
                     className="w-full max-w-lg bg-black p-8 rounded-lg shadow-lg"
@@ -168,16 +168,16 @@ function page() {
                         Sign Up
                     </button>
                     <div>
-                            <br />
+                        <br />
 
-                    <Link href={'/login'}>
-                    Already having an account? 
-                        <button className=" text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
-                          Login
-                        </button>
-                    </Link>
+                        <Link href={'/login'}>
+                            Already having an account?
+                            <button className=" text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
+                                Login
+                            </button>
+                        </Link>
                     </div>
-                   
+
 
                 </form>
             </div>

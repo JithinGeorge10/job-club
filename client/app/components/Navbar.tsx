@@ -1,6 +1,7 @@
 
 import Link from 'next/link';
 import React from 'react';
+import HomePage from '../homePage/page';
 
 function Navbar() {
    
@@ -8,9 +9,13 @@ function Navbar() {
     <nav className="bg-black p-4">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo Section */}
+
+        <Link href={'/'}>
         <div className="text-green-400 font-bold text-2xl">
           _JobClub.
         </div>
+        </Link>
+      
 
         {/* Menu Section - hidden on smaller screens, flex on medium+ screens */}
         <div className="hidden md:flex space-x-4">
@@ -24,9 +29,11 @@ function Navbar() {
             Signup
           </button>
           </Link>
+          <Link href={'/companySignUp'}>
           <button className="border-2 border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
             Employers / Post Job
           </button>
+          </Link>
         </div>
 
         {/* Mobile Menu Button - visible on small screens */}

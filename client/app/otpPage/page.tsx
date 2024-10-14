@@ -79,6 +79,8 @@ export default function OTPVerification({ params }: { params: { email: string } 
                     'Content-Type': 'application/json'
                 }
             })
+            console.log(response.data);
+            
             if (response.data.success) {
                 toast.success('Account created')
                 setTimeout(() => {

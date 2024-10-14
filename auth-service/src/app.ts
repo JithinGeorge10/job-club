@@ -5,6 +5,7 @@ import {connectDB} from "./infrastructure/config/databaseConfig"
 import {PORT,CLIENT_PORT} from './utils/config'
 import {errorHandler} from './presentation/middleware/errorHandler'
 import userRoute from './presentation/routes/userRoute';
+import cookieParser from 'cookie-parser'
 const app=express()
 app.use(express.json());
 
@@ -15,7 +16,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'Role'],
     credentials: true
   }));
-  
+  app.use(cookieParser());
   app.use(morgan("dev")); 
 
   app.use("/api/auth-service", userRoute);
