@@ -7,7 +7,6 @@ export interface User{
     phone:Number,
     email : string,
     password : string,
-    isBlock: boolean;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -17,3 +16,4 @@ export interface OTP{
     otpCode:number,
     createdAt:Date
 }
+

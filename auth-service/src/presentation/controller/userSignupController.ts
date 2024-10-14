@@ -1,10 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import { UserService } from "../../app/useCases/user/user";
+
 import { UserJwtService } from '../../infrastructure/service/jwtService'
 import { User } from "../../domain/entities/user";
+
+
 export class UserController {
     private userService: UserService;
     private userJwtService: UserJwtService;
+
     constructor() {
         this.userService = new UserService();
         this.userJwtService = new UserJwtService();
@@ -69,11 +73,5 @@ export class UserController {
         }
     }
 
-    async companyRegisterController(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            console.log(req.body);
-        } catch (error) {
-            next(error)
-        }
-    }
+    
 }

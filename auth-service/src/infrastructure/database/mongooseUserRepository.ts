@@ -1,7 +1,7 @@
 import { OTP, User } from "../../domain/entities/user";
 import UserModel from './model/userModel';
 import otpModel from './model/otpModel';
-import userModel from "./model/userModel";
+
 
 class UserRepository {
 
@@ -44,15 +44,14 @@ class UserRepository {
     async verifyOtp(userOtp: number, userEmail: string) {
         try {
 
-            const userDetails = await userModel.findOne({ email: userEmail })
+            const userDetails = await UserModel.findOne({ email: userEmail })
             const isOtp = await otpModel.findOne({otpCode: userOtp,userId:userDetails?._id })
             if(isOtp){
-                const userDetails= await userModel.findOne({ _id:isOtp.userId})
+                const userDetails= await UserModel.findOne({ _id:isOtp.userId})
                 return userDetails
             }else{
                 return null
             }
-            // return isOtp ? isOtp.toObject() as OTP : null;
         } catch (error) {
             console.log(error);
         }
