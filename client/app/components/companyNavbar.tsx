@@ -39,33 +39,7 @@ function Navbar() {
 
         
           <div className="flex space-x-6 items-center">
-            <div className="flex space-x-4">
-              <div className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
-                <FaBriefcase />
-                <span>Dashboard</span>
-              </div>
-              <div className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
-                <FaBell />
-                <span>Message</span>
-              </div>
-              <div className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
-                <FaEnvelope />
-                <span>Company Profile</span>
-              </div>
-              <div className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
-                <FaUser />
-                <span>All Applicants</span>
-              </div>
-              <div className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
-                <FaUser />
-                <span>Job listing</span>
-              </div>
-              <div className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
-                <FaUser />
-                <span>settings</span>
-              </div>
-            </div>
-
+           
             <span className="text-green-400 font-bold text-2xl">{companyName}</span>
             <button onClick={handleLogout}
               className="w-20 bg-red-900 hover:bg-red-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
