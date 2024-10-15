@@ -53,4 +53,20 @@ export class CompanyController{
             next(error)
         }
     }
+    async companyLoginController(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            console.log(req.body);
+            const { email, password } = req.body
+            const company = await this.companyService.companyLogin(email, password)
+            console.log('gotcha2',company);
+            
+            if (company) {
+                res.status(200).send({ company, success: true });
+            }
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    
 }

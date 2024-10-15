@@ -1,6 +1,8 @@
 import { OTP, User } from "../../domain/entities/user";
 import UserModel from './model/userModel';
 import otpModel from './model/otpModel';
+import { ADMIN_PASSWORD } from "../../utils/config";
+import bcrypt from 'bcrypt'; 
 
 
 class UserRepository {
@@ -56,7 +58,22 @@ class UserRepository {
             console.log(error);
         }
     }
-  
+    async verifyUser(email:string,password:string) {
+        try {
+           const userData = await UserModel.findOne({ email });
+           if(!userData){
+                return null
+           }
+           const isPasswordValid = await bcrypt.compare(password, userData.password);
+           if (isPasswordValid) {
+            return userData.toObject() as User;
+        } else {
+            return null;
+        }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     
 }

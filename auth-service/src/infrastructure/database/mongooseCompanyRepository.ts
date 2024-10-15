@@ -1,6 +1,7 @@
 import { Company } from "../../domain/entities/company";
 import companyModel from "./model/companyModel";
 import otpModel from "./model/otpModel";
+import bcrypt from 'bcrypt';
 class companyRepository {
     async findCompanyByEmail(email: string): Promise<Company | null> {
         try {
@@ -50,6 +51,23 @@ class companyRepository {
         try {
             const userId = await companyModel.findOne({ email });
             return userId
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async verifyCompany(email:string,password:string) {
+        try {
+           const userData = await companyModel.findOne({ email });
+           if(!userData){
+                return null
+           }
+           const isPasswordValid = await bcrypt.compare(password, userData.password);
+           if (isPasswordValid) {
+            return userData.toObject() as Company;
+        } else {
+            return null;
+        }
         } catch (error) {
             console.log(error);
         }

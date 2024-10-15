@@ -77,7 +77,8 @@ export default function OTPVerification({ params }: { params: { email: string } 
             let response = await axios.post(`${AUTH_SERVICE_URL}/verify-otp`, { otp, email }, {
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                withCredentials: true
             })
             console.log(response.data);
             

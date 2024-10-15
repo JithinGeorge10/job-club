@@ -63,6 +63,13 @@ export class UserController {
     async userLoginController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             console.log(req.body);
+            const { email, password } = req.body
+            const user = await this.userService.userLogin(email, password)
+            console.log('gotcha2',user);
+            
+            if (user) {
+                res.status(200).send({ user, success: true });
+            }
         } catch (error) {
             next(error)
         }

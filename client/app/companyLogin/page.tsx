@@ -15,7 +15,7 @@ function page() {
   }
   const { register, handleSubmit, formState: { errors } } = useForm<login>();
   const onSubmit = async (data: login) => {
-    let response = await axios.post(`${AUTH_SERVICE_URL}/user-login`, data, {
+    let response = await axios.post(`${AUTH_SERVICE_URL}/company-login`, data, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -25,15 +25,12 @@ function page() {
     if (response.data.success) {
       toast.info('Welcome')
       setTimeout(() => {
-        router.push(`jobListingPage`)
+        router.push(`companyDashboard`)
       }, 3000);
     } else {
       toast.error('Invalid credentials')
     }
   };
-
-
-
 
 
   return (

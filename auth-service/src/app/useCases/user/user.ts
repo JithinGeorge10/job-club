@@ -34,20 +34,36 @@ export class UserService {
             throw error
         }
     }
-    async verifyOtp(userOtp: number,email:string) {
+    async verifyOtp(userOtp: number, email: string) {
         try {
-    
-            const userDetails=await getUserRepository.verifyOtp(userOtp,email)
-            if(userDetails){
+
+            const userDetails = await getUserRepository.verifyOtp(userOtp, email)
+            if (userDetails) {
                 return userDetails
-            }else{
+            } else {
                 throw new Error("Invalid Otp");
             }
-            
+
         } catch (error) {
             throw error
         }
     }
-    
+    async userLogin(email: string, password: string) {
+        try {
+
+            const userDetails = await getUserRepository.verifyUser(email, password)
+            console.log('gotcha',userDetails);
+            
+            if(userDetails){
+                return userDetails
+            }else {
+                throw new Error("Give valid credentials");
+            }
+
+        } catch (error) {
+            throw error
+        }
+    }
+
 
 } 
