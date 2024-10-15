@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import { CompanyService } from "../../app/useCases/company/company";
 import { Company } from "../../domain/entities/company";
-import { UserJwtService } from '../../infrastructure/service/jwtService'
+import { JwtService } from '../../infrastructure/service/jwtService'
 export class CompanyController{
     private companyService: CompanyService;
-    private userJwtService: UserJwtService;
+    private JwtService: JwtService;
     constructor() {
         this.companyService=new CompanyService()
-        this.userJwtService = new UserJwtService();
+        this.JwtService = new JwtService();
     }
     async companyRegisterController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
@@ -26,16 +26,16 @@ export class CompanyController{
             console.log(req.body);
             const otp = req.body.otp
             const userOtp = Number(otp.join(''))
-            const verifiedUser = await this.companyService.verifyOtp(userOtp, email)
-            if (verifiedUser) {
+            const verifiedCompany = await this.companyService.verifyOtp(userOtp, email)
+            if (verifiedCompany) {
 
-                const userJwtToken = await this.userJwtService.createJwt(verifiedUser._id, 'user')
-                console.log(userJwtToken);
+                const comapanyJwtToken = await this.JwtService.createJwt(verifiedCompany._id, 'company')
+                console.log(comapanyJwtToken);
 
-                res.status(200).cookie('userToken', userJwtToken, {
+                res.status(200).cookie('companyToken', comapanyJwtToken, {
                     httpOnly: true,
                     maxAge: 60 * 60 * 24 * 1000
-                }).send({ verifiedUser, success: true, token: userJwtToken });
+                }).send({ verifiedCompany, success: true, token: comapanyJwtToken });
             }
         } catch (error) {
             next(error)
@@ -61,7 +61,14 @@ export class CompanyController{
             console.log('gotcha2',company);
             
             if (company) {
-                res.status(200).send({ company, success: true });
+                
+                const comapanyJwtToken = await this.JwtService.createJwt(company._id, 'company')
+                console.log(comapanyJwtToken);
+
+                res.status(200).cookie('companyToken', comapanyJwtToken, {
+                    httpOnly: true,
+                    maxAge: 60 * 60 * 24 * 1000
+                }).send({ company, success: true, token: comapanyJwtToken });
             }
         } catch (error) {
             next(error)

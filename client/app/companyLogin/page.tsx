@@ -18,7 +18,8 @@ function page() {
     let response = await axios.post(`${AUTH_SERVICE_URL}/company-login`, data, {
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      withCredentials: true
     })
 
     console.log(response);
@@ -39,7 +40,7 @@ function page() {
       <div className="flex justify-center items-center min-h-screen bg-cover bg-center"
         style={{ backgroundImage: `url('images/login.jpeg')` }}>
         <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg bg-black p-8 rounded-lg shadow-lg">
-          <h2 className="text-3xl font-semibold text-white text-center mb-6">Login to <span className="text-green-400">{`_JobClub.`}</span></h2>
+          <h2 className="text-3xl font-semibold text-white text-center mb-6">Company Login to <span className="text-green-400">{`_JobClub.`}</span></h2>
 
           <div className="mb-4">
             <input

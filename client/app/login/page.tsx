@@ -18,7 +18,8 @@ function page() {
     let response = await axios.post(`${AUTH_SERVICE_URL}/user-login`, data, {
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      withCredentials: true
     })
 
     console.log(response);

@@ -53,7 +53,7 @@ function page() {
   }
   return (
     <>
-      <Navbar />
+
       <div className="flex justify-center items-center min-h-screen bg-cover bg-center"
         style={{ backgroundImage: `url('images/signup.jpeg')` }}>                <form
           onSubmit={handleSubmit(onSubmit)}

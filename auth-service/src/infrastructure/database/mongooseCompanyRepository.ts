@@ -25,7 +25,9 @@ class companyRepository {
 
     async saveOtp(otp: string, companyId: any) {
         try {
-            await otpModel.create({ companyId, otpCode: otp });
+            const otpDetail=await otpModel.create({ companyId, otpCode: otp });
+            console.log('otototot'+otpDetail);
+            
         } catch (error) {
             console.log(error);
         }
