@@ -8,22 +8,22 @@ import Cookies from 'js-cookie';
 function Navbar() {
   const router = useRouter()
 
-  const [userName, setUserName] = useState<string | null>(null);
+  const [companyName, setCompanyName] = useState<string | null>(null);
 
   useEffect(() => {
-    const user: string | null = localStorage.getItem('user');
+    const company: string | null = localStorage.getItem('company');
 
-    console.log(user)
-    if (user && user !== 'undefined') {
-      let userDetails = JSON.parse(user)
-      console.log(userDetails);
-      setUserName(userDetails.firstName)
+    console.log(company)
+    if (company && company !== 'undefined') {
+      let companyDetails = JSON.parse(company)
+      console.log(companyDetails);
+      setCompanyName(companyDetails.companyName)
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.clear();
-    Cookies.remove('userToken');
+    Cookies.remove('companyToken');
     router.push(`/`)
   }
   return (
@@ -37,52 +37,44 @@ function Navbar() {
           </div>
         </Link>
 
-        {userName ? (
+        
           <div className="flex space-x-6 items-center">
             <div className="flex space-x-4">
               <div className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
                 <FaBriefcase />
-                <span>My jobs</span>
+                <span>Dashboard</span>
               </div>
               <div className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
                 <FaBell />
-                <span>Notifications</span>
+                <span>Message</span>
               </div>
               <div className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
                 <FaEnvelope />
-                <span>Messages</span>
+                <span>Company Profile</span>
               </div>
               <div className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
                 <FaUser />
-                <span>User Profile</span>
+                <span>All Applicants</span>
+              </div>
+              <div className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
+                <FaUser />
+                <span>Job listing</span>
+              </div>
+              <div className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
+                <FaUser />
+                <span>settings</span>
               </div>
             </div>
 
-            <span className="text-green-400 font-bold text-2xl">Hi, {userName}</span>
+            <span className="text-green-400 font-bold text-2xl">{companyName}</span>
             <button onClick={handleLogout}
               className="w-20 bg-red-900 hover:bg-red-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
             >
               Logout
             </button>
           </div>
-        ) : (<div className="hidden md:flex space-x-4">
-          <Link href={'/login'}>
-            <button className="border-2 border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
-              Login
-            </button>
-          </Link>
-          <Link href={'/signup'}>
-            <button className="border-2 border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
-              Signup
-            </button>
-          </Link>
-          <Link href={'/companySignUp'}>
-            <button className="border-2 border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
-              Employers / Post Job
-            </button>
-          </Link>
-        </div>)
-        }
+        
+        
 
 
         <div className="md:hidden">

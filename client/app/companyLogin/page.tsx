@@ -21,9 +21,10 @@ function page() {
       },
       withCredentials: true
     })
-
+    const company=response.data.company
     console.log(response);
     if (response.data.success) {
+      localStorage.setItem('user',JSON.stringify(company));
       toast.info('Welcome')
       setTimeout(() => {
         router.push(`companyDashboard`)

@@ -81,8 +81,10 @@ export default function OTPVerification({ params }: { params: { email: string } 
                 withCredentials: true
             })
             console.log(response.data);
-            
+            const user=response.data.verifiedUser
+            console.log(user)
             if (response.data.success) {
+                localStorage.setItem('user',JSON.stringify(user));
                 toast.success('Account created')
                 setTimeout(() => {
                     router.push(`jobListingPage`)//pass values as params---folder structure :jobListingPage

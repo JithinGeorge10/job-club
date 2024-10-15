@@ -33,7 +33,6 @@ export class CompanyController{
                 console.log(comapanyJwtToken);
 
                 res.status(200).cookie('companyToken', comapanyJwtToken, {
-                    httpOnly: true,
                     maxAge: 60 * 60 * 24 * 1000
                 }).send({ verifiedCompany, success: true, token: comapanyJwtToken });
             }
@@ -66,7 +65,6 @@ export class CompanyController{
                 console.log(comapanyJwtToken);
 
                 res.status(200).cookie('companyToken', comapanyJwtToken, {
-                    httpOnly: true,
                     maxAge: 60 * 60 * 24 * 1000
                 }).send({ company, success: true, token: comapanyJwtToken });
             }

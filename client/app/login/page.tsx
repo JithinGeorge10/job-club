@@ -7,7 +7,9 @@ import axios from 'axios'
 import { AUTH_SERVICE_URL } from '@/utils/constants'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation';
+
 function page() {
+
   const router = useRouter()
   type login = {
     email: string,
@@ -22,9 +24,11 @@ function page() {
       withCredentials: true
     })
 
-    console.log(response);
+    console.log(response.data.user.firstName);
+    const user=response.data.user
     if (response.data.success) {
-      toast.info('Welcome')
+      localStorage.setItem('user',JSON.stringify(user));
+      toast.success('Welcome')
       setTimeout(() => {
         router.push(`jobListingPage`)
       }, 3000);

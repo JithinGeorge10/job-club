@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
 import { AUTH_SERVICE_URL } from '@/utils/constants'
 import { useRouter, useSearchParams } from 'next/navigation';
+import Navbar from '../components/Navbar';
 
 export default function OTPVerification({ params }: { params: { email: string } }) {
     const { register, handleSubmit } = useForm()
@@ -121,9 +122,23 @@ export default function OTPVerification({ params }: { params: { email: string } 
                 'Content-Type': 'application/json'
             }
         })
+        console.log(response.data);
+        const company=response.data.verifiedCompany
+        console.log(company)
+        if (response.data.success) {
+            localStorage.setItem('company',JSON.stringify(company));
+            toast.success('Account created')
+            setTimeout(() => {
+                router.push(`companyDashboard`)
+            }, 3000);
+        } else {
+            toast.error('Invalid OTP')
+        }
     }
 
     return (
+       <>
+    
         <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-4">
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
@@ -189,5 +204,6 @@ export default function OTPVerification({ params }: { params: { email: string } 
 
             </motion.div>
         </div>
+        </>
     )
 }

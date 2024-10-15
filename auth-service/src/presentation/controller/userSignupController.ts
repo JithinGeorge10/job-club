@@ -51,7 +51,6 @@ export class UserController {
                 console.log(userJwtToken);
 
                 res.status(200).cookie('userToken', userJwtToken, {
-                    httpOnly: true,
                     maxAge: 60 * 60 * 24 * 1000
                 }).send({ verifiedUser, success: true, token: userJwtToken });
             }
@@ -74,7 +73,6 @@ export class UserController {
                 console.log(userJwtToken);
 
                 res.status(200).cookie('userToken', userJwtToken, {
-                    httpOnly: true,
                     maxAge: 60 * 60 * 24 * 1000
                 }).send({ user, success: true, token: userJwtToken });
             }
