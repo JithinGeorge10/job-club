@@ -31,8 +31,6 @@ function page() {
 
     try {
       localStorage.clear();
-      console.log('++++++',data)
-
       let response = await axios.post(`${AUTH_SERVICE_URL}/company-register`, data, {
         headers: {
           'Content-Type': 'application/json'
@@ -51,6 +49,7 @@ function page() {
       console.log(error);
     }
   }
+  
   return (
     <>
 
@@ -65,7 +64,7 @@ function page() {
           <div className="mb-4">
             <input
               {...register("companyName", {
-                required: "company name is required",
+                required: "Company name is required",
                 pattern: {
                   value: /^(?=.{1,15}$)[A-Za-z][A-Za-z0-9._]*$/,
                   message:

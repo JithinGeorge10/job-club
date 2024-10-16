@@ -6,6 +6,8 @@ export class CompanyService {
     async createCompany(companyData: Company): Promise<Company | undefined> {
         try {
             const existingCompany = await getCompanyRepository.findCompanyByEmail(companyData.email)
+            console.log(existingCompany);
+            
             if (existingCompany) {
                 throw new Error("Company already existssss");
             } 
@@ -15,7 +17,7 @@ export class CompanyService {
             await getCompanyRepository.saveOtp(generatedOtp, companyDetails?._id)
             return companyDetails
         } catch (error) {
-            console.log(error);
+            throw error
         }
     }
 
