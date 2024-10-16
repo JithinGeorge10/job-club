@@ -1,6 +1,14 @@
+'use client'
 import React from 'react'
-
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 function page() {
+  const router = useRouter()
+  const handleLogout=()=>{
+    localStorage.clear();
+    Cookies.remove('adminToken');
+    router.push(`/`)
+  }
   return (
     <div>
         <div className="flex">
@@ -19,7 +27,11 @@ function page() {
             <br />
             <a href="#">Subscription</a>
           </nav>
-        
+          <button onClick={handleLogout}
+              className="w-20 bg-red-900 hover:bg-red-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
+            >
+              Logout
+            </button>
         </aside>
 
         {/* Main Content */}

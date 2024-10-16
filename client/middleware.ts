@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { userVerifyToken } from './lib/userVerifyToken';
 import { companyVerifyToken } from './lib/companyVerifyToken';
+import { adminVerifyToken } from './lib/adminVerifyToken';
 
 export async function middleware(req: NextRequest) {
     const url = req.nextUrl.clone();
@@ -97,4 +98,31 @@ export async function middleware(req: NextRequest) {
 
         return NextResponse.next();
     }
+
+    if (url.pathname === '/admin') {
+
+        const isValidadmin = await adminVerifyToken("adminToken", req);
+        if (isValidadmin) {
+            console.log(isValidadmin);
+            url.pathname = '/adminDashboard';
+            return NextResponse.redirect(url);
+        }
+
+        return NextResponse.next();
+    }
+
+    if (url.pathname === '/adminDashboard') {
+
+        const isValidadmin = await adminVerifyToken("adminToken", req);
+        if (!isValidadmin) {
+            console.log(isValidadmin);
+            url.pathname = '/admin';
+            return NextResponse.redirect(url);
+        }
+
+        return NextResponse.next();
+    }
+ 
+
+   
 }
