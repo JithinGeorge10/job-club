@@ -1,14 +1,12 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Navbar from '../components/Navbar'
-import { useSearchParams } from 'next/navigation';
 
 function page() {
-  const searchParams = useSearchParams();
-  const name = searchParams.get('name')||'';
+ 
   return (
     <>
-      <Navbar/>
+      <Navbar />
       <div className="bg-black text-white min-h-screen">
         <div className="max-w-7xl mx-auto py-10">
           {/* Search Bar */}
@@ -25,7 +23,7 @@ function page() {
           <div className="grid grid-cols-5 gap-10">
             <aside className="col-span-1 bg-gray-900 p-5 rounded-lg">
               <h3 className="font-bold text-lg mb-4 text-green-400">All Filters</h3>
-              
+
               <div className="mb-6">
                 <h4 className="font-bold text-md mb-2">Work Mode</h4>
                 <label className="block mb-2">

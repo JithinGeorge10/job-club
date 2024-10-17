@@ -6,11 +6,13 @@ import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 
 function Navbar() {
+
   const router = useRouter()
 
   const [userName, setUserName] = useState<string | null>(null);
 
   useEffect(() => {
+
     const user: string | null = localStorage.getItem('user');
 
     console.log(user)
@@ -20,6 +22,7 @@ function Navbar() {
       setUserName(userDetails.firstName)
     }
   }, []);
+
 
   const handleLogout = () => {
     localStorage.clear();
