@@ -19,6 +19,7 @@ export class UserController {
             if (user) {
                 res.status(200).send({ user, success: true });
             }
+           
         } catch (error) {
             next(error)
         }

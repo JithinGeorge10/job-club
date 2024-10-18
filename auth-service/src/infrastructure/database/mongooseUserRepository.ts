@@ -1,7 +1,6 @@
 import { OTP, User } from "../../domain/entities/user";
 import UserModel from './model/userModel';
 import otpModel from './model/otpModel';
-import { ADMIN_PASSWORD } from "../../utils/config";
 import bcrypt from 'bcrypt'; 
 
 

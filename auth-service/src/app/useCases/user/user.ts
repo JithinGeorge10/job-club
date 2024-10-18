@@ -1,7 +1,7 @@
-import { Number, ObjectId } from "mongoose";
 import { OTP, User } from "../../../domain/entities/user";
 import getUserRepository from '../../../infrastructure/database/mongooseUserRepository'
 import sendotp from '../../../infrastructure/helper/sendOTP'
+import produce from '../../../infrastructure/service/producer'
 export class UserService {
 
     async createUser(userData: User): Promise<User | undefined> {
@@ -14,7 +14,12 @@ export class UserService {
             await sendotp(userData, generatedOtp)
             const userDetails = await getUserRepository.saveUser(userData)
             await getUserRepository.saveOtp(generatedOtp, userDetails?._id)
-
+            try {
+                await produce('add-user', JSON.stringify(userDetails))
+            } catch (error) {
+                console.log('Kafka producer add-user error')
+                console.log(error)
+            }
             return userDetails
 
         } catch (error) {
@@ -34,6 +39,8 @@ export class UserService {
             throw error
         }
     }
+
+   
     async verifyOtp(userOtp: number, email: string) {
         try {
 
