@@ -1,6 +1,7 @@
 import { Company } from "../../../domain/entities/company";
 import getCompanyRepository from '../../../infrastructure/database/mongooseCompanyRepository'
 import sendotp from "../../../infrastructure/helper/sendOTP";
+import produce from "../../../infrastructure/service/producer";
 
 export class CompanyService {
     async createCompany(companyData: Company): Promise<Company | undefined> {
@@ -25,15 +26,19 @@ export class CompanyService {
         try {
             const companyDetails = await getCompanyRepository.verifyOtp(userOtp, email)
             if (companyDetails) {
+                try {
+                    await produce('add-company', companyDetails)
+                } catch (error) {
+                    console.log('Kafka producer add-user error')
+                    console.log(error)
+                }
                 return companyDetails
             } else {
                 throw new Error("Invalid Otp");
             }
         } catch (error) {
             console.log(error);
-
         }
-
     }
     async resendOTP(companyDetail: Company) {
         try {

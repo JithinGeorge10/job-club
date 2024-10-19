@@ -1,4 +1,4 @@
-import {  User } from "../../../domain/entities/User";
+
 import UserRepository from '../../../infrastructure/database/mongooseUserRepository'
 export class UserService {
     async createUser(userData: any) {

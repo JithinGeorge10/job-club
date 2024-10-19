@@ -5,7 +5,7 @@ import morgan from "morgan";
 import cookieParser from 'cookie-parser'
 import {connectDB} from "./infrastructure/config/databaseConfig"
 // import {errorHandler} from './presentation/middleware/errorHandler'
-// import consume from './infrastructure/service/consume'
+ import consume from './infrastructure/service/consume'
 const app = express()
 app.use(express.json());
 connectDB()
@@ -17,13 +17,12 @@ app.use(cors({
 }));
 app.use(morgan("dev"));
 app.use(cookieParser());
-// consume()
+ consume()
 app.get('/', (req, res) => {
     res.send('ff')
 })
 
-// app.use(errorHandler)
-
+//  app.use(errorHandler)
 app.listen(PORT, () => {
     console.log('app started')
 })
