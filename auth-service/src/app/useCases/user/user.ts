@@ -14,12 +14,7 @@ export class UserService {
             await sendotp(userData, generatedOtp)
             const userDetails = await getUserRepository.saveUser(userData)
             await getUserRepository.saveOtp(generatedOtp, userDetails?._id)
-            try {
-                await produce('add-user', JSON.stringify(userDetails))
-            } catch (error) {
-                console.log('Kafka producer add-user error')
-                console.log(error)
-            }
+
             return userDetails
 
         } catch (error) {
@@ -40,13 +35,20 @@ export class UserService {
         }
     }
 
-   
-    async verifyOtp(userOtp: number, email: string) {
+
+    async verifyOtp(userOtp: number, email: any) {
         try {
 
             const userDetails = await getUserRepository.verifyOtp(userOtp, email)
             if (userDetails) {
+                try {
+                    await produce('add-user', userDetails)
+                } catch (error) {
+                    console.log('Kafka producer add-user error')
+                    console.log(error)
+                }
                 return userDetails
+
             } else {
                 throw new Error("Invalid Otp");
             }
@@ -59,11 +61,11 @@ export class UserService {
         try {
 
             const userDetails = await getUserRepository.verifyUser(email, password)
-            console.log('gotcha',userDetails);
-            
-            if(userDetails){
+            console.log('gotcha', userDetails);
+
+            if (userDetails) {
                 return userDetails
-            }else {
+            } else {
                 throw new Error("Give valid credentials");
             }
 

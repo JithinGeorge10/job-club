@@ -2,7 +2,7 @@ import kafka from '../config/kafkaConfig'
 import {Partitioners} from 'kafkajs'
 
 
-async function produce(topic:string, message:string) {
+async function produce(topic:string, message:any) {
     try {
         console.log(message);
         console.log(topic);
@@ -20,5 +20,6 @@ async function produce(topic:string, message:string) {
         console.log(error);
     }
 }
+
 
 export default produce

@@ -17,9 +17,9 @@ export class UserController {
         try {
             const user: User | undefined = await this.userService.createUser(req.body);
             if (user) {
+                
                 res.status(200).send({ user, success: true });
             }
-           
         } catch (error) {
             next(error)
         }
