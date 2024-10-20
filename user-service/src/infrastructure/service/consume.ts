@@ -1,6 +1,6 @@
 
 import kafka from '../config/kafkaConfig'
-import { UserService } from '../../app/useCases/addUser/addUser'
+import { UserService } from '../../app/useCases/User/addUser'
 async function consume() {
   console.log('kafka consume')
 

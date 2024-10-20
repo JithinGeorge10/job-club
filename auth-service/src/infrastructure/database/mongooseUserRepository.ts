@@ -9,7 +9,7 @@ class UserRepository {
 
     async findUserByEmail(email: string): Promise<User | null> {
         try {
-            const userData = await UserModel.findOne({ email });
+            const userData = await UserModel.findOne({ email});            
             return userData ? userData.toObject() as User : null;
         } catch (error) {
             console.log(error);
@@ -48,7 +48,10 @@ class UserRepository {
             const userDetails = await UserModel.findOne({ email: userEmail })
             const isOtp = await otpModel.findOne({ otpCode: userOtp, userId: userDetails?._id })
             if (isOtp) {
-                const userDetails = await UserModel.findOne({ _id: isOtp.userId })
+                await UserModel.updateOne(
+                    { _id: isOtp.userId },
+                    { $set: { isVerified: true } }
+                ); const userDetails = await UserModel.findOne({ _id: isOtp.userId })
                 return userDetails
             } else {
                 return null

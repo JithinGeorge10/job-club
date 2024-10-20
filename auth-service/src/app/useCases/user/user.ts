@@ -7,14 +7,20 @@ export class UserService {
     async createUser(userData: User): Promise<User | undefined> {
         try {
             const existingUser = await getUserRepository.findUserByEmail(userData.email)
-            if (existingUser) {
+            if (existingUser && existingUser.isVerified) {
                 throw new Error("User already existssss");
             }
             const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString()
-            await sendotp(userData, generatedOtp)
-            const userDetails = await getUserRepository.saveUser(userData)
-            await getUserRepository.saveOtp(generatedOtp, userDetails?._id)
+            console.log(JSON.stringify(existingUser));
 
+            let userDetails 
+            if (!existingUser) {
+                userDetails = await getUserRepository.saveUser(userData)
+            }else{
+                userDetails=existingUser
+            }
+            await getUserRepository.saveOtp(generatedOtp, userDetails?._id)
+            await sendotp(userData, generatedOtp)
             return userDetails
 
         } catch (error) {

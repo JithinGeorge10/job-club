@@ -10,7 +10,7 @@ function Navbar() {
   const router = useRouter()
 
   const [userName, setUserName] = useState<string | null>(null);
-
+  const [userId,setUserId]=useState<string | null>(null)
   useEffect(() => {
 
     const user: string | null = localStorage.getItem('user');
@@ -20,14 +20,19 @@ function Navbar() {
       let userDetails = JSON.parse(user)
       console.log(userDetails);
       setUserName(userDetails.firstName)
+      setUserId(userDetails._id)
     }
   }, []);
 
-
+ 
   const handleLogout = () => {
     localStorage.clear();
     Cookies.remove('userToken');
     router.push(`/`)
+  }
+
+  const handleUserProfile=()=>{
+    router.push(`userProfile?id=${userId}`)
   }
   return (
 
@@ -55,10 +60,13 @@ function Navbar() {
                 <FaEnvelope />
                 <span>Messages</span>
               </div>
-              <div className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
-                <FaUser />
-                <span>User Profile</span>
-              </div>
+          
+                <div onClick={handleUserProfile} className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
+                  <FaUser />
+                  <span>User Profile</span>
+                </div>
+              
+             
             </div>
 
             <span className="text-green-400 font-bold text-2xl">Hi, {userName}</span>

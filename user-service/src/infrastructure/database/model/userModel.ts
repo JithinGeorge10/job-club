@@ -20,14 +20,7 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'Phone is required'],
     },
-    isBlock: {
-        type: Boolean,
-        default: false
-    },
-    isVerified: {
-        type: Boolean,
-        default: false
-    },
+
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, required: false }
 })

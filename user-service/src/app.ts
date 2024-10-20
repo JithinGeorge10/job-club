@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser'
 import {connectDB} from "./infrastructure/config/databaseConfig"
 import {errorHandler} from './presentation/middleware/errorHandler'
 import consume from './infrastructure/service/consume'
+import userRoute from './presentation/routes/userRoute'
 const app = express()
 app.use(express.json());
 connectDB()
@@ -18,9 +19,8 @@ app.use(cors({
 app.use(morgan("dev"));
 app.use(cookieParser());
 consume()
-app.get('/', (req, res) => {
-    res.send('ff')
-})
+
+app.use("/api/auth-service", userRoute);
 
 app.use(errorHandler)
 

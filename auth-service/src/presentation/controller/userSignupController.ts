@@ -16,8 +16,10 @@ export class UserController {
     async userSignupController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const user: User | undefined = await this.userService.createUser(req.body);
+            console.log('controller')
+            console.log(user)
             if (user) {
-                
+                console.log('ok')            
                 res.status(200).send({ user, success: true });
             }
         } catch (error) {

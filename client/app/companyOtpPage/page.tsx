@@ -8,7 +8,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
 import { AUTH_SERVICE_URL } from '@/utils/constants'
 import { useRouter, useSearchParams } from 'next/navigation';
-import Navbar from '../components/Navbar';
 
 export default function OTPVerification({ params }: { params: { email: string } }) {
     const { register, handleSubmit } = useForm()
