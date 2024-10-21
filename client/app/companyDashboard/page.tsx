@@ -1,12 +1,12 @@
 import React from 'react'
 import CompanyNavbar from '../components/companyNavbar'
+import Link from 'next/link'
 
 function page() {
   return (
     <div>
       <CompanyNavbar />
       <div className="flex">
-        {/* Sidebar */}
         <aside className="bg-black text-white h-screen w-1/5 p-5">
           <nav className="space-y-4">
             <a href="#" className="text-green-400">Dashboard</a>
@@ -24,7 +24,6 @@ function page() {
         
         </aside>
 
-        {/* Main Content */}
         <main className="bg-white text-black w-4/5 p-10">
           <header className="flex justify-between items-center">
             <div className="flex items-center">
@@ -33,9 +32,11 @@ function page() {
                 <h2 className="font-bold text-2xl">Company Google</h2>
               </div>
             </div>
-            <button className="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg">
+            <Link href={'postJob'}>
+            <button  className="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg">
               + Post Job
             </button>
+            </Link>
           </header>
 
           <section className="mt-10">

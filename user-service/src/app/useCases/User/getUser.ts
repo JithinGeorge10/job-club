@@ -25,5 +25,15 @@ export class UserService {
             throw error
         }
     }
+    async addSkills(educationData: any) {
+        try {
+            const userDetails = await UserRepository.addSkills(educationData)
+            return userDetails
+        } catch (error) {
+            throw error
+        }
+    }
+
+    
     
 }

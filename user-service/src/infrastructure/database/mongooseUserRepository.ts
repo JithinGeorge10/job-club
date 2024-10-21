@@ -12,31 +12,31 @@ class UserRepository {
             throw error;
         }
     }
-        async getUser(userId: User) {
-            try {
-                // const userDetails = await userModel.findOne({ _id: userId })
-                // console.log(userDetails);
-                // return userDetails
+    async getUser(userId: User) {
+        try {
+            // const userDetails = await userModel.findOne({ _id: userId })
+            // console.log(userDetails);
+            // return userDetails
 
-                const [userDetails, userProfile] = await Promise.all([
-                    userModel.findOne({ _id: userId }),
-                    UserProfileModel.findOne({ userId })
-                ]);
-                if (!userDetails) {
-                    throw new Error(`User not found with id ${userId}`);
-                }
-                const fullUserDetails = {
-                    ...userDetails.toObject(),
-                    profile: userProfile ? userProfile.toObject() : null
-                };
-        
-                console.log(fullUserDetails);
-                return fullUserDetails;
-            } catch (error) {
-                console.log(error);
-                throw error;
+            const [userDetails, userProfile] = await Promise.all([
+                userModel.findOne({ _id: userId }),
+                UserProfileModel.findOne({ userId })
+            ]);
+            if (!userDetails) {
+                throw new Error(`User not found with id ${userId}`);
             }
+            const fullUserDetails = {
+                ...userDetails.toObject(),
+                profile: userProfile ? userProfile.toObject() : null
+            };
+
+            console.log(fullUserDetails);
+            return fullUserDetails;
+        } catch (error) {
+            console.log(error);
+            throw error;
         }
+    }
     async addEmployment(userData: any) {
         try {
             console.log('reache repo');
@@ -67,12 +67,12 @@ class UserRepository {
         try {
             console.log('reache repo');
             console.log(educationData);
-           
-            const { education, university,course, specialization, courseType,cgpa,fromYear,toYear } = educationData.data;
+
+            const { education, university, course, specialization, courseType, cgpa, fromYear, toYear } = educationData.data;
 
             console.log(educationData.userId)
             const educationDetails = {
-                education, university,course, specialization, courseType,cgpa,fromYear,toYear
+                education, university, course, specialization, courseType, cgpa, fromYear, toYear
             };
 
             const userId = educationData.userId;
@@ -90,7 +90,33 @@ class UserRepository {
             throw error;
         }
     }
-    
+
+
+
+    async addSkills(educationData: any) {
+        try {
+            console.log('reache repo');
+            console.log(educationData);
+
+            const { userId, skills } = educationData;
+
+            const updateResult = await UserProfileModel.updateOne(
+                { userId: userId },
+                {
+                    $addToSet: {
+                        skills: { $each: Object.values(skills) }
+                    }
+                }
+            );
+
+            console.log(updateResult);
+            return true;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
 
 }
 const getUserRepository = new UserRepository();

@@ -7,6 +7,8 @@ const userController = new UserController();
 userRoute.get('/get-userDetails', userController.getUserController.bind(userController));
 userRoute.post('/add-employment', userController.addEmploymentController.bind(userController));
 userRoute.post('/add-education', userController.addEducationController.bind(userController));
+userRoute.post('/add-skills', userController.addSkillsController.bind(userController));
+userRoute.post('/add-resume', userController.addResumeController.bind(userController));
 
 
 
