@@ -23,11 +23,13 @@ function page() {
     })
     const company=response.data.company
     console.log(response);
+    console.log(company);
+    
     if (response.data.success) {
       localStorage.setItem('user',JSON.stringify(company));
       toast.info('Welcome')
       setTimeout(() => {
-        router.push(`companyDashboard`)
+        router.push(`companyDashboard?id=${company._id}`)
       }, 3000);
     } else {
       toast.error('Invalid credentials')

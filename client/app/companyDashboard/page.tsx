@@ -1,8 +1,13 @@
+'use client'
 import React from 'react'
 import CompanyNavbar from '../components/companyNavbar'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation';
 
 function page() {
+  
+  const searchParams = useSearchParams();
+  const companyId = searchParams.get('id');
   return (
     <div>
       <CompanyNavbar />
@@ -29,7 +34,7 @@ function page() {
             <div className="flex items-center">
              
               <div className="ml-4">
-                <h2 className="font-bold text-2xl">Company Google</h2>
+                <h2 className="font-bold text-2xl">Company {companyId}</h2>
               </div>
             </div>
             <Link href={'postJob'}>
@@ -59,33 +64,7 @@ function page() {
             </div>
           </section>
 
-          <section className="mt-10 bg-gray-100 p-6 rounded-lg shadow-md">
-            <header className="flex justify-between items-center">
-              <h3 className="font-bold text-lg">Application Response</h3>
-              <a href="#" className="text-orange-500 font-semibold">Download Report</a>
-            </header>
-            <div className="mt-6">
-              <img
-                src="https://via.placeholder.com/300"
-                alt="Application Response Chart"
-                className="mx-auto"
-              />
-              <div className="flex justify-around mt-6">
-                <div>
-                  <p className="font-bold text-xl">+2.5%</p>
-                  <p>Shortlisted</p>
-                </div>
-                <div>
-                  <p className="font-bold text-xl">+0.4%</p>
-                  <p>Hired</p>
-                </div>
-                <div>
-                  <p className="font-bold text-xl">-0.5%</p>
-                  <p>Rejected</p>
-                </div>
-              </div>
-            </div>
-          </section>
+        
         </main>
       </div>
     </div>
