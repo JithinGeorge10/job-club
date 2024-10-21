@@ -1,0 +1,73 @@
+import mongoose from "mongoose";
+
+const userProfileSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users',  
+        required: false
+    },
+    address: {
+        type: String,
+        required: [false, 'Address is required'],
+    },
+    employment_details: [
+        {
+            companyName: String,
+            experience: String,
+            fromDate: Date,
+            toDate: Date,
+            jobTitle:String,
+            salary:String,
+            skills:String,
+            isCurrent: Boolean
+        }
+    ],
+    education_details: [
+        {
+            institution: String,
+            degree: String,
+            fieldOfStudy: String,
+            startDate: Date,
+            endDate: Date
+        }
+    ],
+    skills: {
+        type: [String],
+        required: false
+    },
+    resume: {
+        type: String,  
+        required: false
+    },
+    saved_jobs: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Jobs',
+        required: false
+    },
+    applied_jobs: {
+        type: [mongoose.Schema.Types.ObjectId],  
+        ref: 'Jobs',
+        required: false
+    },
+    subscriber: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    status: {
+        type: Boolean,
+        required: true,
+        default: true  
+    },
+    createdAt: { 
+        type: Date, 
+        default: Date.now 
+    },
+    updatedAt: { 
+        type: Date 
+    }
+});
+
+const UserProfileModel = mongoose.model('UserProfile', userProfileSchema);
+
+export default UserProfileModel;

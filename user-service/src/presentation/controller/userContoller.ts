@@ -18,4 +18,14 @@ export class UserController {
             next(error)
         }
     }
+    async addEmploymentController(req: Request, res: Response, next: NextFunction): Promise<any> {
+        try {
+            console.log(req.body);
+            const userDetails = await this.userService.addEmployment(req.body)
+            res.status(200).send({ userDetails })
+        } catch (error) {
+            next(error)
+        }
+    }
+
 }

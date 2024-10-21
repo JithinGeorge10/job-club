@@ -9,4 +9,14 @@ export class UserService {
             throw error
         }
     }
+    async addEmployment(userData: any) {
+        try {
+            const userDetails = await UserRepository.addEmployment(userData)
+            return userDetails
+        } catch (error) {
+            throw error
+        }
+    }
+
+    
 }
