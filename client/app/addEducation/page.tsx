@@ -2,6 +2,10 @@
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
+import axios from 'axios';
+import { USER_SERVICE_URL } from '@/utils/constants';
+import { useSearchParams,useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 interface EmploymentFormInputs {
     university: string;
@@ -15,14 +19,30 @@ interface EmploymentFormInputs {
 }
 
 const AddEmploymentForm = () => {
+    const searchParams = useSearchParams();
+    const router = useRouter()
+    const userId = searchParams.get('id');
     const { register, handleSubmit, formState: { errors }, watch } = useForm<EmploymentFormInputs>();
     const [submittedData, setSubmittedData] = useState<EmploymentFormInputs | null>(null);
 
-
-    const onSubmit = (data: EmploymentFormInputs) => {
+    const onSubmit = async (data: EmploymentFormInputs) => {
         setSubmittedData(data);
-        console.log("Form Submitted Data: ", data);
-    };
+        let response = await axios.post(`${USER_SERVICE_URL}/add-education`, { data, userId }, {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        })
+        if (response.data.userDetails) {
+          toast.success('Education Added')
+          setTimeout(() => {
+            router.push(`userProfile?id=${userId}`)
+          }, 1000);
+        } else {
+          toast.error('Error')
+          
+        }
+      };
 
     return (
         <>

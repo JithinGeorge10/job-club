@@ -13,9 +13,23 @@ const Profile = () => {
     email: string;
     phone: number;
   }
+  interface EmploymentDetail {
+    jobTitle: string;
+    companyName: string;
+    fromDate: string;
+    toDate: string;
+  }
+  interface EducationDetail {
+    education: string;
+    course: string;
+    fromYear: string;
+    university:string,
+    toYear: string;
+  }
+  
   const searchParams = useSearchParams();
   const userId = searchParams.get('id');
-  const [userDetails, setUserDetails] = useState<UserDetailsInterface | null>(null);
+  const [userDetails, setUserDetails] = useState<any | null>(null);
   useEffect(() => {
     const res = async function () {
       let response = await axios.get(`${USER_SERVICE_URL}/get-userDetails?id=${userId}`, {
@@ -29,8 +43,22 @@ const Profile = () => {
     }
     res()
   }, [])
-
-
+  const formatDate = (dateString: string): string => {
+    const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+    const date = new Date(dateString);
+  
+    const day = date.getDate().toString().padStart(2, '0'); // Get the day and pad to two digits
+    const month = months[date.getMonth()]; // Get the month abbreviation
+    const year = date.getFullYear(); // Get the full year
+  
+    return `${day}-${month}-${year}`;
+  };
+  const formatYear = (dateString: string): string => {
+    const date = new Date(dateString);
+    const year = date.getFullYear(); // Get the full year
+  
+    return `${year}`;
+  };
   const handleEmployment = () => {
     router.push(`addEmployment?id=${userId}`)
   }
@@ -81,19 +109,46 @@ const Profile = () => {
           </div>
 
           <div className="bg-gray-800 rounded-lg p-6 mt-6">
-            <div className="flex justify-between items-center">
-              <h3 className="text-xl font-semibold">Employment</h3>
-              <button onClick={handleEmployment} className="text-green-500">Add Employment</button>
-            </div>
-            <div className="mt-4">
-              <h4 className="font-semibold">Software Developer</h4>
-              <p>Manappuram Finance</p>
-              <p className="text-gray-400">Full-time, Jan 2021 to Jan 2024 (3 years 1 month)</p>
-              <p className="mt-2">
-                Worked as a PL/SQL developer in Database Administration Team. Optimized database performance by fine-tuning SQL queries...
-              </p>
-            </div>
-          </div>
+  <div className="flex justify-between items-center">
+    <h3 className="text-xl font-semibold">Employment</h3>
+    <button onClick={handleEmployment} className="text-green-500">Add Employment</button>
+  </div>
+
+  {userDetails?.profile?.employment_details && userDetails.profile.employment_details.length > 0 ? (
+    userDetails.profile.employment_details.map((employment:EmploymentDetail, index:number) => (
+      <div key={index} className="mt-4">
+        <h4 className="font-semibold">{employment.jobTitle}</h4>
+        <p>{employment.companyName}</p>
+        <p className="text-gray-400">{formatDate(employment.fromDate)} to {formatDate(employment.toDate)}</p>
+      </div>
+    ))
+  ) : (
+    <p>No employment details available</p>
+  )}
+</div>
+
+
+
+<div className="bg-gray-800 rounded-lg p-6 mt-6">
+  <div className="flex justify-between items-center">
+    <h3 className="text-xl font-semibold">Employment</h3>
+    <button onClick={handleEducation} className="text-green-500">Add Education</button>
+  </div>
+
+  {userDetails?.profile?.education_details && userDetails.profile.education_details.length > 0 ? (
+    userDetails.profile.education_details.map((education:EducationDetail, index:number) => (
+      <div key={index} className="mt-4">
+        <h4 className="font-semibold">{education.education}</h4>
+        <p>{education.course}</p>
+        <p>{education.university}</p>
+        <p className="text-gray-400">{formatYear(education.fromYear)} to {formatYear(education.toYear)}</p>
+      </div>
+    ))
+  ) : (
+    <p>No education details available</p>
+  )}
+</div>
+
 
           <div className="bg-gray-800 rounded-lg p-6 mt-6">
             <div className="flex justify-between items-center">
@@ -111,29 +166,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="bg-gray-800 rounded-lg p-6 mt-6">
-            <div className="flex justify-between items-center">
-              <h3 className="text-xl font-semibold">Education</h3>
-              <button  onClick={handleEducation} className="text-green-500">Add Education</button>
-            </div>
-            <div className="mt-4 space-y-2">
-              <div>
-                <h4 className="font-semibold">B.Tech/B.E. Computers</h4>
-                <p>Anna University</p>
-                <p className="text-gray-400">2016–2020 (Full-time)</p>
-              </div>
-              <div>
-                <h4 className="font-semibold">Higher Secondary</h4>
-                <p>State Board of Tamilnadu</p>
-                <p className="text-gray-400">2015–2016 (Full-time)</p>
-              </div>
-              <div>
-                <h4 className="font-semibold">SSLC</h4>
-                <p>State Board of Tamilnadu</p>
-                <p className="text-gray-400">2013–2014 (Full-time)</p>
-              </div>
-            </div>
-          </div>
+          
         </div>
 
 

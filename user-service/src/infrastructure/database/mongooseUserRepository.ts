@@ -12,16 +12,31 @@ class UserRepository {
             throw error;
         }
     }
-    async getUser(userId: User) {
-        try {
-            const userDetails = await userModel.findOne({ _id: userId })
-            console.log(userDetails);
-            return userDetails
-        } catch (error) {
-            console.log(error);
-            throw error;
+        async getUser(userId: User) {
+            try {
+                // const userDetails = await userModel.findOne({ _id: userId })
+                // console.log(userDetails);
+                // return userDetails
+
+                const [userDetails, userProfile] = await Promise.all([
+                    userModel.findOne({ _id: userId }),
+                    UserProfileModel.findOne({ userId })
+                ]);
+                if (!userDetails) {
+                    throw new Error(`User not found with id ${userId}`);
+                }
+                const fullUserDetails = {
+                    ...userDetails.toObject(),
+                    profile: userProfile ? userProfile.toObject() : null
+                };
+        
+                console.log(fullUserDetails);
+                return fullUserDetails;
+            } catch (error) {
+                console.log(error);
+                throw error;
+            }
         }
-    }
     async addEmployment(userData: any) {
         try {
             console.log('reache repo');
@@ -48,6 +63,34 @@ class UserRepository {
             throw error;
         }
     }
+    async addEducation(educationData: any) {
+        try {
+            console.log('reache repo');
+            console.log(educationData);
+           
+            const { education, university,course, specialization, courseType,cgpa,fromYear,toYear } = educationData.data;
+
+            console.log(educationData.userId)
+            const educationDetails = {
+                education, university,course, specialization, courseType,cgpa,fromYear,toYear
+            };
+
+            const userId = educationData.userId;
+
+            const result = await UserProfileModel.updateOne(
+                { userId: userId },
+                { $push: { education_details: educationDetails } },
+                { new: true, upsert: true }
+            );
+
+            console.log('Education added:', result);
+            return true
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+    
 
 }
 const getUserRepository = new UserRepository();

@@ -27,5 +27,14 @@ export class UserController {
             next(error)
         }
     }
+    async addEducationController(req: Request, res: Response, next: NextFunction): Promise<any> {
+        try {
+            console.log(req.body);
+            const userDetails = await this.userService.addEducation(req.body)
+            res.status(200).send({ userDetails })
+        } catch (error) {
+            next(error)
+        }
+    }
 
 }

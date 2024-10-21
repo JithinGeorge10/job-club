@@ -6,7 +6,7 @@ const userController = new UserController();
 
 userRoute.get('/get-userDetails', userController.getUserController.bind(userController));
 userRoute.post('/add-employment', userController.addEmploymentController.bind(userController));
-
+userRoute.post('/add-education', userController.addEducationController.bind(userController));
 
 
 

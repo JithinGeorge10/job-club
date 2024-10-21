@@ -17,6 +17,13 @@ export class UserService {
             throw error
         }
     }
-
+    async addEducation(educationData: any) {
+        try {
+            const userDetails = await UserRepository.addEducation(educationData)
+            return userDetails
+        } catch (error) {
+            throw error
+        }
+    }
     
 }

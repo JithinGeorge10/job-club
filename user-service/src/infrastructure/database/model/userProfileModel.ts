@@ -24,11 +24,14 @@ const userProfileSchema = new mongoose.Schema({
     ],
     education_details: [
         {
-            institution: String,
-            degree: String,
-            fieldOfStudy: String,
-            startDate: Date,
-            endDate: Date
+            education:String, 
+            university:String, 
+            course:String, 
+            specialization:String, 
+            courseType:String, 
+            cgpa:Number, 
+            fromYear:Date,
+            toYear:Date
         }
     ],
     skills: {
