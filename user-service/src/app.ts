@@ -20,7 +20,7 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 consume()
 
-app.use("/api/auth-service", userRoute);
+app.use("/api/user-service", userRoute);
 
 app.use(errorHandler)
 

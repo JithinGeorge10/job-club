@@ -4,6 +4,7 @@ import cors from 'cors'
 import morgan from "morgan";
 import cookieParser from 'cookie-parser'
 import {connectDB} from "./infrastructure/config/databaseConfig"
+ import companyRoute from './presentation/routes/companyRoute'
 // import {errorHandler} from './presentation/middleware/errorHandler'
  import consume from './infrastructure/service/consume'
 const app = express()
@@ -18,9 +19,8 @@ app.use(cors({
 app.use(morgan("dev"));
 app.use(cookieParser());
  consume()
-app.get('/', (req, res) => {
-    res.send('ff')
-})
+
+ app.use("/api/company-service", companyRoute);
 
 //  app.use(errorHandler)
 app.listen(PORT, () => {
