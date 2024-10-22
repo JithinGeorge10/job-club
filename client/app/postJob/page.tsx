@@ -1,6 +1,7 @@
 'use client';
 import { COMPANY_SERVICE_URL, USER_SERVICE_URL } from '@/utils/constants';
 import axios from 'axios';
+import { useSearchParams } from 'next/navigation';
 import React from 'react';
 import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -26,6 +27,8 @@ interface PostJobForm {
 }
 
 const PostJob: React.FC = () => {
+  const searchParams = useSearchParams();
+  const companyId = searchParams.get('id');
   const {
     register,
     handleSubmit,
@@ -52,7 +55,7 @@ const PostJob: React.FC = () => {
 
   const onSubmit: SubmitHandler<PostJobForm> = async(data) => {
     console.log('Form submitted', data);
-    let response = await axios.post(`${COMPANY_SERVICE_URL}/post-job`, { data }, {
+    let response = await axios.post(`${COMPANY_SERVICE_URL}/post-job`, { data,companyId }, {
       headers: {
         'Content-Type': 'application/json'
       },

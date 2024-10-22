@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const jobSchema = new mongoose.Schema({
+    companyId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company',  
+        required: true
+    },
     jobTitle: {
         type: String,
         required: [true, 'Job Title is required'],
@@ -57,6 +62,6 @@ const jobSchema = new mongoose.Schema({
     updatedAt: { type: Date, required: false }
 });
 
-const jobModel = mongoose.model('Job', jobSchema);
+const jobModel = mongoose.model('Jobs', jobSchema);
 
 export default jobModel;

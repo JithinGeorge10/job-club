@@ -37,7 +37,7 @@ function page() {
                 <h2 className="font-bold text-2xl">Company {companyId}</h2>
               </div>
             </div>
-            <Link href={'postJob'}>
+            <Link href={`postJob?id=${companyId}`}>
             <button  className="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg">
               + Post Job
             </button>

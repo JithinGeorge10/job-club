@@ -1,5 +1,4 @@
 'use client'
-import { FaBriefcase, FaBell, FaEnvelope, FaUser } from 'react-icons/fa';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
