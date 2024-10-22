@@ -81,11 +81,11 @@ export default function OTPVerification({ params }: { params: { email: string } 
                 withCredentials: true
             })
             console.log(response.data);
-
+            const company=response.data.verifiedCompany
             if (response.data.success) {
                 toast.success('Account created')
                  setTimeout(() => {
-                    router.push(`companyDashboard`)//pass values as params---folder structure :jobListingPage
+                    router.push(`companyDashboard?id=${company._id}`)
                 }, 3000);
             } else {
                 toast.error('Invalid OTP')

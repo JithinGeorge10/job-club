@@ -8,40 +8,52 @@ class CompanyRepository {
 
             const { data, companyId } = JobData;
 
-        // Convert salaries to numbers if they're passed as strings
-        const minSalary = parseInt(data.minSalary, 10);
-        const maxSalary = parseInt(data.maxSalary, 10);
+    
+            const minSalary = parseInt(data.minSalary, 10);
+            const maxSalary = parseInt(data.maxSalary, 10);
 
-        // Create a new job object to save in the database
-        const newJob = new jobModel({
-            companyId,
-            jobTitle: data.jobTitle,
-            employmentType: data.employmentType,
-            startDate: new Date(data.startDate),
-            endDate: new Date(data.endDate),
-            minSalary,
-            maxSalary,
-            category: data.category,
-            slots: parseInt(data.slots, 10),
-            jobDescription: data.jobDescription,
-            qualification: data.qualification,
-            jobResponsibilities: data.jobResponsibilities,
-            requirements: data.requirements,
-            skills: data.skills // Assuming skills already follow the expected object structure
-        });
+          
+            const newJob = new jobModel({
+                companyId,
+                jobTitle: data.jobTitle,
+                employmentType: data.employmentType,
+                startDate: new Date(data.startDate),
+                endDate: new Date(data.endDate),
+                minSalary,
+                maxSalary,
+                category: data.category,
+                slots: parseInt(data.slots, 10),
+                jobDescription: data.jobDescription,
+                qualification: data.qualification,
+                jobResponsibilities: data.jobResponsibilities,
+                requirements: data.requirements,
+                skills: data.skills 
+            });
 
-        // Save the new job document to the database
-        const savedJob = await newJob.save();
-        console.log('Job successfully added:', savedJob);
+        
+            const savedJob = await newJob.save();
+            console.log('Job successfully added:', savedJob);
 
-        return savedJob;
-           
+            return savedJob;
+
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async getJob() {
+        try {
+            const jobDetails = await jobModel.find().populate('companyId');
+            return jobDetails
+
         } catch (error) {
             console.log(error);
             throw error;
         }
     }
 }
+
 const jobRepository = new CompanyRepository();
 
 export default jobRepository;

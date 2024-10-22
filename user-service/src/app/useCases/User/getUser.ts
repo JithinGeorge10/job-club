@@ -33,7 +33,13 @@ export class UserService {
             throw error
         }
     }
-
-    
+    async addResume(resume: any) {
+        try {
+            const userDetails = await UserRepository.addResume(resume)
+            return userDetails
+        } catch (error) {
+            throw error
+        }
+    }
     
 }

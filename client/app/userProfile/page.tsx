@@ -4,6 +4,9 @@ import Navbar from '../components/Navbar';
 import axios from 'axios';
 import { USER_SERVICE_URL } from '@/utils/constants';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { uploadImagesToFireStore } from '../../utils/fireStore'
+import { toast } from 'react-toastify';
+import { totalmem } from 'os';
 const Profile = () => {
 
   const router = useRouter()
@@ -75,45 +78,55 @@ const Profile = () => {
     if (file && file.type === 'application/pdf') {
       setSelectedFile(file);
     } else {
-      alert('Please select a valid PDF file');
+      toast.info('Please select a valid PDF file')
     }
   };
   if (!userId) {
-    alert('User ID is missing');
+toast.error('User ID is missing')
     return;
   }
 
 
   const handleFileUpload = async () => {
     if (!selectedFile) {
-      alert('Please select a PDF file to upload');
+      toast.info('Please select a PDF file to upload')
       return;
     }
     console.log(selectedFile)
 
     const formData = new FormData();
-  
+
     formData.append('resume', selectedFile);
     formData.append('userId', userId);
     console.log(formData)
     try {
 
-      let response = await axios.post(`${USER_SERVICE_URL}/add-resume`, { formData, userId }, {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        withCredentials: true
-      })
-
-
-      console.log('File uploaded successfully:', response.data);
-      alert('Resume uploaded successfully');
+      let uploadImageUrl = await uploadImagesToFireStore(selectedFile)
+      console.log('File uploaded successfully:', uploadImageUrl);
+      if (uploadImageUrl) {
+        let response = await axios.post(`${USER_SERVICE_URL}/add-resume`, { uploadImageUrl, userId }, {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        })
+      }
+      toast.success('resume uploaded successfully')
     } catch (error) {
 
       console.error('Error uploading the file:', error);
-      alert('Error uploading the resume');
+      toast.error('Error uploading the resume')
     }
   };
+
+  const deleteResume = async () => {
+    let response = await axios.post(`${USER_SERVICE_URL}/delete-resume`, { userId }, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      withCredentials: true
+    })
+  }
   return (
     <>
       <Navbar></Navbar>
@@ -141,8 +154,16 @@ const Profile = () => {
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-semibold">Resume</h3>
               <div className="space-x-4">
-                <button className="text-gray-400">⬇️</button>
-                <button className="text-gray-400">🗑️</button>
+                {userDetails?.profile.resume ? (
+                  <a href={userDetails.profile.resume} download>
+                    <button className="text-gray-400">📄</button>
+                  </a>
+                ) : (
+                  <button className="text-gray-400" disabled>
+                    📄
+                  </button>
+                )}
+                <button onClick={deleteResume} className="text-gray-400">🗑️</button>
               </div>
             </div>
             <div className="mt-4">
@@ -154,7 +175,7 @@ const Profile = () => {
                 onChange={handleFileChange}
               />
               <button onClick={handleFileUpload} className="bg-green-500 text-black px-4 py-2 rounded mt-4">
-                Update Resume
+                Update Resume.
               </button>
               <p className="text-gray-400 mt-2">Supported formats: pdf, up to 2 MB</p>
             </div>
@@ -202,22 +223,22 @@ const Profile = () => {
           </div>
 
           <div className="bg-gray-800 rounded-lg p-6 mt-6">
-  <div className="flex justify-between items-center">
-    <h3 className="text-xl font-semibold">Skills</h3>
-    <button onClick={handleSkill} className="text-green-500">Add Skill</button>
-  </div>
-  <div className="flex flex-wrap gap-2 mt-4">
-    {userDetails && userDetails.profile && userDetails.profile.skills && userDetails.profile.skills.length > 0 ? (
-      userDetails.profile.skills.map((skill:string, index:number) => (
-        <span key={index} className="bg-green-600 px-4 py-2 rounded-full text-black">
-          {skill}
-        </span>
-      ))
-    ) : (
-      <span className="text-gray-400">No skills added</span>
-    )}
-  </div>
-</div>
+            <div className="flex justify-between items-center">
+              <h3 className="text-xl font-semibold">Skills</h3>
+              <button onClick={handleSkill} className="text-green-500">Add Skill</button>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-4">
+              {userDetails && userDetails.profile && userDetails.profile.skills && userDetails.profile.skills.length > 0 ? (
+                userDetails.profile.skills.map((skill: string, index: number) => (
+                  <span key={index} className="bg-green-600 px-4 py-2 rounded-full text-black">
+                    {skill}
+                  </span>
+                ))
+              ) : (
+                <span className="text-gray-400">No skills added</span>
+              )}
+            </div>
+          </div>
 
 
 

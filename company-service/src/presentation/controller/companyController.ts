@@ -10,14 +10,27 @@ export class CompanyController {
         try {
             console.log(req.body);
    
-             const userDetails = await this.companyService.addJob(req.body)
-            // console.log(userDetails);
+             const jobDetails = await this.companyService.addJob(req.body)
+            // console.log(jobDetails);
 
-            // res.status(200).send({ userDetails })
+            // res.status(200).send({ jobDetails })
         } catch (error) {
             next(error)
         }
     }
-      
+    
+    async getJobController(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            
+            console.log('reached get job');
+            
+             const jobDetails = await this.companyService.getJobDetails()
+            // console.log(userDetails);
+
+             res.status(200).send({ jobDetails })
+        } catch (error) {
+            next(error)
+        }
+    }
 
 }

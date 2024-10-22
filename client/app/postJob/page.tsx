@@ -61,6 +61,7 @@ const PostJob: React.FC = () => {
       },
       withCredentials: true
     })
+    toast.success('Job Posted')
     // if (response.data.userDetails) {
     //   toast.success('Employment Added')
     //   setTimeout(() => {

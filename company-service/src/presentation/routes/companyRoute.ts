@@ -5,5 +5,7 @@ const companyRoute = Router()
 const companyController = new CompanyController();
 
 companyRoute.post('/post-job', companyController.postJobController.bind(companyController));
+companyRoute.get('/get-jobDetails', companyController.getJobController.bind(companyController));
+
 
 export default companyRoute

@@ -12,4 +12,16 @@ export class CompanyService {
             throw error
         }
     }
+
+    async getJobDetails() {
+        try {
+    
+            const jobs = await jobRepository.getJob()
+            return jobs
+        } catch (error) {
+            throw error
+        }
+    }
+
+    
 }
