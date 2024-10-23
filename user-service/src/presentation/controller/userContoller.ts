@@ -56,6 +56,16 @@ export class UserController {
     }
 
     
-    
+    async addProfileImageController(req: Request, res: Response, next: NextFunction): Promise<any> {
+        try {
+            console.log('reached controller');
+            console.log(req.body);
+            const addProfileImage = await this.userService.addProfileImage(req.body)
+            res.status(200).send({ addProfileImage })
+        } catch (error) {
+            next(error)
+        }
+    }
+
 
 }

@@ -135,10 +135,30 @@ class UserRepository {
         } catch (error) {
             console.log(error);
             throw error;
+     
+        }
+    }
+    async addProfileImage(resume: any) {
+        try {
+            console.log('reache repo');
+            console.log(resume);
+
+            const { uploadImageUrl, userId } = resume;
+            const addResume = await UserProfileModel.updateOne(
+                { userId }, 
+                { $set: { profileImage: uploadImageUrl } }, 
+                { upsert: true } 
+              );
+
+                        
+            return addResume;
+        } catch (error) {
+            console.log(error);
+            throw error;
         }
     }
     
-
+    
 
 }
 const getUserRepository = new UserRepository();

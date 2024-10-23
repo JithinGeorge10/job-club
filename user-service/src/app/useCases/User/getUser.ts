@@ -41,5 +41,14 @@ export class UserService {
             throw error
         }
     }
+    async addProfileImage(resume: any) {
+        try {
+            const profileImage = await UserRepository.addProfileImage(resume)
+            return profileImage
+        } catch (error) {
+            throw error
+        }
+    }
+    
     
 }

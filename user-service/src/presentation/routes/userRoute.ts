@@ -9,6 +9,7 @@ userRoute.post('/add-employment', userController.addEmploymentController.bind(us
 userRoute.post('/add-education', userController.addEducationController.bind(userController));
 userRoute.post('/add-skills', userController.addSkillsController.bind(userController));
 userRoute.post('/add-resume', userController.addResumeController.bind(userController));
+userRoute.post('/add-profile-image', userController.addProfileImageController.bind(userController));
 
 
 

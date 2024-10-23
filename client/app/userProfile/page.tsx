@@ -34,6 +34,7 @@ const Profile = () => {
   const userId = searchParams.get('id');
   const [userDetails, setUserDetails] = useState<any | null>(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   useEffect(() => {
     const res = async function () {
@@ -82,9 +83,10 @@ const Profile = () => {
     }
   };
   if (!userId) {
-toast.error('User ID is missing')
+    toast.error('User ID is missing')
     return;
   }
+
 
 
   const handleFileUpload = async () => {
@@ -112,6 +114,8 @@ toast.error('User ID is missing')
         })
       }
       toast.success('resume uploaded successfully')
+
+
     } catch (error) {
 
       console.error('Error uploading the file:', error);
@@ -127,28 +131,81 @@ toast.error('User ID is missing')
       withCredentials: true
     })
   }
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+      console.log(file);
+
+      setSelectedImage(file);
+    } else {
+      toast.info('Please select a valid image file (JPEG or PNG)');
+    }
+  };
+
+  const handleImageUpload = async () => {
+    if (!selectedImage) {
+      toast.info('Please select an image file to upload');
+      return;
+    }
+    try {
+      const uploadImageUrl = await uploadImagesToFireStore(selectedImage);
+      console.log('Image uploaded successfully:', uploadImageUrl);
+
+      if (uploadImageUrl) {
+        const response = await axios.post(`${USER_SERVICE_URL}/add-profile-image`, { uploadImageUrl, userId }, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true,
+        });
+        console.log('ressss==='+response)
+        toast.success('Profile image uploaded successfully');
+      }
+    
+    } catch (error) {
+      console.error('Error uploading the image:', error);
+      toast.error('Error uploading the profile image');
+    }
+  };
+
+
+
   return (
     <>
       <Navbar></Navbar>
       <div className="bg-black text-white min-h-screen">
-
-
         <div className="container mx-auto mt-10 px-6">
           <h1 className="text-4xl font-bold">My public profile</h1>
-
+          <h1 className="text-4xl font-bold"></h1>
           <div className="bg-gray-800 rounded-lg p-6 mt-6 flex items-center justify-between">
             <div className="flex items-center space-x-4">
-
+              <img
+                src={selectedImage ? URL.createObjectURL(selectedImage) : userDetails?.profile?.profileImage || 'images/userProfile.jpg'}
+                alt={`${userDetails?.firstName}'s Profile Picture`}
+                className="w-16 h-16 rounded-full object-cover"
+              />
               <div>
                 <h2 className="text-2xl font-semibold">{userDetails?.firstName}</h2>
+                <div className="mt-2">
+                  <input
+                    type="file"
+                    accept="image/jpeg, image/png"
+                    onChange={handleImageChange}
+                    className="mb-4"
+                  />
+                  <button onClick={handleImageUpload} className="bg-green-500 text-black px-4 py-2 rounded mt-4">
+                    Upload Image
+                  </button>
+                </div>
               </div>
             </div>
             <div className="space-y-2 text-right">
-
               <p>📞 {userDetails?.phone}</p>
               <p>✉️ {userDetails?.email}</p>
             </div>
           </div>
+
 
           <div className="bg-gray-800 rounded-lg p-6 mt-6">
             <div className="flex justify-between items-center">

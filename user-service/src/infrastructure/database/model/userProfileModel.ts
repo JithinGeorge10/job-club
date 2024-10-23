@@ -42,6 +42,11 @@ const userProfileSchema = new mongoose.Schema({
         type: String,  
         required: false
     },
+    profileImage: {
+        type: String,  
+        required: false
+    },
+    
     saved_jobs: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'Jobs',
