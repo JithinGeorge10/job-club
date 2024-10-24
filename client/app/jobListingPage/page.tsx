@@ -58,11 +58,11 @@ function page() {
                         <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full">Salary upto &#8377; {job.maxSalary}  </span>
                       </div>
                     </div>
-                    <img
+                    {/* <img
                       src={`https://via.placeholder.com/50?text=${index === 0 ? 'Infosys' : index === 1 ? 'Google' : index === 2 ? 'Jkart' : 'DC'}`}
                       alt="Company Logo"
                       className="rounded-full"
-                    />
+                    /> */}
                   </div>
                 ))}
     </>

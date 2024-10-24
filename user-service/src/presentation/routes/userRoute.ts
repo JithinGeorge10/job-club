@@ -10,6 +10,9 @@ userRoute.post('/add-education', userController.addEducationController.bind(user
 userRoute.post('/add-skills', userController.addSkillsController.bind(userController));
 userRoute.post('/add-resume', userController.addResumeController.bind(userController));
 userRoute.post('/add-profile-image', userController.addProfileImageController.bind(userController));
+userRoute.post('/delete-resume', userController.addDeleteResumeController.bind(userController));
+
+
 
 
 

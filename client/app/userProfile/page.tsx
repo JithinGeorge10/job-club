@@ -130,6 +130,10 @@ const Profile = () => {
       },
       withCredentials: true
     })
+    console.log(response)
+    if(response.status){
+      toast.success('resume deleted')
+    }
   }
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -159,10 +163,10 @@ const Profile = () => {
           },
           withCredentials: true,
         });
-        console.log('ressss==='+response)
+        console.log('ressss===' + response)
         toast.success('Profile image uploaded successfully');
       }
-    
+
     } catch (error) {
       console.error('Error uploading the image:', error);
       toast.error('Error uploading the profile image');
@@ -211,7 +215,7 @@ const Profile = () => {
             <div className="flex justify-between items-center">
               <h3 className="text-xl font-semibold">Resume</h3>
               <div className="space-x-4">
-                {userDetails?.profile.resume ? (
+                {userDetails?.profile?.resume ? (
                   <a href={userDetails.profile.resume} download>
                     <button className="text-gray-400">📄</button>
                   </a>
@@ -246,16 +250,20 @@ const Profile = () => {
 
             {userDetails?.profile?.employment_details && userDetails.profile.employment_details.length > 0 ? (
               userDetails.profile.employment_details.map((employment: EmploymentDetail, index: number) => (
-                <div key={index} className="mt-4">
-                  <h4 className="font-semibold">{employment.jobTitle}</h4>
-                  <p>{employment.companyName}</p>
-                  <p className="text-gray-400">{formatDate(employment.fromDate)} to {formatDate(employment.toDate)}</p>
+                <div key={index} className="mt-4 flex justify-between items-center">
+                  <div>
+                    <h4 className="font-semibold">{employment.jobTitle}</h4>
+                    <p>{employment.companyName}</p>
+                    <p className="text-gray-400">{formatDate(employment.fromDate)} to {formatDate(employment.toDate)}</p>
+                  </div>
+                 
                 </div>
               ))
             ) : (
               <p>No employment details available</p>
             )}
           </div>
+
 
 
 

@@ -49,6 +49,15 @@ export class UserService {
             throw error
         }
     }
+    async deleteResume(resume: any) {
+        try {
+            const deleteResume = await UserRepository.deleteResume(resume)
+            return deleteResume
+        } catch (error) {
+            throw error
+        }
+    }
+    
     
     
 }

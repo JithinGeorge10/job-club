@@ -34,7 +34,7 @@ function page() {
             <div className="flex items-center">
              
               <div className="ml-4">
-                <h2 className="font-bold text-2xl">Company {companyId}</h2>
+              
               </div>
             </div>
             <Link href={`postJob?id=${companyId}`}>
@@ -45,7 +45,7 @@ function page() {
           </header>
 
           <section className="mt-10">
-            <h2 className="font-bold text-lg">Welcome Google</h2>
+           
             <p className="text-gray-500">Here is your job listings statistic report</p>
 
             <div className="grid grid-cols-3 gap-6 mt-6">

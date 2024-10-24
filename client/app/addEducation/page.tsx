@@ -168,12 +168,7 @@ const AddEmploymentForm = () => {
                     </button>
                 </form>
 
-                {submittedData && (
-                    <div className="mt-6 text-center">
-                        <h3 className="font-bold">Submitted Data:</h3>
-                        <pre>{JSON.stringify(submittedData, null, 2)}</pre>
-                    </div>
-                )}
+              
             </div>
         </>
     );

@@ -66,6 +66,17 @@ export class UserController {
             next(error)
         }
     }
+    async addDeleteResumeController(req: Request, res: Response, next: NextFunction): Promise<any> {
+        try {
+            console.log('reached controller');
+            console.log(req.body);
+            const deleteResume = await this.userService.deleteResume(req.body)
+            res.status(200).send({ deleteResume })
+        } catch (error) {
+            next(error)
+        }
+    }
+    
 
 
 }

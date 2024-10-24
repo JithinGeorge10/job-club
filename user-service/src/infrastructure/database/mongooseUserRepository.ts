@@ -125,17 +125,17 @@ class UserRepository {
 
             const { uploadImageUrl, userId } = resume;
             const addResume = await UserProfileModel.updateOne(
-                { userId }, 
-                { $set: { resume: uploadImageUrl } }, 
-                { upsert: true } 
-              );
+                { userId },
+                { $set: { resume: uploadImageUrl } },
+                { upsert: true }
+            );
 
-                        
+
             return addResume;
         } catch (error) {
             console.log(error);
             throw error;
-     
+
         }
     }
     async addProfileImage(resume: any) {
@@ -145,20 +145,36 @@ class UserRepository {
 
             const { uploadImageUrl, userId } = resume;
             const addResume = await UserProfileModel.updateOne(
-                { userId }, 
-                { $set: { profileImage: uploadImageUrl } }, 
-                { upsert: true } 
-              );
+                { userId },
+                { $set: { profileImage: uploadImageUrl } },
+                { upsert: true }
+            );
 
-                        
+
             return addResume;
         } catch (error) {
             console.log(error);
             throw error;
         }
     }
-    
-    
+    async deleteResume(resume: any) {
+        try {
+            console.log('reache repo');
+            console.log(resume);
+            const { userId } = resume
+            const deleteResume = await UserProfileModel.updateOne(
+                { userId },
+                { $unset: { resume: "" } }
+            );
+            return deleteResume
+
+
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
 
 }
 const getUserRepository = new UserRepository();
