@@ -34,6 +34,11 @@ function Navbar() {
   const handleUserProfile=()=>{
     router.push(`userProfile?id=${userId}`)
   }
+  const handleMessages=()=>{
+    router.push(`subscribePage?id=${userId}`)
+  }
+
+  
   return (
 
     <nav className="bg-black p-4">
@@ -56,7 +61,7 @@ function Navbar() {
                 <FaBell />
                 <span>Notifications</span>
               </div>
-              <div className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
+              <div onClick={handleMessages} className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
                 <FaEnvelope />
                 <span>Messages</span>
               </div>

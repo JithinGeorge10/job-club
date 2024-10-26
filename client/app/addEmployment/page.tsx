@@ -35,6 +35,9 @@ const AddEmploymentForm = () => {
       },
       withCredentials: true
     })
+    if(response.data.failToken){
+      router.push(`login`)
+    }
     if (response.data.userDetails) {
       toast.success('Employment Added')
       setTimeout(() => {

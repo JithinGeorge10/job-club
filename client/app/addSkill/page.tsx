@@ -42,6 +42,9 @@ function Page() {
       },
       withCredentials: true
     })
+    if(response.data.failToken){
+      router.push(`login`)
+    }
     if (response.data.userDetails) {
       toast.success('Skills Added')
       setTimeout(() => {

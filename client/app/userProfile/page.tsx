@@ -45,10 +45,15 @@ const Profile = () => {
         withCredentials: true
       })
       console.log(response.data);
+      if(response.data.failToken){
+        router.push(`login`)
+      }
       setUserDetails(response.data.userDetails)
     }
     res()
   }, [])
+
+
   const formatDate = (dateString: string): string => {
     const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
     const date = new Date(dateString);
@@ -131,7 +136,7 @@ const Profile = () => {
       withCredentials: true
     })
     console.log(response)
-    if(response.status){
+    if (response.status) {
       toast.success('resume deleted')
     }
   }
@@ -256,7 +261,7 @@ const Profile = () => {
                     <p>{employment.companyName}</p>
                     <p className="text-gray-400">{formatDate(employment.fromDate)} to {formatDate(employment.toDate)}</p>
                   </div>
-                 
+
                 </div>
               ))
             ) : (

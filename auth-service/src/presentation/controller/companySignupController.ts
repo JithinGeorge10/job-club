@@ -9,6 +9,7 @@ export class CompanyController{
         this.companyService=new CompanyService()
         this.JwtService = new JwtService();
     }
+    
     async companyRegisterController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
              const company: Company | undefined = await this.companyService.createCompany(req.body);
@@ -19,6 +20,7 @@ export class CompanyController{
             next(error)
         }
     }
+
     async verifyOtpController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { email } = req.body
@@ -40,6 +42,8 @@ export class CompanyController{
             next(error)
         }
     }
+
+
     async resendOtpController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { email } = req.body
@@ -52,6 +56,8 @@ export class CompanyController{
             next(error)
         }
     }
+
+
     async companyLoginController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             console.log(req.body);
