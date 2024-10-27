@@ -24,7 +24,6 @@ function page() {
       withCredentials: true
     })
 
-    console.log(response.data.user.firstName);
     const user=response.data.user
     if (response.data.success) {
       localStorage.setItem('user',JSON.stringify(user));

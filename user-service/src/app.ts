@@ -16,6 +16,10 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'Role'],
     credentials: true
 }));
+
+
+
+
 app.use(morgan("dev"));
 app.use(cookieParser());
 consume()

@@ -11,7 +11,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function OTPVerification({ params }: { params: { email: string } }) {
     const { register, handleSubmit } = useForm()
-    const [data, setData] = useState('')
     const [timer, setTimer] = useState(50)
     const [showVerify, setShowVerify] = useState(true)
     const router = useRouter()

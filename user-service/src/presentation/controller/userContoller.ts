@@ -8,12 +8,13 @@ export class UserController {
     }
     async getUserController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
+            
             console.log(req.query.id);
             const { id } = req.query
             const userDetails = await this.userService.getUserDetails(id)
             console.log(userDetails);
 
-            res.status(200).send({ userDetails })
+            res.status(200).send( {userDetails} )
         } catch (error) {
             next(error)
         }
@@ -76,7 +77,14 @@ export class UserController {
             next(error)
         }
     }
-    
-
-
+    async userPaymentController(req: Request, res: Response, next: NextFunction): Promise<any> {
+        try {
+            console.log('reached controller');
+            const payment = await this.userService.payment()
+            console.log(payment)
+            // res.status(200).send({  })
+        } catch (error) {
+            next(error)
+        }
+    }
 }

@@ -6,7 +6,7 @@ import { USER_SERVICE_URL } from '@/utils/constants';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { uploadImagesToFireStore } from '../../utils/fireStore'
 import { toast } from 'react-toastify';
-import { totalmem } from 'os';
+
 const Profile = () => {
 
   const router = useRouter()
@@ -178,7 +178,9 @@ const Profile = () => {
     }
   };
 
-
+const handlePayment=()=>{
+  router.push(`/subscribePage?userDetails=${userDetails}`)
+}
 
   return (
     <>
@@ -186,6 +188,7 @@ const Profile = () => {
       <div className="bg-black text-white min-h-screen">
         <div className="container mx-auto mt-10 px-6">
           <h1 className="text-4xl font-bold">My public profile</h1>
+          <button onClick={handlePayment}>Premium Account</button>
           <h1 className="text-4xl font-bold"></h1>
           <div className="bg-gray-800 rounded-lg p-6 mt-6 flex items-center justify-between">
             <div className="flex items-center space-x-4">
