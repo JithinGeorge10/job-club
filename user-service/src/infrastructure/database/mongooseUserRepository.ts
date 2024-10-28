@@ -1,6 +1,8 @@
 import { User } from "../../domain/entities/User";
 import userModel from "./model/userModel";
+import mongoose from 'mongoose';
 import UserProfileModel from "./model/userProfileModel";
+import userPaymentModel from "./model/userPaymentModel";
 
 class UserRepository {
     async addUser(userDetails: User) {
@@ -174,6 +176,26 @@ class UserRepository {
             throw error;
         }
     }
+
+    async startPayment(userId: any) {
+        try {
+            console.log('reache repo');
+            console.log(userId);
+
+         
+            const result = await userPaymentModel.findOneAndUpdate(
+                { userId },
+                { paymentStatus: 'pending' },
+                { upsert: true, new: true, setDefaultsOnInsert: true }
+            );
+
+            return result
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
 
 
 }

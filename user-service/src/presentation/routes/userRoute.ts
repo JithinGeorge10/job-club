@@ -11,7 +11,7 @@ userRoute.post('/add-skills',authenticateToken, userController.addSkillsControll
 userRoute.post('/add-resume',authenticateToken, userController.addResumeController.bind(userController));
 userRoute.post('/add-profile-image',authenticateToken, userController.addProfileImageController.bind(userController));
 userRoute.post('/delete-resume',authenticateToken, userController.addDeleteResumeController.bind(userController));
-userRoute.post('/user-payment', userController.userPaymentController.bind(userController));
+userRoute.post('/start-payment',authenticateToken, userController.startPaymentController.bind(userController));
 
 
 

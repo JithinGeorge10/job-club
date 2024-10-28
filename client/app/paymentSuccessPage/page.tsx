@@ -1,11 +1,18 @@
-import React from 'react'
+'use client';
+import { useSearchParams } from 'next/navigation';
 
-function page() {
-  return (
-    <div>
-      paymentSuccess
-    </div>
-  )
-}
+const PaymentSuccessPage = () => {
+    const searchParams = useSearchParams();
 
-export default page
+
+    const userId = searchParams.get('userId');
+
+    return (
+        <div>
+            <h1>Payment {userId}</h1>
+
+        </div>
+    );
+};
+
+export default PaymentSuccessPage;

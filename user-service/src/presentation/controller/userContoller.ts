@@ -8,13 +8,13 @@ export class UserController {
     }
     async getUserController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            
+
             console.log(req.query.id);
             const { id } = req.query
             const userDetails = await this.userService.getUserDetails(id)
             console.log(userDetails);
 
-            res.status(200).send( {userDetails} )
+            res.status(200).send({ userDetails })
         } catch (error) {
             next(error)
         }
@@ -49,14 +49,14 @@ export class UserController {
     async addResumeController(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
             console.log(req.body);
-             const userDetails = await this.userService.addResume(req.body)
-             res.status(200).send({ userDetails })
+            const userDetails = await this.userService.addResume(req.body)
+            res.status(200).send({ userDetails })
         } catch (error) {
             next(error)
         }
     }
 
-    
+
     async addProfileImageController(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
             console.log('reached controller');
@@ -77,14 +77,15 @@ export class UserController {
             next(error)
         }
     }
-    async userPaymentController(req: Request, res: Response, next: NextFunction): Promise<any> {
+    async startPaymentController(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
-            console.log('reached controller');
-            const payment = await this.userService.payment()
-            console.log(payment)
-            // res.status(200).send({  })
+            console.log(req.body)
+            const paymentStarted=await this.userService.startPayment(req.body)
+            return paymentStarted
         } catch (error) {
             next(error)
         }
     }
+
+
 }

@@ -45,7 +45,7 @@ const Profile = () => {
         withCredentials: true
       })
       console.log(response.data);
-      if(response.data.failToken){
+      if (response.data.failToken) {
         router.push(`login`)
       }
       setUserDetails(response.data.userDetails)
@@ -58,15 +58,15 @@ const Profile = () => {
     const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
     const date = new Date(dateString);
 
-    const day = date.getDate().toString().padStart(2, '0'); // Get the day and pad to two digits
-    const month = months[date.getMonth()]; // Get the month abbreviation
-    const year = date.getFullYear(); // Get the full year
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
 
     return `${day}-${month}-${year}`;
   };
   const formatYear = (dateString: string): string => {
     const date = new Date(dateString);
-    const year = date.getFullYear(); // Get the full year
+    const year = date.getFullYear();
 
     return `${year}`;
   };
@@ -178,9 +178,10 @@ const Profile = () => {
     }
   };
 
-const handlePayment=()=>{
-  router.push(`/subscribePage?userDetails=${userDetails}`)
-}
+  const handlePayment = () => {
+    console.log(userDetails)
+    router.push(`/subscribePage?firstName=${userDetails?.firstName}&lastName=${userDetails?.lastName}&userId=${userDetails?._id}&email=${userDetails.email}&phone=${userDetails.phone}`);
+  }
 
   return (
     <>
@@ -188,7 +189,13 @@ const handlePayment=()=>{
       <div className="bg-black text-white min-h-screen">
         <div className="container mx-auto mt-10 px-6">
           <h1 className="text-4xl font-bold">My public profile</h1>
-          <button onClick={handlePayment}>Premium Account</button>
+          <br />
+          <button
+            onClick={handlePayment}
+            className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2"
+          >
+            💎 Upgrade to Premium Account
+          </button>
           <h1 className="text-4xl font-bold"></h1>
           <div className="bg-gray-800 rounded-lg p-6 mt-6 flex items-center justify-between">
             <div className="flex items-center space-x-4">

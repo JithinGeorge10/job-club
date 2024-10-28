@@ -1,12 +1,20 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiResponse } from "next";
+import { redirect } from "next/navigation";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method === 'POST') {
-        console.log(req.body); 
+export async function POST(req: any, res: NextApiResponse) {
+  const contentType = req.headers.get("content-type") || "";
+  console.log({ contentType });
 
-        res.redirect(302, '/paymentSuccess'); 
-    } else {
-        res.setHeader('Allow', ['POST']);
-        res.status(405).end(`Method ${req.method} Not Allowed`);
-    }
+  const formData = await req.formData();
+
+  const data: { [key: string]: any } = {};
+  formData.forEach((value: any, key: string) => {
+    data[key] = value;
+  });
+  console.log(data)
+
+
+  redirect(
+    `/paymentFailurePage`
+  );
 }

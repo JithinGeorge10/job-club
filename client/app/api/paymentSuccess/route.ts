@@ -13,8 +13,9 @@ export async function POST(req: any, res: NextApiResponse) {
   });
   console.log(data)
 
+const {productinfo } = data;
 
-  redirect(
-    `/paymentSuccessPage`
-  );
+const redirectUrl = `/paymentSuccessPage?userId=${productinfo}`;
+
+redirect(redirectUrl);
 }
