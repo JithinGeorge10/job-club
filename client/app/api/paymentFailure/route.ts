@@ -12,9 +12,8 @@ export async function POST(req: any, res: NextApiResponse) {
     data[key] = value;
   });
   console.log(data)
+  const { productinfo } = data;
 
-
-  redirect(
-    `/paymentFailurePage`
-  );
+  const redirectUrl = `/paymentFailurePage?userId=${productinfo}`;
+  redirect(redirectUrl);
 }

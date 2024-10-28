@@ -10,6 +10,10 @@ const userPaymentSchema = new mongoose.Schema({
         default: 'pending',
         required: [true, 'status is requred'],
     },
+    transactionId: {
+        type: String,
+        required: false
+    },
     amount: {
         type: String,
         required: false
@@ -18,15 +22,15 @@ const userPaymentSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    bank_ref_num:{
+    bank_ref_num: {
         type: String,
         required: false
     },
-    bankcode:{
+    bankcode: {
         type: String,
         required: false
     },
-    cardnum:{
+    cardnum: {
         type: String,
         required: false
     },

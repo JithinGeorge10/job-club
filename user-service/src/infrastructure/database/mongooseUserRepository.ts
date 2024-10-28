@@ -206,7 +206,7 @@ class UserRepository {
                 { userId: actualUserId },
                 { paymentStatus: 'success',amount:userDetails.net_amount_debit,
                     paymentSource:userDetails.payment_source,bank_ref_num:userDetails.bank_ref_num,
-                    bankcode:userDetails.bankcode,cardnum:userDetails.cardnum},
+                    bankcode:userDetails.bankcode,cardnum:userDetails.cardnum,transactionId:userDetails.txnid},
                 { upsert: true, new: true, setDefaultsOnInsert: true }
             );
 

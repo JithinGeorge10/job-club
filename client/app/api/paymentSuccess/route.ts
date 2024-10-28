@@ -22,9 +22,9 @@ export async function POST(req: any, res: NextApiResponse) {
     withCredentials: true
   })
 
-  const { productinfo } = data;//prouctInfo=userID
+  const { productinfo } = data;
 
-  const redirectUrl = `/paymentSuccessPage?userId=${productinfo}`;
+  const redirectUrl = `/paymentSuccessPage?userId=${productinfo}&transactionId=${data.txnid}&amountPaid=${data.amount}&bankRefNum=${data.bank_ref_num}`;
 
   redirect(redirectUrl);
 }
