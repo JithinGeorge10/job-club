@@ -181,14 +181,41 @@ class UserRepository {
         try {
             console.log('reache repo');
             console.log(userId);
+            const actualUserId = new mongoose.Types.ObjectId(userId.userId);
 
-         
             const result = await userPaymentModel.findOneAndUpdate(
-                { userId },
+                { userId: actualUserId },
                 { paymentStatus: 'pending' },
                 { upsert: true, new: true, setDefaultsOnInsert: true }
             );
+            return result
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
 
+
+    async successPayment(userDetails: any) {
+        try {
+            console.log('reache repo');
+            console.log(userDetails);
+            const actualUserId = new mongoose.Types.ObjectId(userDetails.productinfo);
+
+            const result = await userPaymentModel.findOneAndUpdate(
+                { userId: actualUserId },
+                { paymentStatus: 'success',amount:userDetails.net_amount_debit,
+                    paymentSource:userDetails.payment_source,bank_ref_num:userDetails.bank_ref_num,
+                    bankcode:userDetails.bankcode,cardnum:userDetails.cardnum},
+                { upsert: true, new: true, setDefaultsOnInsert: true }
+            );
+
+            await UserProfileModel.updateOne(
+                { userId: actualUserId },
+                { $set: { subscriber: true } }
+            );
+
+            console.log(result)
             return result
         } catch (error) {
             console.log(error);

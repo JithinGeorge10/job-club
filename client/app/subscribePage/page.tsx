@@ -56,6 +56,7 @@ const PaymentPage = () => {
       },
       withCredentials: true,
     });
+    console.log(response)
     const formData = {
       key: 'hLAGgn',
       txnid: txnid,

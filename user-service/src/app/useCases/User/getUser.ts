@@ -66,6 +66,14 @@ export class UserService {
             throw error
         }
     }
+    async successPayment(userDetails: any) {
+        try {
+            const startPayment = await UserRepository.successPayment(userDetails)
+            return startPayment
+        } catch (error) {
+            throw error
+        }
+    }
     
 
 }

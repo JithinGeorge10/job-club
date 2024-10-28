@@ -79,13 +79,21 @@ export class UserController {
     }
     async startPaymentController(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
-            console.log(req.body)
-            const paymentStarted=await this.userService.startPayment(req.body)
-            return paymentStarted
+            const paymentStarted = await this.userService.startPayment(req.body)
+            res.status(200).send({ paymentStarted })
         } catch (error) {
             next(error)
         }
     }
+    async successPaymentController(req: Request, res: Response, next: NextFunction): Promise<any> {
+        try {
+            const paymentStarted = await this.userService.successPayment(req.body)
+            res.status(200).send({ paymentStarted })
+        } catch (error) {
+            next(error)
+        }
+    }
+
 
 
 }

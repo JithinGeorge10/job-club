@@ -1,3 +1,5 @@
+import { USER_SERVICE_URL } from "@/utils/constants";
+import axios from "axios";
 import { NextApiResponse } from "next";
 import { redirect } from "next/navigation";
 
@@ -13,9 +15,16 @@ export async function POST(req: any, res: NextApiResponse) {
   });
   console.log(data)
 
-const {productinfo } = data;
+  let response = await axios.post(`${USER_SERVICE_URL}/paymentSuccess`, data, {
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    withCredentials: true
+  })
 
-const redirectUrl = `/paymentSuccessPage?userId=${productinfo}`;
+  const { productinfo } = data;//prouctInfo=userID
 
-redirect(redirectUrl);
+  const redirectUrl = `/paymentSuccessPage?userId=${productinfo}`;
+
+  redirect(redirectUrl);
 }

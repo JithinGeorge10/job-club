@@ -12,6 +12,8 @@ userRoute.post('/add-resume',authenticateToken, userController.addResumeControll
 userRoute.post('/add-profile-image',authenticateToken, userController.addProfileImageController.bind(userController));
 userRoute.post('/delete-resume',authenticateToken, userController.addDeleteResumeController.bind(userController));
 userRoute.post('/start-payment',authenticateToken, userController.startPaymentController.bind(userController));
+userRoute.post('/paymentSuccess', userController.successPaymentController.bind(userController));
+
 
 
 
