@@ -204,9 +204,11 @@ class UserRepository {
 
             const result = await userPaymentModel.findOneAndUpdate(
                 { userId: actualUserId },
-                { paymentStatus: 'success',amount:userDetails.net_amount_debit,
-                    paymentSource:userDetails.payment_source,bank_ref_num:userDetails.bank_ref_num,
-                    bankcode:userDetails.bankcode,cardnum:userDetails.cardnum,transactionId:userDetails.txnid},
+                {
+                    paymentStatus: 'success', amount: userDetails.net_amount_debit,
+                    paymentSource: userDetails.payment_source, bank_ref_num: userDetails.bank_ref_num,
+                    bankcode: userDetails.bankcode, cardnum: userDetails.cardnum, transactionId: userDetails.txnid
+                },
                 { upsert: true, new: true, setDefaultsOnInsert: true }
             );
 
@@ -223,6 +225,7 @@ class UserRepository {
         }
     }
 
+  
 
 
 }

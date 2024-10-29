@@ -70,7 +70,6 @@ export class UserController {
             console.log('gotcha2',user);
             
             if (user) {
-                console.log('blablabla')
                 console.log(user)
                 const userJwtToken = await this.JwtService.createJwt(user._id, 'user')
                 console.log(userJwtToken);
@@ -84,5 +83,16 @@ export class UserController {
         }
     }
 
+    
+    async changePasswordController(req: Request, res: Response, next: NextFunction): Promise<any> {
+        try {
+            const changedPassword = await this.userService.changePassword(req.body)
+            res.status(200).send({ changedPassword })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    
     
 }

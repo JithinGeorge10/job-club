@@ -6,44 +6,37 @@ import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 
 function Navbar() {
-
-  const router = useRouter()
-
+  const router = useRouter();
   const [userName, setUserName] = useState<string | null>(null);
-  const [userId,setUserId]=useState<string | null>(null)
+  const [userId, setUserId] = useState<string | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
+
   useEffect(() => {
-
     const user: string | null = localStorage.getItem('user');
-
-    console.log(user)
     if (user && user !== 'undefined') {
-      let userDetails = JSON.parse(user)
-      console.log(userDetails);
-      setUserName(userDetails.firstName)
-      setUserId(userDetails._id)
+      let userDetails = JSON.parse(user);
+      setUserName(userDetails.firstName);
+      setUserId(userDetails._id);
     }
   }, []);
 
- 
   const handleLogout = () => {
     localStorage.clear();
     Cookies.remove('userToken');
-    router.push(`/`)
-  }
+    router.push(`/`);
+  };
 
-  const handleUserProfile=()=>{
-    router.push(`userProfile?id=${userId}`)
-  }
-  const handleMessages=()=>{
-    router.push(`subscribePage?id=${userId}`)
-  }
+  const handleUserProfile = () => {
+    router.push(`userProfile?id=${userId}`);
+  };
 
-  
+  const handleChangePassword = () => {
+    router.push(`/changePassword?id=${userId}`);
+  };
+
   return (
-
     <nav className="bg-black p-4">
       <div className="container mx-auto flex justify-between items-center">
-
         <Link href={'/'}>
           <div className="text-green-400 font-bold text-2xl">
             _JobClub.
@@ -61,45 +54,63 @@ function Navbar() {
                 <FaBell />
                 <span>Notifications</span>
               </div>
-              <div onClick={handleMessages} className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
-                <FaEnvelope />
-                <span>Messages</span>
+              <div onClick={handleUserProfile} className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
+                <FaUser />
+                <span>User Profile</span>
               </div>
-          
-                <div onClick={handleUserProfile} className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
-                  <FaUser />
-                  <span>User Profile</span>
-                </div>
-              
-             
             </div>
 
             <span className="text-green-400 font-bold text-2xl">Hi, {userName}</span>
-            <button onClick={handleLogout}
-              className="w-20 bg-red-900 hover:bg-red-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
-            >
-              Logout
-            </button>
-          </div>
-        ) : (<div className="hidden md:flex space-x-4">
-          <Link href={'/login'}>
-            <button className="border-2 border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
-              Login
-            </button>
-          </Link>
-          <Link href={'/signup'}>
-            <button className="border-2 border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
-              Signup
-            </button>
-          </Link>
-          <Link href={'/companySignUp'}>
-            <button className="border-2 border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
-              Employers / Post Job
-            </button>
-          </Link>
-        </div>)
-        }
 
+            <div className="relative">
+              <button
+                onMouseEnter={() => setShowSettings(true)}
+                onMouseLeave={() => setShowSettings(false)}
+                className="w-20 bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
+              >
+                Settings
+              </button>
+              {showSettings && (
+                <div
+                  onMouseEnter={() => setShowSettings(true)}
+                  onMouseLeave={() => setShowSettings(false)}
+                  className="absolute top-12 left-0 bg-white text-black rounded-lg shadow-lg p-2 space-y-2"
+                >
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 hover:bg-red-500 hover:text-white rounded transition-colors"
+                  >
+                    Logout
+                  </button>
+                  <button
+                    onClick={handleChangePassword}
+                    className="w-full text-left px-4 py-2 hover:bg-green-500 hover:text-white rounded transition-colors"
+                  >
+                    Change Password
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="hidden md:flex space-x-4">
+            <Link href={'/login'}>
+              <button className="border-2 border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
+                Login
+              </button>
+            </Link>
+            <Link href={'/signup'}>
+              <button className="border-2 border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
+                Signup
+              </button>
+            </Link>
+            <Link href={'/companySignUp'}>
+              <button className="border-2 border-white text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition">
+                Employers / Post Job
+              </button>
+            </Link>
+          </div>
+        )}
 
         <div className="md:hidden">
           <button className="text-white focus:outline-none">

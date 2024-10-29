@@ -9,7 +9,7 @@ class UserRepository {
 
     async findUserByEmail(email: string): Promise<User | null> {
         try {
-            const userData = await UserModel.findOne({ email});            
+            const userData = await UserModel.findOne({ email });
             return userData ? userData.toObject() as User : null;
         } catch (error) {
             console.log(error);
@@ -77,6 +77,37 @@ class UserRepository {
         }
     }
 
+    async changePassword(data: any) {
+        const { oldPassword, newPassword, confirmPassword } = data.data;
+        const userId = data.userId;
+        try {
+            const user =await UserModel.findOne({_id:userId})
+            if (!user) {
+                throw new Error("User not found");
+            }
+            const isMatch = await bcrypt.compare(oldPassword, user.password);
+            if (!isMatch) {
+                console.log("Enter correct password");
+                throw new Error("Incorrect password");
+            }
+            if (newPassword === oldPassword) {
+                throw new Error("New password cannot be the same as the old password");
+            }
+            if (newPassword !== confirmPassword) {
+                throw new Error("New password and confirm password do not match");
+            }
+
+            user.password = newPassword;
+            await user.save();
+    
+            console.log("Password updated successfully");      
+            console.log(user)
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+
+    }
 
 }
 

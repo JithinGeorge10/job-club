@@ -19,4 +19,5 @@ userRoute.post('/paymentSuccess', userController.successPaymentController.bind(u
 
 
 
+
 export default userRoute

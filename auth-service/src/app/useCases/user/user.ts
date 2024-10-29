@@ -80,5 +80,13 @@ export class UserService {
         }
     }
 
-
+    async changePassword(password: any) {
+        try {
+            const changePassword = await getUserRepository.changePassword(password)
+            return changePassword
+        } catch (error) {
+            throw error
+        }
+    }
+    
 } 

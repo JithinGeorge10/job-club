@@ -8,6 +8,8 @@ userRoute.post('/user-signup', userController.userSignupController.bind(userCont
 userRoute.post('/resend-otp', userController.resendOtpController.bind(userController));
 userRoute.post('/verify-otp', userController.verifyOtpController.bind(userController));
 userRoute.post('/user-login', userController.userLoginController.bind(userController));
+userRoute.post('/changePassword', userController.changePasswordController.bind(userController));
+
 
 
 export default userRoute
