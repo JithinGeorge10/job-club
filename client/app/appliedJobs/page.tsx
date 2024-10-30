@@ -55,17 +55,21 @@ const MyJobsPage = () => {
         fetchJobDetails();
     }, []);
 
-    const savedJobs = jobDetails.filter((job) =>
-        userDetails?.profile?.saved_jobs?.includes(job._id)
+    // Filter jobs that the user has applied for
+    const appliedJobs = jobDetails.filter((job) =>
+        userDetails?.profile?.applied_jobs?.includes(job._id)
     );
-    const handleJobClick = async (jobId: any, companyId: any) => {
-        console.log(jobId);
-        console.log(companyId);
-        router.push(`jobView?jobId=${jobId}`);
 
+    const handleJobClick = async (jobId: any, companyId: any) => {
+        router.push(`jobView?jobId=${jobId}`);
     }
-    const applied=async()=>{
+
+    const applied = async () => {
         router.push(`appliedJobs?userId=${userId}`);
+    }
+
+    const saved = async () => {
+        router.push(`myJobs?userId=${userId}`);
     }
 
     return (
@@ -76,15 +80,15 @@ const MyJobsPage = () => {
                 <h1 className="text-3xl font-bold text-center mb-8">My Jobs</h1>
 
                 <div className="flex justify-center space-x-4 mb-6">
-                    <button className="text-lg font-semibold border-b-2 border-white">Saved</button>
-                    <button onClick={applied} className="text-lg font-semibold text-gray-400">Applied</button>
+                    <button onClick={saved} className="text-lg font-semibold text-gray-400">Saved</button>
+                    <button onClick={applied} className="text-lg font-semibold border-b-2 border-white">Applied</button>
                 </div>
 
                 <div className="space-y-4">
                     {loading ? (
                         <p className="text-center text-gray-400">Loading jobs...</p>
-                    ) : savedJobs.length > 0 ? (
-                        savedJobs.map((job) => (
+                    ) : appliedJobs.length > 0 ? (
+                        appliedJobs.map((job) => (
                             <div key={job._id} className="bg-gray-800 p-4 rounded-lg flex justify-between items-center">
                                 <div>
                                     <button onClick={() => handleJobClick(job._id, job.companyId._id)} className="text-xl font-semibold">{job.jobTitle}</button>
@@ -96,7 +100,7 @@ const MyJobsPage = () => {
                             </div>
                         ))
                     ) : (
-                        <p className="text-center text-gray-400">No saved jobs found.</p>
+                        <p className="text-center text-gray-400">No applied jobs found.</p>
                     )}
                 </div>
             </main>
