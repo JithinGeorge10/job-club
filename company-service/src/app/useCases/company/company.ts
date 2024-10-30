@@ -23,5 +23,16 @@ export class CompanyService {
         }
     }
 
+    async getSingleJobDetails(jobId:any) {
+        try {
+            const jobs = await jobRepository.singleJobDetails(jobId)
+            return jobs
+        } catch (error) {
+            throw error
+        }
+    }
+
+
+    
     
 }

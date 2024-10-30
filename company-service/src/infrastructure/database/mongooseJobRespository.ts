@@ -8,11 +8,11 @@ class CompanyRepository {
 
             const { data, companyId } = JobData;
 
-    
+
             const minSalary = parseInt(data.minSalary, 10);
             const maxSalary = parseInt(data.maxSalary, 10);
 
-          
+
             const newJob = new jobModel({
                 companyId,
                 jobTitle: data.jobTitle,
@@ -27,10 +27,10 @@ class CompanyRepository {
                 qualification: data.qualification,
                 jobResponsibilities: data.jobResponsibilities,
                 requirements: data.requirements,
-                skills: data.skills 
+                skills: data.skills
             });
 
-        
+
             const savedJob = await newJob.save();
             console.log('Job successfully added:', savedJob);
 
@@ -52,6 +52,16 @@ class CompanyRepository {
             throw error;
         }
     }
+    async singleJobDetails(jobId: any) {
+        try {
+            const jobDetails = await jobModel.find({_id:jobId}).populate('companyId');
+            return jobDetails
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
 }
 
 const jobRepository = new CompanyRepository();
