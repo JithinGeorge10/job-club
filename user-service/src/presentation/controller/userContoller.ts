@@ -103,6 +103,15 @@ export class UserController {
             next(error)
         }
     }
-    
+    async applyJobController(req: Request, res: Response, next: NextFunction): Promise<any> {
+        try {
+            console.log(req.body);
+            const {userId,jobId}=req.body
+            const applyJob = await this.userService.applyJob(userId,jobId)
+            res.status(200).send({ applyJob })
+        } catch (error) {
+            next(error)
+        }
+    }
     
 }

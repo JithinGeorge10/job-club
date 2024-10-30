@@ -5,8 +5,9 @@ import Navbar from '../components/Navbar';
 import axios from 'axios';
 import { COMPANY_SERVICE_URL, USER_SERVICE_URL } from '@/utils/constants';
 import { useSearchParams } from 'next/navigation';
-
+import { useRouter } from 'next/navigation';
 function page() {
+
     interface JobDetails {
         _id: String;
         jobTitle: string;
@@ -25,7 +26,7 @@ function page() {
         location: string;
         industry: String;
     }
-
+    const router = useRouter()
     const searchParams = useSearchParams();
     const jobId = searchParams.get('jobId');
     const [userId, setUserId] = useState<string | null>(null);
@@ -91,7 +92,9 @@ function page() {
 
     // Check if the job is saved
     const isJobSaved = userDetails?.profile?.saved_jobs?.includes(jobDetails?._id);
-
+    const handleSubmit =async () => {
+        router.push(`reviewProfile?jobId=${jobId}&userId=${userId}`);
+    }
     return (
         <>
             <Navbar />
@@ -121,7 +124,7 @@ function page() {
                                     Save
                                 </button>
                             )}
-                            <button className="bg-green-500 text-white font-semibold px-6 py-2 rounded-lg">Apply</button>
+                            <button onClick={handleSubmit} className="bg-green-500 text-white font-semibold px-6 py-2 rounded-lg">Apply</button>
                         </div>
                     </div>
                 </div>

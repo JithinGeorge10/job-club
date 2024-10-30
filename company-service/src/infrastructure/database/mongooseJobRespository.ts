@@ -54,13 +54,25 @@ class CompanyRepository {
     }
     async singleJobDetails(jobId: any) {
         try {
-            const jobDetails = await jobModel.find({_id:jobId}).populate('companyId');
+            const jobDetails = await jobModel.find({ _id: jobId }).populate('companyId');
             return jobDetails
         } catch (error) {
             console.log(error);
             throw error;
         }
     }
+
+    async submitApplication(application: any) {
+        try {
+            console.log(application)
+            
+            // return jobDetails
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
 
 }
 

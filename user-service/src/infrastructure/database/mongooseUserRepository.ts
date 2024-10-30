@@ -231,12 +231,25 @@ class UserRepository {
                 { userId }, 
                 { $addToSet: { saved_jobs: jobId } } 
             );
+            return result
         } catch (error) {
             console.log(error);
             throw error;
         }
     }
-
+    async applyJob(userId:any,jobId: any) {
+        try {
+            const result = await UserProfileModel.updateOne(
+                { userId }, 
+                { $addToSet: { applied_jobs: jobId } } 
+            );
+            return result
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+    
     
 
 

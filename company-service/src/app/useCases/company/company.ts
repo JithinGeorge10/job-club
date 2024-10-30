@@ -32,7 +32,16 @@ export class CompanyService {
         }
     }
 
+    async submitApplication(application:any) {
+        try {
+            const submitApplication = await jobRepository.submitApplication(application)
+            return submitApplication
+        } catch (error) {
+            throw error
+        }
+    }
 
+    
     
     
 }

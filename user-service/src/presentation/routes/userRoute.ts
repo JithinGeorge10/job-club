@@ -14,6 +14,7 @@ userRoute.post('/delete-resume',authenticateToken, userController.addDeleteResum
 userRoute.post('/start-payment',authenticateToken, userController.startPaymentController.bind(userController));
 userRoute.post('/paymentSuccess', userController.successPaymentController.bind(userController));
 userRoute.post('/saveJob',authenticateToken, userController.saveJobController.bind(userController));
+userRoute.post('/applyJob',authenticateToken, userController.applyJobController.bind(userController));
 
 
 

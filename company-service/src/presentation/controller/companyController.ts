@@ -43,8 +43,15 @@ export class CompanyController {
             next(error)
         }
     }
-
-
+    async submitApplication(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+          const submitApplication = await this.companyService.submitApplication(req.body)
+          return submitApplication
+        } catch (error) {
+            next(error)
+        }
+    }
+    
 
 
 }
