@@ -19,7 +19,7 @@ function page() {
         jobDescription: String;
         requirements: String;
     }
-    
+
     interface CompanyDetails {
         companyName: string;
         location: string;
@@ -54,7 +54,6 @@ function page() {
         };
         res();
     }, [userId]);
-
     useEffect(() => {
         const fetchData = async () => {
             const response = await axios.get(
@@ -70,7 +69,7 @@ function page() {
         };
         fetchData();
     }, [jobId]);
-
+    console.log(jobDetails)
     const handleSaveJob = async (jobId: any) => {
         let response = await axios.post(`${USER_SERVICE_URL}/saveJob`, { jobId, userId }, {
             headers: {
@@ -79,6 +78,15 @@ function page() {
             withCredentials: true
         });
         console.log(response);
+        if (response.status === 200) {
+            setUserDetails((prevDetails: any) => ({
+                ...prevDetails,
+                profile: {
+                    ...prevDetails?.profile,
+                    saved_jobs: [...(prevDetails?.profile?.saved_jobs || []), jobId]
+                }
+            }));
+        }
     };
 
     // Check if the job is saved
@@ -117,9 +125,9 @@ function page() {
                         </div>
                     </div>
                 </div>
-            
 
-<div className="mx-6 my-8 text-gray-300">
+
+                <div className="mx-6 my-8 text-gray-300">
                     <h3 className="text-lg font-semibold text-white">Job Types: <span className="font-normal text-gray-400">{jobDetails?.employmentType[0]}</span></h3>
                     <h3 className="text-lg font-semibold text-white">Pay: <span className="font-normal text-gray-400">₹{jobDetails?.minSalary} - ₹{jobDetails?.maxSalary}</span></h3>
                     <h3 className="text-lg font-semibold text-white">Qualification:</h3>

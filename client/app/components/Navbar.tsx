@@ -1,5 +1,5 @@
 'use client'
-import { FaBriefcase, FaBell, FaEnvelope, FaUser } from 'react-icons/fa';
+import { FaBriefcase, FaBell, FaUser } from 'react-icons/fa';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -33,7 +33,10 @@ function Navbar() {
   const handleChangePassword = () => {
     router.push(`/changePassword?id=${userId}`);
   };
-
+  const handleMyjobs = () => {
+    router.push(`/myJobs?id=${userId}`);
+  };
+  
   return (
     <nav className="bg-black p-4">
       <div className="container mx-auto flex justify-between items-center">
@@ -46,7 +49,7 @@ function Navbar() {
         {userName ? (
           <div className="flex space-x-6 items-center">
             <div className="flex space-x-4">
-              <div className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
+              <div onClick={handleMyjobs} className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
                 <FaBriefcase />
                 <span>My jobs</span>
               </div>

@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar'
 import { COMPANY_SERVICE_URL } from '@/utils/constants'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import Footer from '../components/footer/footer'
 
 function Page() {
   const router=useRouter()
@@ -221,6 +222,7 @@ function Page() {
           </div>
         </div>
       </div>
+      <Footer></Footer>
     </>
   )
 }
