@@ -74,7 +74,15 @@ export class UserService {
             throw error
         }
     }
-
+    async saveJob(userId:any,jobId: any) {
+        try {
+            const savedJob = await UserRepository.saveJob(userId,jobId)
+            return savedJob
+        } catch (error) {
+            throw error
+        }
+    }
+    
  
     
 

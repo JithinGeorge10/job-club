@@ -13,6 +13,7 @@ userRoute.post('/add-profile-image', userController.addProfileImageController.bi
 userRoute.post('/delete-resume',authenticateToken, userController.addDeleteResumeController.bind(userController));
 userRoute.post('/start-payment',authenticateToken, userController.startPaymentController.bind(userController));
 userRoute.post('/paymentSuccess', userController.successPaymentController.bind(userController));
+userRoute.post('/saveJob',authenticateToken, userController.saveJobController.bind(userController));
 
 
 

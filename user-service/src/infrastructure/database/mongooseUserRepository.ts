@@ -225,7 +225,19 @@ class UserRepository {
         }
     }
 
-  
+    async saveJob(userId:any,jobId: any) {
+        try {
+            const result = await UserProfileModel.updateOne(
+                { userId }, 
+                { $addToSet: { saved_jobs: jobId } } 
+            );
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    
 
 
 }
