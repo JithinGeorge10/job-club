@@ -1,31 +1,40 @@
 'use client'
 import { AUTH_SERVICE_URL } from '@/utils/constants';
 import axios from 'axios';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useSearchParams,useRouter } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 function ChangePassword() {
     const searchParams = useSearchParams();
-    const router=useRouter()
-    const userId = searchParams.get('id');
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const router = useRouter()
+    // const userId = searchParams.get('id');
+    const [userId, setUserId] = useState<string | null>(null);
 
-    const onSubmit = async(data: any) => {
+
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    useEffect(() => {
+        const user: string | null = localStorage.getItem('user');
+        if (user && user !== 'undefined') {
+            let userDetails = JSON.parse(user);
+            setUserId(userDetails._id);
+        }
+    }, []);
+    const onSubmit = async (data: any) => {
         console.log('Password changed', data);
-        const response =await axios.post(`${AUTH_SERVICE_URL}/changePassword`,{data,userId},{
+        const response = await axios.post(`${AUTH_SERVICE_URL}/changePassword`, { data, userId }, {
             headers: {
-              'Content-Type': 'application/json',
+                'Content-Type': 'application/json',
             },
             withCredentials: true,
-          })
-          console.log(response)
-          if(response.data.errorMessage){
+        })
+        console.log(response)
+        if (response.data.errorMessage) {
             toast.error(response.data.errorMessage)
-          }else{
+        } else {
             toast.success('Password updated')
             router.push(`userProfile?id=${userId}`);
-          }
+        }
     };
 
     return (

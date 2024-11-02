@@ -31,7 +31,7 @@ function Navbar() {
   };
 
   const handleChangePassword = () => {
-    router.push(`/changePassword?id=${userId}`);
+    router.push(`/changePassword`);
   };
   const handleMyjobs = () => {
     router.push(`/myJobs?id=${userId}`);
