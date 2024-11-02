@@ -250,8 +250,19 @@ class UserRepository {
         }
     }
     
+    async unsaveJob(userId: any, jobId: any) {
+        try {
+            const result = await UserProfileModel.updateOne(
+                { userId },
+                { $pull: { saved_jobs: jobId } } 
+            );
+            return result;
+        } catch (error) {
+            console.log("Error unsaving job:", error);
+            throw error;
+        }
+    }
     
-
 
 }
 const getUserRepository = new UserRepository();

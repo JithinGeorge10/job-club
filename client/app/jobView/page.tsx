@@ -90,9 +90,11 @@ function page() {
         }
     };
 
-    // Check if the job is saved
+
     const isJobSaved = userDetails?.profile?.saved_jobs?.includes(jobDetails?._id);
-    const handleSubmit =async () => {
+    const isJobApplied = userDetails?.profile?.applied_jobs?.includes(jobDetails?._id);
+
+    const handleSubmit = async () => {
         router.push(`reviewProfile?jobId=${jobId}&userId=${userId}`);
     }
     return (
@@ -124,7 +126,16 @@ function page() {
                                     Save
                                 </button>
                             )}
-                            <button onClick={handleSubmit} className="bg-green-500 text-white font-semibold px-6 py-2 rounded-lg">Apply</button>
+
+                            {isJobApplied ? (
+                                <button className="bg-gray-500 text-white font-semibold px-6 py-2 rounded-lg" disabled>
+                                    Applied
+                                </button>
+                            ) : (
+                                <button onClick={handleSubmit} className="bg-green-500 text-white font-semibold px-6 py-2 rounded-lg">Apply</button>
+                            )}
+
+
                         </div>
                     </div>
                 </div>

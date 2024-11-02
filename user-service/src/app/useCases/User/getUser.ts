@@ -90,7 +90,14 @@ export class UserService {
             throw error
         }
     }
-    
+    async unsaveJob(userId:any,jobId: any) {
+        try {
+            const unsaveJob = await UserRepository.unsaveJob(userId,jobId)
+            return unsaveJob
+        } catch (error) {
+            throw error
+        }
+    }
     
     
 

@@ -113,5 +113,15 @@ export class UserController {
             next(error)
         }
     }
+    async unsaveJobController(req: Request, res: Response, next: NextFunction): Promise<any> {
+        try {
+            console.log(req.body);
+            const {userId,jobId}=req.body
+            const unsaveJob = await this.userService.unsaveJob(userId,jobId)
+            res.status(200).send({ unsaveJob })
+        } catch (error) {
+            next(error)
+        }
+    }
     
 }

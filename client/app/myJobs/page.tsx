@@ -7,7 +7,7 @@ import { COMPANY_SERVICE_URL, USER_SERVICE_URL } from '@/utils/constants';
 import { useRouter } from 'next/navigation';
 
 const MyJobsPage = () => {
-    const router = useRouter()
+    const router = useRouter();
     const [userId, setUserId] = useState<string | null>(null);
     const [userDetails, setUserDetails] = useState<any | null>(null);
     const [jobDetails, setJobDetails] = useState<any[]>([]);
@@ -58,15 +58,34 @@ const MyJobsPage = () => {
     const savedJobs = jobDetails.filter((job) =>
         userDetails?.profile?.saved_jobs?.includes(job._id)
     );
-    const handleJobClick = async (jobId: any, companyId: any) => {
-        console.log(jobId);
-        console.log(companyId);
-        router.push(`jobView?jobId=${jobId}`);
 
-    }
-    const applied=async()=>{
+    const handleJobClick = (jobId: any) => {
+        router.push(`jobView?jobId=${jobId}`);
+    };
+
+    const handleUnsaveJob = async (jobId: string) => {
+        try {
+            await axios.put(
+                `${USER_SERVICE_URL}/unsave-job`,
+                { userId, jobId },
+                { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
+            );
+
+            setUserDetails((prevDetails: any) => ({
+                ...prevDetails,
+                profile: {
+                    ...prevDetails.profile,
+                    saved_jobs: prevDetails.profile.saved_jobs.filter((id: string) => id !== jobId),
+                },
+            }));
+        } catch (error) {
+            console.error("Error unsaving job", error);
+        }
+    };
+
+    const applied = async () => {
         router.push(`appliedJobs?userId=${userId}`);
-    }
+    };
 
     return (
         <div className="bg-black text-white font-sans min-h-screen">
@@ -87,12 +106,18 @@ const MyJobsPage = () => {
                         savedJobs.map((job) => (
                             <div key={job._id} className="bg-gray-800 p-4 rounded-lg flex justify-between items-center">
                                 <div>
-                                    <button onClick={() => handleJobClick(job._id, job.companyId._id)} className="text-xl font-semibold">{job.jobTitle}</button>
+                                    <button onClick={() => handleJobClick(job._id)} className="text-xl font-semibold">{job.jobTitle}</button>
                                     <p className="text-gray-400">{job.companyId.companyName}</p>
                                     <span className="bg-green-500 text-white px-3 py-1 rounded-full mt-2 inline-block">
                                         {job.companyId.location}
                                     </span>
                                 </div>
+                                <button
+                                    onClick={() => handleUnsaveJob(job._id)}
+                                    className="text-red-500 hover:text-red-700 font-semibold"
+                                >
+                                    Unsave
+                                </button>
                             </div>
                         ))
                     ) : (
