@@ -7,7 +7,7 @@ export class CompanyService {
             console.log('service' + jobData);
 
             const company = await jobRepository.addJob(jobData)
-
+return company
         } catch (error) {
             throw error
         }

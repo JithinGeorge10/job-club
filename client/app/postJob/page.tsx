@@ -1,7 +1,8 @@
 'use client';
-import { COMPANY_SERVICE_URL, USER_SERVICE_URL } from '@/utils/constants';
+import { COMPANY_SERVICE_URL } from '@/utils/constants';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -14,19 +15,20 @@ interface PostJobForm {
   jobTitle: string;
   employmentType: string[];
   minSalary?: number;
-  maxSalary?: number; 
+  maxSalary?: number;
   category: string;
-  slots?: number; 
+  slots?: number;
   startDate: string;
   endDate: string;
   skills: Skill[];
-  jobDescription?: string; 
-  qualification?: string; 
-  jobResponsibilities?: string; 
+  jobDescription?: string;
+  qualification?: string;
+  jobResponsibilities?: string;
   requirements?: string;
 }
 
 const PostJob: React.FC = () => {
+  const router = useRouter()
   const searchParams = useSearchParams();
   const companyId = searchParams.get('id');
   const {
@@ -53,24 +55,22 @@ const PostJob: React.FC = () => {
     append({ skill: '' });
   };
 
-  const onSubmit: SubmitHandler<PostJobForm> = async(data) => {
+  const onSubmit: SubmitHandler<PostJobForm> = async (data) => {
     console.log('Form submitted', data);
-    let response = await axios.post(`${COMPANY_SERVICE_URL}/post-job`, { data,companyId }, {
+    let response = await axios.post(`${COMPANY_SERVICE_URL}/post-job`, { data, companyId }, {
       headers: {
         'Content-Type': 'application/json'
       },
       withCredentials: true
     })
-    toast.success('Job Posted')
-    // if (response.data.userDetails) {
-    //   toast.success('Employment Added')
-    //   setTimeout(() => {
-    //     router.push(`userProfile?id=${userId}`)
-    //   }, 1000);
-    // } else {
-    //   toast.error('Error')
-      
-    // }
+    console.log(response)
+    if (response.status === 200) {
+      toast.success('Job Posted');
+      router.push(`companyDashboard`)
+    } else {
+      console.log('Unexpected response:', response);
+    }
+
   };
 
   const startDate = watch('startDate');
@@ -131,12 +131,12 @@ const PostJob: React.FC = () => {
                   validate: (value) => {
                     const minSalary = watch('minSalary') ?? 0;
                     return (value !== undefined && value >= minSalary) || 'Maximum Salary must be greater than Minimum Salary';
-                }
+                  }
                 })}
                 className="w-full p-2 bg-gray-800 rounded-md text-white"
               />
               {errors.maxSalary && <span className="text-red-500">{errors.maxSalary.message}</span>}
-            </div>  
+            </div>
           </div>
 
           <div className="mb-4">
@@ -181,12 +181,12 @@ const PostJob: React.FC = () => {
               <input
                 type="date"
                 id="endDate"
-                {...register('endDate', { 
-                  required: 'End Date is required', 
+                {...register('endDate', {
+                  required: 'End Date is required',
                   validate: (value) => {
-                    const startDateValue = startDate ?? ''; 
+                    const startDateValue = startDate ?? '';
                     return (new Date(value) >= new Date(startDateValue)) || 'End Date must be after Start Date';
-                  } 
+                  }
                 })}
                 className={`w-full p-2 bg-gray-800 rounded-md text-white ${errors.endDate ? 'border-red-500' : ''}`}
               />

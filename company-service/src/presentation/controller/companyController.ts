@@ -13,7 +13,7 @@ export class CompanyController {
             const jobDetails = await this.companyService.addJob(req.body)
             // console.log(jobDetails);
 
-            // res.status(200).send({ jobDetails })
+             res.status(200).send({ jobDetails })
         } catch (error) {
             next(error)
         }
@@ -46,7 +46,7 @@ export class CompanyController {
     async submitApplication(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
           const submitApplication = await this.companyService.submitApplication(req.body)
-          return submitApplication
+          res.status(200).send({ submitApplication })
         } catch (error) {
             next(error)
         }

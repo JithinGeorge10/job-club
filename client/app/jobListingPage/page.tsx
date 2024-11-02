@@ -1,21 +1,22 @@
 'use client'
-import React, { useEffect, useState } from 'react'
-import Navbar from '../components/Navbar'
-import { COMPANY_SERVICE_URL } from '@/utils/constants'
-import axios from 'axios'
-import { useRouter } from 'next/navigation'
-import Footer from '../components/footer/footer'
+import React, { useEffect, useState, useCallback } from 'react';
+import Navbar from '../components/Navbar';
+import { COMPANY_SERVICE_URL } from '@/utils/constants';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import Footer from '../components/footer/footer';
 
 function Page() {
-  const router=useRouter()
+  const router = useRouter();
 
-  const [jobDetails, setJobDetails] = useState<any[]>([])
-  const [searchTerm, setSearchTerm] = useState<string>('')
-  const [filteredJobs, setFilteredJobs] = useState<any[]>([])
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
-  const [selectedSalaryRanges, setSelectedSalaryRanges] = useState<string[]>([])
-  const [currentPage, setCurrentPage] = useState<number>(1)
-  const jobsPerPage = 5
+  const [jobDetails, setJobDetails] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [filteredJobs, setFilteredJobs] = useState<any[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedSalaryRanges, setSelectedSalaryRanges] = useState<string[]>([]);
+  const [selectedEmploymentTypes, setSelectedEmploymentTypes] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const jobsPerPage = 5;
 
   const salaryRanges = [
     { label: '0 - 2 LPA', value: '0-200000' },
@@ -31,26 +32,28 @@ function Page() {
     { label: 'Internship', value: 'Internship' },
     { label: 'Contract', value: 'Contract' },
   ];
-  const [selectedEmploymentTypes, setSelectedEmploymentTypes] = useState<string[]>([]);
+
   useEffect(() => {
     const fetchData = async () => {
       let response = await axios.get(`${COMPANY_SERVICE_URL}/get-jobDetails`, {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        withCredentials: true
-      })
-      setJobDetails(response.data.jobDetails)
-      setFilteredJobs(response.data.jobDetails)
-    }
-    fetchData()
-  }, [])
-  const handleEmploymentTypeChange = (type: string) => {
-    setSelectedEmploymentTypes(prev =>
-      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
-    );
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
+      setJobDetails(response.data.jobDetails);
+      setFilteredJobs(response.data.jobDetails);
+    };
+    fetchData();
+  }, []);
+
+  const debounce = (func: Function, delay: number) => {
+    let timer: NodeJS.Timeout;
+    return (...args: any[]) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => func(...args), delay);
+    };
   };
-  const handleSearch = () => {
+
+  const handleSearch = useCallback(() => {
     let filtered = jobDetails;
 
     if (searchTerm.trim() !== '') {
@@ -74,28 +77,42 @@ function Page() {
         });
       });
     }
+
     if (selectedEmploymentTypes.length > 0) {
       filtered = filtered.filter((job) =>
         selectedEmploymentTypes.includes(job.employmentType[0])
       );
     }
-    filtered.sort((a, b) => (a.minSalary || 0) - (b.minSalary || 0));
 
+    filtered.sort((a, b) => (a.minSalary || 0) - (b.minSalary || 0));
     setFilteredJobs(filtered);
     setCurrentPage(1);
+  }, [jobDetails, searchTerm, selectedSalaryRanges, selectedEmploymentTypes]);
+
+
+  const debouncedSearch = useCallback(debounce(handleSearch, 500), [handleSearch]);
+
+  useEffect(() => {
+    debouncedSearch();
+  }, [searchTerm, selectedSalaryRanges, selectedEmploymentTypes, debouncedSearch]);
+
+  const handleEmploymentTypeChange = (type: string) => {
+    setSelectedEmploymentTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+    );
   };
 
   const handleCategoryChange = (category: string) => {
-    setSelectedCategories(prev =>
-      prev.includes(category) ? prev.filter(c => c !== category) : [...prev, category]
+    setSelectedCategories((prev) =>
+      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
     );
-  }
+  };
 
   const handleSalaryRangeChange = (range: string) => {
-    setSelectedSalaryRanges(prev =>
-      prev.includes(range) ? prev.filter(r => r !== range) : [...prev, range]
+    setSelectedSalaryRanges((prev) =>
+      prev.includes(range) ? prev.filter((r) => r !== range) : [...prev, range]
     );
-  }
+  };
 
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
@@ -104,19 +121,16 @@ function Page() {
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-  }
-  const handleJobClick = async (jobId: any, companyId: any) => {
-    console.log(jobId);
-    console.log(companyId);
-    router.push(`jobView?jobId=${jobId}`);
+  };
 
-  }
+  const handleJobClick = async (jobId: any, companyId: any) => {
+    router.push(`jobView?jobId=${jobId}`);
+  };
+
   return (
     <>
       <Navbar />
-
       <div className="p-8">
-
         <div className="flex items-center space-x-4 mb-6">
           <input
             type="text"
@@ -129,12 +143,10 @@ function Page() {
             Search
           </button>
         </div>
-
         <div className="flex">
 
           <div className="w-1/4 bg-gray-800 p-4 rounded-lg border border-gray-600 mr-6">
             <h2 className="text-xl font-bold mb-4 text-white">Filters</h2>
-
             <div className="mb-4">
               <h3 className="font-semibold mb-2 text-white">Salary Range</h3>
               {salaryRanges.map(range => (
@@ -222,9 +234,10 @@ function Page() {
           </div>
         </div>
       </div>
-      <Footer></Footer>
+      <Footer />
+
     </>
-  )
+  );
 }
 
 export default Page;
