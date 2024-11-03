@@ -1,4 +1,3 @@
-import { Job } from "../../domain/entities/company";
 import jobModel from "./model/jobModel";
 class CompanyRepository {
     async addJob(JobData: any) {
