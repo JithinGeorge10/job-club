@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { genSalt, hash } from 'bcrypt'
 const companySchema = new mongoose.Schema({
     companyName: {
         type: String,

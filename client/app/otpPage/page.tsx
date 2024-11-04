@@ -18,7 +18,7 @@ export default function OTPVerification({ params }: { params: { email: string } 
     const email = searchParams.get('id');
     let interval: NodeJS.Timeout;
 
-    // Function to calculate time left
+ 
     const calculateTimeLeft = () => {
         const storedTime = localStorage.getItem('otpStartTime')
         const currentTime = Date.now()

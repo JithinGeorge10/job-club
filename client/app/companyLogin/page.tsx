@@ -21,13 +21,13 @@ function page() {
       },
       withCredentials: true
     })
-    const company=response.data.company
+    const company = response.data.company
     console.log(response);
     console.log(company);
-    
+
     if (response.data.success) {
-      localStorage.setItem('user',JSON.stringify(company));
-      toast.info('Welcome')
+      localStorage.setItem('company', JSON.stringify(company));
+      toast.success('Welcome')
       setTimeout(() => {
         router.push(`companyDashboard?id=${company._id}`)
       }, 3000);

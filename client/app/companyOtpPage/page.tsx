@@ -19,7 +19,6 @@ export default function OTPVerification({ params }: { params: { email: string } 
     const email = searchParams.get('id');
     let interval: NodeJS.Timeout;
 
-    // Function to calculate time left
     const calculateTimeLeft = () => {
         const storedTime = localStorage.getItem('otpStartTime')
         const currentTime = Date.now()
@@ -83,6 +82,7 @@ export default function OTPVerification({ params }: { params: { email: string } 
             console.log(response.data);
             const company=response.data.verifiedCompany
             if (response.data.success) {
+                localStorage.setItem('company',JSON.stringify(company));
                 toast.success('Account created')
                  setTimeout(() => {
                     router.push(`companyDashboard?id=${company._id}`)
@@ -128,7 +128,7 @@ export default function OTPVerification({ params }: { params: { email: string } 
             localStorage.setItem('company',JSON.stringify(company));
             toast.success('Account created')
             setTimeout(() => {
-                router.push(`companyDashboard`)
+                router.push(`companyDashboard?id=${company._id}`)
             }, 3000);
         } else {
             toast.error('Invalid OTP')

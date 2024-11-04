@@ -1,8 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
-import { useSearchParams,useRouter } from 'next/navigation';
-import { USER_SERVICE_URL } from '@/utils/constants';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { COMPANY_SERVICE_URL, USER_SERVICE_URL } from '@/utils/constants';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -11,7 +11,7 @@ function ProfilePage() {
     const searchParams = useSearchParams();
     const userId = searchParams.get('userId');
     const jobId = searchParams.get('jobId');
-    
+
     const [userDetails, setUserDetails] = useState<any | null>(null);
 
     useEffect(() => {
@@ -41,24 +41,25 @@ function ProfilePage() {
         }).replace(/ /g, '-');
     };
 
-    const handleSubmit = async() => {
-        let applyResponse = await axios.post(`${USER_SERVICE_URL}/applyJob`, { jobId, userId }, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            withCredentials: true
-        });
-        console.log(applyResponse);
+    const handleSubmit = async () => {
+        // let applyResponse = await axios.post(`${USER_SERVICE_URL}/applyJob`, { jobId, userId }, {
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     withCredentials: true
+        // });
+        // console.log(applyResponse);
+        const response = await axios.post(`${COMPANY_SERVICE_URL}/submitApplication`, { userDetails, jobId }, {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true,
+        })
+        console.log(response)
         toast.success('Job Applied');
         setTimeout(() => {
             router.push(`/jobListingPage`);
         }, 3000);
-        
-        // const response =await axios.post(`${COMPANY_SERVICE_URL}/submitApplication`,{userDetails,jobId},{
-        //     headers: { 'Content-Type': 'application/json' },
-        //     withCredentials: true,
-        // })
-        // console.log(response)
+
+
     };
 
     return (

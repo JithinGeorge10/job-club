@@ -66,7 +66,7 @@ const PostJob: React.FC = () => {
     console.log(response)
     if (response.status === 200) {
       toast.success('Job Posted');
-      router.push(`companyDashboard`)
+      router.push(`companyDashboard?id=${companyId}`)
     } else {
       console.log('Unexpected response:', response);
     }

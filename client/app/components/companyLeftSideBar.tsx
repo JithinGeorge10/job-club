@@ -5,7 +5,7 @@ function CompanyLeftSideBar() {
     const router = useRouter();
 
     const handleJobListing = () => {
-        router.push('jobListing');
+        router.push('companyJobListing');
     };
 
     return (
