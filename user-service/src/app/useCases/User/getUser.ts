@@ -99,6 +99,10 @@ export class UserService {
         }
     }
     
-    
+    async handleSubscriptionExpiry() {
+        return await UserRepository.expireSubscriptions();
+    }
 
 }
+
+export default UserService;

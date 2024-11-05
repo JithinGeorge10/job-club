@@ -62,6 +62,10 @@ const userProfileSchema = new mongoose.Schema({
         required: true,
         default: false
     },
+    subscriptionExpiry: {
+        type: Date,
+        default: null
+    },
     status: {
         type: Boolean,
         required: true,

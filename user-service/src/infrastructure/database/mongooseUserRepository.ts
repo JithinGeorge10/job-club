@@ -211,10 +211,11 @@ class UserRepository {
                 },
                 { upsert: true, new: true, setDefaultsOnInsert: true }
             );
+            const oneYearFromNow = new Date(Date.now() + 10 * 60 * 1000); // Set expiration time to 10 minutes from now
 
             await UserProfileModel.updateOne(
                 { userId: actualUserId },
-                { $set: { subscriber: true } }
+                { $set: { subscriber: true, subscriptionExpiry: oneYearFromNow } }
             );
 
             console.log(result)
@@ -225,11 +226,11 @@ class UserRepository {
         }
     }
 
-    async saveJob(userId:any,jobId: any) {
+    async saveJob(userId: any, jobId: any) {
         try {
             const result = await UserProfileModel.updateOne(
-                { userId }, 
-                { $addToSet: { saved_jobs: jobId } } 
+                { userId },
+                { $addToSet: { saved_jobs: jobId } }
             );
             return result
         } catch (error) {
@@ -237,11 +238,11 @@ class UserRepository {
             throw error;
         }
     }
-    async applyJob(userId:any,jobId: any) {
+    async applyJob(userId: any, jobId: any) {
         try {
             const result = await UserProfileModel.updateOne(
-                { userId }, 
-                { $addToSet: { applied_jobs: jobId } } 
+                { userId },
+                { $addToSet: { applied_jobs: jobId } }
             );
             return result
         } catch (error) {
@@ -249,12 +250,12 @@ class UserRepository {
             throw error;
         }
     }
-    
+
     async unsaveJob(userId: any, jobId: any) {
         try {
             const result = await UserProfileModel.updateOne(
                 { userId },
-                { $pull: { saved_jobs: jobId } } 
+                { $pull: { saved_jobs: jobId } }
             );
             return result;
         } catch (error) {
@@ -262,7 +263,27 @@ class UserRepository {
             throw error;
         }
     }
-    
+    async expireSubscriptions() {
+        const now = new Date();
+
+        try {
+            const expiredUsers = await UserProfileModel.find({
+                subscriber: true,
+                subscriptionExpiry: { $lt: now }
+            });
+
+            for (const user of expiredUsers) {
+                await UserProfileModel.updateOne(
+                    { userId: user.userId },
+                    { $set: { subscriber: false } }
+                );
+            }
+
+            return expiredUsers.length;
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
 }
 const getUserRepository = new UserRepository();
