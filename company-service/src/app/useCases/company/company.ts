@@ -40,7 +40,16 @@ return company
             throw error
         }
     }
-
+    
+    async changeStatus(closeJob:any) {
+        try {
+            const changeStatus = await jobRepository.changeStatus(closeJob)
+            return changeStatus
+        } catch (error) {
+            throw error
+        }
+    }
+    
     
     
     

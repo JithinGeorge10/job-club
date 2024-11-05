@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const jobSchema = new mongoose.Schema({
     companyId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Company',  
+        ref: 'Company',
         required: true
     },
     jobTitle: {
@@ -55,8 +55,12 @@ const jobSchema = new mongoose.Schema({
         required: [true, 'Requirements are required'],
     },
     skills: {
-        type: [Object], // Assuming skills will be stored as an array of objects
+        type: [Object],
         required: [true, 'Skills are required'],
+    },
+    status: {
+        type: Boolean,
+        default: true,
     },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, required: false }

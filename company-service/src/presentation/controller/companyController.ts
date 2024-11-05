@@ -51,6 +51,15 @@ export class CompanyController {
             next(error)
         }
     }
+    async changeStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+   
+        const changeStatus = await this.companyService.changeStatus(req.body)
+        res.status(200).send({ changeStatus })
+        } catch (error) {
+            next(error)
+        }
+    }
     
 
 

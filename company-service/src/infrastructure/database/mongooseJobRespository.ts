@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import jobModel from "./model/jobModel";
 class CompanyRepository {
     async addJob(JobData: any) {
@@ -64,8 +65,22 @@ class CompanyRepository {
     async submitApplication(application: any) {
         try {
             console.log(application)
-            
+
             // return jobDetails
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+    async changeStatus(job: any) {
+        try {
+           
+            const statusChanges = await jobModel.updateOne(
+                { _id: job.jobId },
+                { $set: { status: false } }
+            );
+
+            return statusChanges;
         } catch (error) {
             console.log(error);
             throw error;
