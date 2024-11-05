@@ -49,6 +49,16 @@ return company
             throw error
         }
     }
+    async filteredJobs(filter:any) {
+        try {
+            const filteredJobs = await jobRepository.filterJobs(filter)
+            return filteredJobs
+        } catch (error) {
+            throw error
+        }
+    }
+
+    
     
     
     

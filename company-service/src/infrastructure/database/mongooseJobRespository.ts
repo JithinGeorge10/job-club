@@ -86,7 +86,41 @@ class CompanyRepository {
             throw error;
         }
     }
+    async filterJobs(filter: any) {
+        try {
+            const { salaryRanges, categories, employmentTypes } = filter;
+    
 
+            const salaryFilter = salaryRanges.map((range: string) => {
+                const [min, max] = range.split('-').map(Number);
+                return {
+                    $or: [
+                        { minSalary: { $gte: min, $lte: max } },
+                        { maxSalary: { $gte: min, $lte: max } },
+                        { minSalary: { $lte: min }, maxSalary: { $gte: max } }
+                    ]
+                };
+            });
+    
+
+            const filterQuery = {
+                ...(salaryFilter.length > 0 && { $or: salaryFilter }),
+                ...(categories.length > 0 && { category: { $in: categories } }),
+                ...(employmentTypes.length > 0 && { employmentType: { $in: employmentTypes } }),
+            };
+    
+          
+            const jobs = await jobModel.find(filterQuery).populate('companyId', 'companyName'); // Add populate here
+    
+            console.log('Filtered Jobs:', jobs);
+            return jobs;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+    
+    
 
 }
 

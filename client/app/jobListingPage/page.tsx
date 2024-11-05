@@ -63,38 +63,39 @@ function Page() {
       );
     }
 
-    if (selectedSalaryRanges.length > 0) {
-      filtered = filtered.filter((job) => {
-        const jobMinSalary = job.minSalary || 0;
-        const jobMaxSalary = job.maxSalary || 0;
-
-        return selectedSalaryRanges.some(range => {
-          const [min, max] = range.split('-').map(Number);
-
-          return (jobMinSalary >= min && jobMinSalary <= max) ||
-            (jobMaxSalary >= min && jobMaxSalary <= max) ||
-            (jobMinSalary <= min && jobMaxSalary >= max);
-        });
-      });
-    }
-
-    if (selectedEmploymentTypes.length > 0) {
-      filtered = filtered.filter((job) =>
-        selectedEmploymentTypes.includes(job.employmentType[0])
-      );
-    }
-
-    filtered.sort((a, b) => (a.minSalary || 0) - (b.minSalary || 0));
     setFilteredJobs(filtered);
     setCurrentPage(1);
-  }, [jobDetails, searchTerm, selectedSalaryRanges, selectedEmploymentTypes]);
-
+  }, [jobDetails, searchTerm]);
 
   const debouncedSearch = useCallback(debounce(handleSearch, 500), [handleSearch]);
 
   useEffect(() => {
     debouncedSearch();
-  }, [searchTerm, selectedSalaryRanges, selectedEmploymentTypes, debouncedSearch]);
+  }, [searchTerm, debouncedSearch]);
+
+  const applyFilters = async () => {
+    console.log('Applying filters:', {
+      selectedSalaryRanges,
+      selectedCategories,
+      selectedEmploymentTypes,
+    });
+
+    try {
+      const response = await axios.post(`${COMPANY_SERVICE_URL}/get-filteredJobs`, {
+        salaryRanges: selectedSalaryRanges,
+        categories: selectedCategories,
+        employmentTypes: selectedEmploymentTypes,
+      }, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
+
+      setFilteredJobs(response.data.filteredJobs);
+      setCurrentPage(1);
+    } catch (error) {
+      console.error('Error fetching filtered jobs:', error);
+    }
+  };
 
   const handleEmploymentTypeChange = (type: string) => {
     setSelectedEmploymentTypes((prev) =>
@@ -194,7 +195,7 @@ function Page() {
               ))}
             </div>
 
-            <button onClick={handleSearch} className="w-full bg-green-500 py-2 rounded-lg text-black font-semibold hover:bg-green-600">
+            <button onClick={applyFilters} className="w-full bg-green-500 py-2 rounded-lg text-black font-semibold hover:bg-green-600">
               Apply Filters
             </button>
           </div>
@@ -209,25 +210,24 @@ function Page() {
                     <div className="mt-2 space-x-4">
                       <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full">{job.employmentType[0]}</span>
                       <span className="inline-block bg-gray-700 text-white px-3 py-1 rounded-full">{job.category}</span>
-                      <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full">Salary upto &#8377; {job.maxSalary}</span>
+                      <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full">
+                        Salary upto &#8377;{job.salaryRange ? job.salaryRange.toLocaleString() : 'N/A'}
+                      </span>
                     </div>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="text-center text-xl font-bold text-red-500">
-                No results found
-              </div>
+              <div className="text-white text-center text-lg">No jobs found.</div>
             )}
-
-            <div className="flex justify-center space-x-2 mt-4">
-              {Array.from({ length: totalPages }, (_, index) => (
+            <div className="flex justify-center mt-6">
+              {Array.from({ length: totalPages }, (_, i) => (
                 <button
-                  key={index}
-                  onClick={() => handlePageChange(index + 1)}
-                  className={`px-4 py-2 rounded ${currentPage === index + 1 ? 'bg-green-600 text-white' : 'bg-gray-300 text-black'}`}
+                  key={i}
+                  onClick={() => handlePageChange(i + 1)}
+                  className={`px-4 py-2 rounded-lg ${currentPage === i + 1 ? 'bg-green-500 text-white' : 'bg-gray-600 text-gray-300'} mx-1`}
                 >
-                  {index + 1}
+                  {i + 1}
                 </button>
               ))}
             </div>
@@ -235,7 +235,6 @@ function Page() {
         </div>
       </div>
       <Footer />
-
     </>
   );
 }

@@ -9,7 +9,7 @@ companyRoute.get('/get-jobDetails', companyController.getJobController.bind(comp
 companyRoute.get('/get-singleJobDetails', companyController.getsingleJobDetails.bind(companyController));
 companyRoute.post('/submitApplication', companyController.submitApplication.bind(companyController));
 companyRoute.post('/changeStatus-jobDetails', companyController.changeStatus.bind(companyController));
-
+companyRoute.post('/get-filteredJobs', companyController.getfilteredJobs.bind(companyController));
 
 
 export default companyRoute
