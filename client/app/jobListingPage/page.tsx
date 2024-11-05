@@ -118,6 +118,7 @@ function Page() {
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
   const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
+  console.log(currentJobs)
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
 
   const handlePageChange = (pageNumber: number) => {
@@ -211,7 +212,7 @@ function Page() {
                       <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full">{job.employmentType[0]}</span>
                       <span className="inline-block bg-gray-700 text-white px-3 py-1 rounded-full">{job.category}</span>
                       <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full">
-                        Salary upto &#8377;{job.salaryRange ? job.salaryRange.toLocaleString() : 'N/A'}
+                        Salary upto &#8377;{job.maxSalary ? job.maxSalary : 'N/A'}
                       </span>
                     </div>
                   </div>
