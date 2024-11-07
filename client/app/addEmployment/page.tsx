@@ -1,6 +1,5 @@
 'use client'
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import { USER_SERVICE_URL } from '@/utils/constants';
 import axios from 'axios';
@@ -23,13 +22,11 @@ const AddEmploymentForm = () => {
   const router = useRouter()
   const userId = searchParams.get('id');
   const { register, handleSubmit, formState: { errors }, watch } = useForm<EmploymentFormInputs>();
-  const [submittedData, setSubmittedData] = useState<EmploymentFormInputs | null>(null);
 
   const fromDate = watch('fromDate');
 
   const onSubmit = async (data: EmploymentFormInputs) => {
-    setSubmittedData(data);
-    let response = await axios.post(`${USER_SERVICE_URL}/add-employment`, { data, userId }, {
+    const response = await axios.post(`${USER_SERVICE_URL}/add-employment`, { data, userId }, {
       headers: {
         'Content-Type': 'application/json'
       },

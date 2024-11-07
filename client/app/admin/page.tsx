@@ -7,7 +7,7 @@ import axios from 'axios'
 import { AUTH_SERVICE_URL } from '@/utils/constants'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
-function page() {
+function Page() {
   const router = useRouter()
   type login = {
     email: string,
@@ -87,4 +87,4 @@ function page() {
   );
 }
 
-export default page
+export default Page

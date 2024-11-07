@@ -1,6 +1,5 @@
 'use client'
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
 import { USER_SERVICE_URL } from '@/utils/constants';
@@ -25,7 +24,7 @@ const AddEmploymentForm = () => {
     const { register, handleSubmit, formState: { errors }, watch } = useForm<EmploymentFormInputs>();
 
     const onSubmit = async (data: EmploymentFormInputs) => {
-        let response = await axios.post(`${USER_SERVICE_URL}/add-education`, { data, userId }, {
+        const response = await axios.post(`${USER_SERVICE_URL}/add-education`, { data, userId }, {
           headers: {
             'Content-Type': 'application/json'
           },
