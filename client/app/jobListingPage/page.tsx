@@ -33,6 +33,7 @@ function Page() {
     { label: 'Contract', value: 'Contract' },
   ];
 
+  
   useEffect(() => {
     const fetchData = async () => {
       let response = await axios.get(`${COMPANY_SERVICE_URL}/get-jobDetails`, {

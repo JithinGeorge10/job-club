@@ -211,7 +211,8 @@ class UserRepository {
                 },
                 { upsert: true, new: true, setDefaultsOnInsert: true }
             );
-            const oneYearFromNow = new Date(Date.now() + 10 * 60 * 1000); // Set expiration time to 10 minutes from now
+            const oneYearFromNow = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000); 
+
 
             await UserProfileModel.updateOne(
                 { userId: actualUserId },

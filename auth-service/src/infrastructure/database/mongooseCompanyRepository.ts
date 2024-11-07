@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Company } from "../../domain/entities/company";
 import companyModel from "./model/companyModel";
 import otpModel from "./model/otpModel";
@@ -36,7 +37,6 @@ class companyRepository {
    
     async verifyOtp(companyOtp: number, userEmail: string) {
         try {
-
             const companyDetails = await companyModel.findOne({ email: userEmail })
             const isOtp = await otpModel.findOne({otpCode: companyOtp,companyId:companyDetails?._id })
             if(isOtp){
@@ -49,6 +49,7 @@ class companyRepository {
             console.log(error);
         }
     }
+    
     async findUserId(email: string) {
         try {
             const userId = await companyModel.findOne({ email });
@@ -60,7 +61,7 @@ class companyRepository {
 
     async verifyCompany(email:string,password:string) {
         try {
-           const userData = await companyModel.findOne({ email });
+           const userData = await companyModel.findOne({ email,isBlock:false });
            if(!userData){
                 return null
            }
@@ -74,6 +75,61 @@ class companyRepository {
             console.log(error);
         }
     }
+
+    async verifygetCompanyCompany() {
+        try {
+          
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    async getCompany() {
+        try {
+          const companyDetails=await  companyModel.find();
+          console.log(companyDetails)
+          return companyDetails
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async blockUser(companyId: any ) {
+        try {
+            const actualcompanyId = new mongoose.Types.ObjectId(companyId.companyId);
+    
+            const updatedUser = await companyModel.findOneAndUpdate(
+                { _id: actualcompanyId }, 
+                { $set: { isBlock: true } },
+                { new: true }
+            );
+    console.log(updatedUser)
+            return updatedUser;
+        } catch (error) {
+            console.error("Error blocking user:", error);
+            throw error;
+        }
+    }
+    
+    
+    async unBlockCompany(companyId: any) {
+       
+        try {
+            const actualcompanyId = new mongoose.Types.ObjectId(companyId.companyId);
+    
+            const updatedUser = await companyModel.findOneAndUpdate(
+                { _id: actualcompanyId }, 
+                { $set: { isBlock: false } },
+                { new: true }
+            );
+            console.log(updatedUser)
+            return updatedUser;
+        } catch (error) {
+            console.error("Error blocking user:", error);
+            throw error;
+        }
+    }
+    
+    
 
 }
 

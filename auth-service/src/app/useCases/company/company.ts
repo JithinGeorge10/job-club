@@ -1,3 +1,4 @@
+import { AnyARecord } from "dns";
 import { Company } from "../../../domain/entities/company";
 import getCompanyRepository from '../../../infrastructure/database/mongooseCompanyRepository'
 import sendotp from "../../../infrastructure/helper/sendOTP";
@@ -8,10 +9,10 @@ export class CompanyService {
         try {
             const existingCompany = await getCompanyRepository.findCompanyByEmail(companyData.email)
             console.log(existingCompany);
-            
+
             if (existingCompany) {
                 throw new Error("Company already existssss");
-            } 
+            }
             const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString()
             await sendotp(companyData, generatedOtp)
             const companyDetails = await getCompanyRepository.saveCompany(companyData)
@@ -52,16 +53,16 @@ export class CompanyService {
             throw error
         }
     }
-    
+
     async companyLogin(email: string, password: string) {
         try {
 
             const companyDetails = await getCompanyRepository.verifyCompany(email, password)
-            console.log('gotcha',companyDetails);
-            
-            if(companyDetails){
+            console.log('gotcha', companyDetails);
+
+            if (companyDetails) {
                 return companyDetails
-            }else {
+            } else {
                 throw new Error("Give valid credentials");
             }
 
@@ -69,4 +70,37 @@ export class CompanyService {
             throw error
         }
     }
+    async getCompanyDetails() {
+        try {
+
+            const companyDetails = await getCompanyRepository.getCompany()
+            console.log('gotcha', companyDetails);
+            return companyDetails
+
+
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async blockCompany(companyId: any) {
+        try {
+            const blockedUser = await getCompanyRepository.blockUser( companyId );
+            return blockedUser;
+        } catch (error) {
+            throw error;
+        }
+    }
+    
+    async unBlockCompany(companyId: any) {
+        try {
+
+            const unBlockCompany = await getCompanyRepository.unBlockCompany(companyId)
+            return unBlockCompany
+
+        } catch (error) {
+            throw error
+        }
+    }
+    
 }

@@ -25,6 +25,14 @@ const companySchema = new mongoose.Schema({
         type: String,
         required: [true, 'Location is required'],
     },
+    isBlock: {
+        type: Boolean,
+        default: false
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
     
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, required: false }
