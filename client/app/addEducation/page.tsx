@@ -23,10 +23,8 @@ const AddEmploymentForm = () => {
     const router = useRouter()
     const userId = searchParams.get('id');
     const { register, handleSubmit, formState: { errors }, watch } = useForm<EmploymentFormInputs>();
-    const [submittedData, setSubmittedData] = useState<EmploymentFormInputs | null>(null);
 
     const onSubmit = async (data: EmploymentFormInputs) => {
-        setSubmittedData(data);
         let response = await axios.post(`${USER_SERVICE_URL}/add-education`, { data, userId }, {
           headers: {
             'Content-Type': 'application/json'
