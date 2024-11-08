@@ -92,7 +92,33 @@ export class UserController {
             next(error)
         }
     }
+    async getUserController(req: Request, res: Response, next: NextFunction): Promise<any> {
+        try {
+            const userDetails = await this.userService.userDetails()
+            res.status(200).send({ userDetails })
+        } catch (error) {
+            next(error)
+        }
+    }
 
     
+    async blockUserController(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+           console.log(req.body)
+           const blockUser = await this.userService.blockUser(req.body)
+           res.send({ blockUser, success: true })
+        } catch (error) {
+            next(error)
+        }
+    }
+    async unBlockUserController(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+           console.log(req.body)
+           const unblockUser = await this.userService.unblockUser(req.body)
+           res.send({ unblockUser, success: true })
+        } catch (error) {
+            next(error)
+        }
+    }
     
 }

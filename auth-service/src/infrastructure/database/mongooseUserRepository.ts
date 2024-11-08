@@ -2,6 +2,7 @@ import { User } from "../../domain/entities/user";
 import UserModel from './model/userModel';
 import otpModel from './model/otpModel';
 import bcrypt from 'bcrypt';
+import mongoose from "mongoose";
 
 
 class UserRepository {
@@ -81,7 +82,7 @@ class UserRepository {
         const { oldPassword, newPassword, confirmPassword } = data.data;
         const userId = data.userId;
         try {
-            const user =await UserModel.findOne({_id:userId})
+            const user = await UserModel.findOne({ _id: userId })
             if (!user) {
                 throw new Error("User not found");
             }
@@ -99,8 +100,8 @@ class UserRepository {
 
             user.password = newPassword;
             await user.save();
-    
-            console.log("Password updated successfully");      
+
+            console.log("Password updated successfully");
             console.log(user)
         } catch (error) {
             console.log(error);
@@ -109,6 +110,50 @@ class UserRepository {
 
     }
 
+
+    async userDetails() {
+        try {
+            const userDetails = await UserModel.find();
+            console.log(userDetails)
+            return userDetails
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async blockUser(userId: any) {
+        try {
+            const actualUserId = new mongoose.Types.ObjectId(userId.userId);
+
+            const updatedUser = await UserModel.findOneAndUpdate(
+                { _id: actualUserId },
+                { $set: { isBlock: true } },
+                { new: true }
+            );
+            console.log(updatedUser)
+            return updatedUser;
+        } catch (error) {
+            console.error("Error blocking user:", error);
+            throw error;
+        }
+    }
+    async unblockUser(userId: any) {
+        try {
+            const actualUserId = new mongoose.Types.ObjectId(userId.userId);
+
+            const updatedUser = await UserModel.findOneAndUpdate(
+                { _id: actualUserId },
+                { $set: { isBlock: false } },
+                { new: true }
+            );
+            console.log(updatedUser)
+            return updatedUser;
+        } catch (error) {
+            console.error("Error blocking user:", error);
+            throw error;
+        }
+    }
+    
 }
 
 const getUserRepository = new UserRepository();

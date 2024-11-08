@@ -88,5 +88,33 @@ export class UserService {
             throw error
         }
     }
+    async userDetails() {
+        try {
+            const userDetails = await getUserRepository.userDetails()
+            return userDetails
+        } catch (error) {
+            throw error
+        }
+    }
+
+    
+    async blockUser(userId: any) {
+        try {
+            const blockedUser = await getUserRepository.blockUser( userId );
+            return blockedUser;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async unblockUser(userId: any) {
+        try {
+            const unblockUser = await getUserRepository.unblockUser( userId );
+            return unblockUser;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     
 } 
