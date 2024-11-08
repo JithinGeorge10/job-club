@@ -60,24 +60,25 @@ export class CompanyController {
 
     async companyLoginController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            console.log(req.body);
-            const { email, password } = req.body
-            const company = await this.companyService.companyLogin(email, password)
-            console.log('gotcha2', company);
-
-            if (company) {
-
-                const comapanyJwtToken = await this.JwtService.createJwt(company._id, 'company')
-                console.log(comapanyJwtToken);
-
-                res.status(200).cookie('companyToken', comapanyJwtToken, {
-                    maxAge: 60 * 60 * 24 * 1000
-                }).send({ company, success: true, token: comapanyJwtToken });
-            }
+          const { email, password } = req.body;
+          const company = await this.companyService.companyLogin(email, password);
+      
+          if (company && '_id' in company) { // Valid company user
+            const companyJwtToken = await this.JwtService.createJwt(company._id, 'company');
+      
+            res.status(200).cookie('companyToken', companyJwtToken, {
+              maxAge: 60 * 60 * 24 * 1000, // 1 day
+            }).send({ company, success: true, token: companyJwtToken });
+          } else if (company && 'isBlocked' in company && company.isBlocked) { // Blocked user
+            res.status(403).send({ success: false, message: 'User is blocked' });
+          } else { // Invalid credentials
+            res.status(401).send({ success: false, message: 'Invalid credentials' });
+          }
         } catch (error) {
-            next(error)
+          next(error);
         }
-    }
+      }
+      
     async companyDetailsController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const companyDetails = await this.companyService.getCompanyDetails()

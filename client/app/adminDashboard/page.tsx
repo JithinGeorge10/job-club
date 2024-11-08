@@ -4,13 +4,9 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import AdminLeftSideBar from '../components/adminLeftSideBar';
 
-function page() {
+function Page() {
   const router = useRouter()
-  const handleLogout = () => {
-    localStorage.clear();
-    Cookies.remove('adminToken');
-    router.push(`/`)
-  }
+ 
   return (
     <div className="flex min-h-screen bg-gray-100">
       <AdminLeftSideBar />
@@ -76,4 +72,4 @@ function page() {
   )
 }
 
-export default page;
+export default Page;

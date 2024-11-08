@@ -71,7 +71,7 @@ export class UserService {
 
             if (userDetails) {
                 return userDetails
-            } else {
+            } else { 
                 throw new Error("Give valid credentials");
             }
 

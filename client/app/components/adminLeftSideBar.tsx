@@ -14,7 +14,10 @@ function AdminLeftSideBar() {
   const handleCompany = () => {
     router.push(`companyManagement`);
   };
-
+  const handleUsers = () => {
+    router.push(`userManagement`);
+  };
+  
   return (
     <aside className="bg-black text-white fixed h-full w-1/5 p-6 sm:w-1/4 md:w-1/5 lg:w-1/6">
       <nav className="space-y-6">
@@ -22,6 +25,11 @@ function AdminLeftSideBar() {
           onClick={handleCompany} 
           className="w-full text-left py-3 hover:bg-gray-700 rounded-md text-lg">
           Companies
+        </button>
+        <button 
+          onClick={handleUsers} 
+          className="w-full text-left py-3 hover:bg-gray-700 rounded-md text-lg">
+          Users
         </button>
       </nav>
       <button 

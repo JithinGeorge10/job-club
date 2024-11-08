@@ -75,6 +75,18 @@ class companyRepository {
             console.log(error);
         }
     }
+    async isCompanyBlock(email:string,password:string) {
+        try {
+           const userData = await companyModel.findOne({ email,isBlock:true });
+           if(userData){
+                return true
+           }
+         
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
 
     async verifygetCompanyCompany() {
         try {

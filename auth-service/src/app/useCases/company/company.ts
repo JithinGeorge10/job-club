@@ -57,14 +57,22 @@ export class CompanyService {
     async companyLogin(email: string, password: string) {
         try {
 
-            const companyDetails = await getCompanyRepository.verifyCompany(email, password)
-            console.log('gotcha', companyDetails);
+            const isCompanyBlock=await getCompanyRepository.isCompanyBlock(email, password)
 
-            if (companyDetails) {
-                return companyDetails
-            } else {
-                throw new Error("Give valid credentials");
+            if(isCompanyBlock){
+                throw new Error("User is blocked");
+            }else{
+                const companyDetails = await getCompanyRepository.verifyCompany(email, password)
+                console.log('gotcha', companyDetails);
+    
+                if (companyDetails) {
+                    return companyDetails
+                } else {
+                    throw new Error("Give valid credentials");
+                }
             }
+
+          
 
         } catch (error) {
             throw error

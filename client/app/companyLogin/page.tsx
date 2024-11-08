@@ -15,27 +15,42 @@ function page() {
   }
   const { register, handleSubmit, formState: { errors } } = useForm<login>();
   const onSubmit = async (data: login) => {
-    let response = await axios.post(`${AUTH_SERVICE_URL}/company-login`, data, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      withCredentials: true
-    })
-    const company = response.data.company
-    console.log(response);
-    console.log(company);
-
-    if (response.data.success) {
-      localStorage.setItem('company', JSON.stringify(company));
-      toast.success('Welcome')
-      setTimeout(() => {
-        router.push(`companyDashboard?id=${company._id}`)
-      }, 3000);
-    } else {
-      toast.error('Invalid credentials')
+    try {
+      const response = await axios.post(`${AUTH_SERVICE_URL}/company-login`, data, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
+  
+      const company = response.data.company;
+      console.log(response)
+      if (response.data.success) {
+        localStorage.setItem('company', JSON.stringify(company));
+        toast.success('Welcome');
+        setTimeout(() => {
+          router.push(`companyDashboard?id=${company._id}`);
+        }, 3000);
+      }
+      if (response.data.errorMessage=='Give valid credentials') {
+        toast.info('Give valid credentials');
+      }
+      if (response.data.errorMessage=='User is blocked') {
+        toast.error('You are blocked');
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 403) {
+          toast.error('User is blocked');
+        } else if (error.response?.status === 401) {
+          toast.error('Invalid credentials');
+        } else {
+          toast.error('An unexpected error occurred');
+        }
+      } else {
+        toast.error('An unexpected error occurred');
+        console.error(error);
+      }
     }
   };
-
 
   return (
     <>

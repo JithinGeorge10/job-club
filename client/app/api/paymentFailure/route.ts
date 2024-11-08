@@ -1,7 +1,6 @@
-import { NextApiResponse } from "next";
 import { redirect } from "next/navigation";
 
-export async function POST(req: any, res: NextApiResponse) {
+export async function POST(req: any) {
   const contentType = req.headers.get("content-type") || "";
   console.log({ contentType });
 
