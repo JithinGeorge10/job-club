@@ -26,7 +26,7 @@ function Page() {
     if (response.data.success) {
         toast.success('Welcome')
         setTimeout(() => {
-          router.push(`adminDashboard`)
+          router.replace(`adminDashboard`)
       }, 3000);
     } else {
         toast.error('Invalid Credentials')

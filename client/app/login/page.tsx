@@ -29,7 +29,7 @@ function page() {
       localStorage.setItem('user',JSON.stringify(user));
       toast.success('Welcome')
       setTimeout(() => {
-        router.push(`jobListingPage`)
+        router.replace(`jobListingPage`)
       }, 3000);
     } else {
       toast.error('Invalid credentials')

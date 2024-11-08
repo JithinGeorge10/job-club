@@ -27,7 +27,7 @@ function page() {
         localStorage.setItem('company', JSON.stringify(company));
         toast.success('Welcome');
         setTimeout(() => {
-          router.push(`companyDashboard?id=${company._id}`);
+          router.replace(`companyDashboard?id=${company._id}`);
         }, 3000);
       }
       if (response.data.errorMessage=='Give valid credentials') {
