@@ -1,6 +1,7 @@
 
 import kafka from '../config/kafkaConfig'
 import { UserService } from '../../app/useCases/User/addUser'
+import { CompanyService } from '../../app/useCases/User/addCompany'
 async function consume() {
     console.log('kafka consume')
 
@@ -8,11 +9,12 @@ async function consume() {
         const consumer = kafka.consumer({ groupId: "chat-group" });
         await consumer.connect();
         await consumer.subscribe({
-            topics: ["add-user", 'delete-user'],
+            topics: ["add-user", "add-company"],
             fromBeginning: true,
         });
         console.log("post adding user");
-         const userService = new UserService();
+        const companyService = new CompanyService();
+        const userService = new UserService();
         await consumer.run({
             eachMessage: async ({ topic, partition, message }) => {
                 let user
@@ -22,7 +24,18 @@ async function consume() {
                 }
 
                 if (topic === "add-user") {
-                  await userService.createUser(user);
+                    await userService.createUser(user);
+                }
+                let company
+                console.log('blaconsume');
+                console.log(message.value);
+
+                if (message.value) {
+                    company = JSON.parse(message.value.toString())
+                    console.log(company)
+                }
+                if (topic === "add-company") {
+                    await companyService.createCompany(company);
                 }
             }
         })
