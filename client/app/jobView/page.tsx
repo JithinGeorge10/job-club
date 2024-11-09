@@ -6,7 +6,7 @@ import axios from 'axios';
 import { COMPANY_SERVICE_URL, USER_SERVICE_URL } from '@/utils/constants';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import { profile } from 'console';
+
 function page() {
 
     interface JobDetails {
@@ -26,6 +26,7 @@ function page() {
         companyName: string;
         location: string;
         industry: String;
+        _id:String
     }
     const router = useRouter()
     const searchParams = useSearchParams();
@@ -104,6 +105,10 @@ function page() {
     const handlePremiumSubmit=()=>{
         router.push(`userProfile?id=${userId}`);
     }
+    const handlechat=(companyId:any)=>{
+        router.push(`userChat?id=${companyId}`);
+    }
+
     return (
         <>
             <Navbar />
@@ -142,7 +147,7 @@ function page() {
                                 <button onClick={handleSubmit} className="bg-green-500 text-white font-semibold px-6 py-2 rounded-lg">Apply</button>
                             )}
                             {userDetails?.profile?.subscriber ? ( // Check if the user is a subscriber
-                                <button className="bg-green-500 text-white font-semibold px-6 py-2 rounded-lg">
+                                <button onClick={()=>handlechat(jobDetails?.companyId?._id)} className="bg-green-500 text-white font-semibold px-6 py-2 rounded-lg">
                                     Chat
                                 </button>
                             ) : (
