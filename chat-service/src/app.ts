@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 import { PORT, CLIENT_PORT } from './utils/config'
 import consume from './infrastructure/service/consume'
 import {connectDB} from "./infrastructure/config/databaseConfig"
+import chatRoute from './presentation/routes/chatRoute'
 
 const app = express()
 app.use(express.json());
@@ -19,7 +20,7 @@ app.use(cors({
 app.use(morgan("dev"));
 app.use(cookieParser());
 consume()
-
+app.use("/api/chat-service", chatRoute);
 app.listen(PORT, () => {
     console.log('app started')
 })

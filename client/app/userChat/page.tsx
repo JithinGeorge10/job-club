@@ -1,5 +1,5 @@
 'use client'
-import { USER_SERVICE_URL } from '@/utils/constants';
+import { CHAT_SERVICE_URL } from '@/utils/constants';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
@@ -13,7 +13,7 @@ function Page() {
 
     const handleSendMessage = async() => {
         console.log(message);
-        let response = await axios.post(`${USER_SERVICE_URL}/sendMessage`, { companyId,message }, {
+        let response = await axios.post(`${CHAT_SERVICE_URL}/sendMessage`, { companyId,message }, {
             headers: {
                 'Content-Type': 'application/json'
             },
