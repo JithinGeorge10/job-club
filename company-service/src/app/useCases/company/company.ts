@@ -66,8 +66,13 @@ return company
             throw error
         }
     }
-    
-    
-    
+    async deleteJob(jobId:any) {
+        try {
+            const deleteJob = await jobRepository.deleteJob(jobId)
+            return deleteJob
+        } catch (error) {
+            throw error
+        }
+    }
     
 }

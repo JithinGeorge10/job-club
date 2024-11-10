@@ -79,6 +79,15 @@ export class CompanyController {
             next(error)
         }
     }
-    
+    async deleteJobs(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
 
+          console.log(req.body)
+          const {jobId}=req.body
+          const deleteJob = await this.companyService.deleteJob(jobId)
+        } catch (error) {
+            next(error)
+        }
+    }
+    
 }

@@ -142,6 +142,24 @@ class CompanyRepository {
             throw error;
         }
     }
+
+    
+    async deleteJob(jobId:any) {
+        try {
+          const result = await jobModel.findByIdAndDelete(jobId);
+          if (result) {
+            console.log("Job deleted successfully:", result);
+            return { success: true, message: "Job deleted successfully" };
+          } else {
+            console.log("Job not found");
+            return { success: false, message: "Job not found" };
+          }
+        } catch (error) {
+          console.error("Error deleting job:", error);
+          return { success: false, message: "Error deleting job" };
+        }
+      };
+      
 }
 
 const jobRepository = new CompanyRepository();
