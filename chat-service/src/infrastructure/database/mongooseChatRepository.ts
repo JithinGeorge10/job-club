@@ -1,11 +1,15 @@
-import messageModel from "./model/messageModel";
+import roomModel from "./model/roomModel";
 class ChatRepository {
-    async addMessage(messageDetails:any) {
+    async createRoom(messageDetails: any) {
         try {
-            const { userId, companyId, message } = messageDetails
-            const newMessage = new messageModel({ sender:userId, receiver:companyId, message });
-            const savedMessage = await newMessage.save();
-            return savedMessage; 
+            const { userId, companyId } = messageDetails;
+            const existingRoom = await roomModel.findOne({ userId, companyId });
+            if (existingRoom) {
+                return existingRoom;
+            }
+                        const newRoom = new roomModel({ userId, companyId });
+            const savedRoom = await newRoom.save();
+            return savedRoom; 
         } catch (error) {
             console.log(error);
             throw error;

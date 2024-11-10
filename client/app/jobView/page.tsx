@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Footer from '../components/footer/footer';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
-import { COMPANY_SERVICE_URL, USER_SERVICE_URL } from '@/utils/constants';
+import { CHAT_SERVICE_URL, COMPANY_SERVICE_URL, USER_SERVICE_URL } from '@/utils/constants';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
@@ -75,6 +75,7 @@ function page() {
         fetchData();
     }, [jobId]);
     console.log(jobDetails)
+
     const handleSaveJob = async (jobId: any) => {
         let response = await axios.post(`${USER_SERVICE_URL}/saveJob`, { jobId, userId }, {
             headers: {
@@ -105,7 +106,14 @@ function page() {
     const handlePremiumSubmit=()=>{
         router.push(`userProfile?id=${userId}`);
     }
-    const handlechat=(companyId:any)=>{
+    
+    const handlechat=async(companyId:any)=>{
+        let response = await axios.post(`${CHAT_SERVICE_URL}/createRoom`,{userId,companyId}, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        });
         router.push(`userChat?id=${companyId}`);
     }
 

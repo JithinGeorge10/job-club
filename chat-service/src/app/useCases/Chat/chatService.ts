@@ -1,10 +1,10 @@
 
 import ChatRepository from '../../../infrastructure/database/mongooseChatRepository'
 export class ChatService {
-    async saveChatDetails(messageDetails:any) {
+    async createRoom(roomDetails:any) {
         try {
 
-            const company = await ChatRepository.addMessage(messageDetails)
+            const createRoom = await ChatRepository.createRoom(roomDetails)
 
         } catch (error) {
             throw error
