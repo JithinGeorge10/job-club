@@ -70,7 +70,15 @@ export class CompanyController {
             next(error)
         }
     }
+    async updateJobs(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
 
-
+            const updatedJob = await this.companyService.editJob(req.body)
+            res.status(200).send({ updatedJob })
+        } catch (error) {
+            next(error)
+        }
+    }
+    
 
 }

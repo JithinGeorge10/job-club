@@ -74,7 +74,7 @@ class CompanyRepository {
     }
     async changeStatus(job: any) {
         try {
-           
+
             const statusChanges = await jobModel.updateOne(
                 { _id: job.jobId },
                 { $set: { status: false } }
@@ -89,7 +89,7 @@ class CompanyRepository {
     async filterJobs(filter: any) {
         try {
             const { salaryRanges, categories, employmentTypes } = filter;
-    
+
 
             const salaryFilter = salaryRanges.map((range: string) => {
                 const [min, max] = range.split('-').map(Number);
@@ -101,17 +101,17 @@ class CompanyRepository {
                     ]
                 };
             });
-    
+
 
             const filterQuery = {
                 ...(salaryFilter.length > 0 && { $or: salaryFilter }),
                 ...(categories.length > 0 && { category: { $in: categories } }),
                 ...(employmentTypes.length > 0 && { employmentType: { $in: employmentTypes } }),
             };
-    
-          
+
+
             const jobs = await jobModel.find(filterQuery).populate('companyId', 'companyName'); // Add populate here
-    
+
             console.log('Filtered Jobs:', jobs);
             return jobs;
         } catch (error) {
@@ -119,9 +119,29 @@ class CompanyRepository {
             throw error;
         }
     }
-    
-    
 
+    async editJob(JobDetails: any) {
+        try {
+            
+            const { _id: jobId, ...updateFields } = JobDetails;   
+            const updatedJob = await jobModel.findByIdAndUpdate(
+                jobId,
+                { $set: updateFields },
+                { new: true, runValidators: true } 
+            );
+    
+            if (!updatedJob) {
+                console.log('Job not found');
+                return { success: false, message: 'Job not found' };
+            }
+    
+            console.log('Job updated successfully:', updatedJob);
+            return { success: true, data: updatedJob };
+        } catch (error) {
+            console.log('Error updating job:', error);
+            throw error;
+        }
+    }
 }
 
 const jobRepository = new CompanyRepository();

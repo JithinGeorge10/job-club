@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import CompanyNavbar from '../components/companyNavbar';
@@ -42,11 +42,9 @@ function JobTable() {
     }
   }, [companyId, jobDetails]);
 
-
   const filteredAndSearchedJobs = filteredJobDetails.filter((job) =>
     job.jobTitle.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
 
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
@@ -55,7 +53,7 @@ function JobTable() {
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
-    setCurrentPage(1); // Reset to the first page on new search
+    setCurrentPage(1); 
   };
 
   const handleCloseJob = async (jobId: any) => {
@@ -85,6 +83,12 @@ function JobTable() {
     });
   };
 
+  const handleEditJob = (jobId: string) => {
+    console.log(jobId)
+    router.push(`editJob?id=${jobId}`);
+
+  };
+
   const handlePageChange = (page: number) => {
     if (page > 0 && page <= totalPages) {
       setCurrentPage(page);
@@ -99,7 +103,6 @@ function JobTable() {
 
         <div className="flex-1 flex flex-col items-center justify-start p-6 md:p-8">
           <h1 className="text-3xl font-bold mb-6 md:mb-8 text-center md:text-left">Job Listings</h1>
-
 
           <input
             type="text"
@@ -139,7 +142,7 @@ function JobTable() {
                       </span>
                     </td>
                     <td className="p-3 md:p-4 bg-gray-900 text-sm md:text-base">{job.slots}</td>
-                    <td className="p-3 md:p-4 bg-gray-900">
+                    <td className="p-3 md:p-4 bg-gray-900 flex space-x-2">
                       {job.status ? (
                         <button
                           onClick={() => handleCloseJob(job._id)}
@@ -155,13 +158,19 @@ function JobTable() {
                           Closed
                         </button>
                       )}
+                      {/* New Edit button */}
+                      <button
+                        onClick={() => handleEditJob(job._id)}
+                        className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded-full text-xs md:text-sm"
+                      >
+                        Edit
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-
 
           <div className="flex items-center justify-center space-x-4 mt-4">
             <button

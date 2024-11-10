@@ -2,7 +2,7 @@
 import { CHAT_SERVICE_URL } from '@/utils/constants';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 function Page() {
     const searchParams = useSearchParams();
@@ -10,10 +10,19 @@ function Page() {
     console.log(companyId);
 
     const [message, setMessage] = useState('');
+    const [userId, setUserId] = useState<string | null>(null);
 
-    const handleSendMessage = async() => {
+    useEffect(() => {
+        const user: string | null = localStorage.getItem('user');
+        if (user && user !== 'undefined') {
+            let userDetails = JSON.parse(user);
+            setUserId(userDetails._id);
+        }
+    }, []);
+
+    const handleSendMessage = async () => {
         console.log(message);
-        let response = await axios.post(`${CHAT_SERVICE_URL}/sendMessage`, { companyId,message }, {
+        let response = await axios.post(`${CHAT_SERVICE_URL}/sendMessage`, { userId,companyId, message }, {
             headers: {
                 'Content-Type': 'application/json'
             },

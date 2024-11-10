@@ -57,8 +57,15 @@ return company
             throw error
         }
     }
-
     
+    async editJob(jobDetails:any) {
+        try {
+            const updatedJob = await jobRepository.editJob(jobDetails)
+            return updatedJob
+        } catch (error) {
+            throw error
+        }
+    }
     
     
     

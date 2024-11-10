@@ -10,6 +10,8 @@ companyRoute.get('/get-singleJobDetails', companyController.getsingleJobDetails.
 companyRoute.post('/submitApplication', companyController.submitApplication.bind(companyController));
 companyRoute.post('/changeStatus-jobDetails', companyController.changeStatus.bind(companyController));
 companyRoute.post('/get-filteredJobs', companyController.getfilteredJobs.bind(companyController));
+companyRoute.put('/update-jobDetails', companyController.updateJobs.bind(companyController));
+
 
 
 export default companyRoute
