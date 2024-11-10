@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 const chatRoom = new mongoose.Schema({
     userId: String,
     companyId: String,
+    lastMessage:String,
     timestamp: { type: Date, default: Date.now },
 })
 

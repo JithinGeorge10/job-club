@@ -6,23 +6,21 @@ import React, { useEffect, useState } from 'react';
 
 function Page() {
     const searchParams = useSearchParams();
-    const companyId = searchParams.get('id');
-    console.log(companyId);
-
+    const roomDetailsString = searchParams.get('roomDetails');
+    let roomDetails = null;
+    if (roomDetailsString) {
+        roomDetails = JSON.parse(decodeURIComponent(roomDetailsString));
+    }
+    const { _id, userId, companyId } = roomDetails
+    console.log(_id)
+    console.log(userId)
+    console.log(companyId)
     const [message, setMessage] = useState('');
-    const [userId, setUserId] = useState<string | null>(null);
 
-    useEffect(() => {
-        const user: string | null = localStorage.getItem('user');
-        if (user && user !== 'undefined') {
-            let userDetails = JSON.parse(user);
-            setUserId(userDetails._id);
-        }
-    }, []);
 
     const handleSendMessage = async () => {
         console.log(message);
-        let response = await axios.post(`${CHAT_SERVICE_URL}/sendMessage`, { userId,companyId, message }, {
+        let response = await axios.post(`${CHAT_SERVICE_URL}/postMessage`, { sender:userId,receiver:companyId,message,roomId :_id }, {
             headers: {
                 'Content-Type': 'application/json'
             },

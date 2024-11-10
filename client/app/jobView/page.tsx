@@ -114,7 +114,9 @@ function page() {
             },
             withCredentials: true
         });
-        router.push(`userChat?id=${companyId}`);
+        console.log(response)
+        const {chatRoom}=response.data
+        router.push(`userChat?roomDetails=${encodeURIComponent(JSON.stringify(chatRoom))}`);
     }
 
     return (

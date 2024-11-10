@@ -7,6 +7,10 @@ function CompanyLeftSideBar() {
     const handleJobListing = () => {
         router.push('companyJobListing');
     };
+    const handleMessage=()=>{
+        router.push('companychat');
+    }
+
 
     return (
         <aside className="bg-gradient-to-b from-gray-800 to-gray-900 text-white h-screen w-1/5 p-5">
@@ -14,9 +18,9 @@ function CompanyLeftSideBar() {
                 <a href="#" className="flex items-center text-green-400 hover:text-green-500 transition-colors duration-200">
                     <span className="material-icons mr-3">Dashboard</span>
                 </a>
-                <a href="#" className="flex items-center hover:text-gray-300 transition-colors duration-200">
+                <button onClick={handleMessage} className="flex items-center hover:text-gray-300 transition-colors duration-200">
                     <span className="material-icons mr-3">Messages</span>
-                </a>
+                </button>
                 <button className="flex items-center hover:text-gray-300 transition-colors duration-200">
                     <span className="material-icons mr-3">Company Profile</span>
                 </button>
