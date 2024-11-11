@@ -83,18 +83,29 @@ class ChatRepository {
     }
     
     
-    async getUserRoom(roomId: string) {
+    // async getUserRoom(roomId: string) {
+    //     try {
+    //         const rooms = await roomModel.find({ _id: roomId })
+    //         console.log(rooms);
+    //         return rooms;
+    //     } catch (error) {
+    //         console.log(error);
+    //         throw error;
+    //     }
+    // }
+
+    async getMessages(roomId:any) {
         try {
-            const rooms = await roomModel.find({ _id: roomId })
-            console.log(rooms);
-            return rooms;
+            const rooms = await messageModel.find({ roomId })
+            console.log(rooms)
+            return rooms
         } catch (error) {
             console.log(error);
             throw error;
         }
     }
 
-
+    
 
 }
 const getChatRepository = new ChatRepository();
