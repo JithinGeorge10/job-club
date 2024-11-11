@@ -4,6 +4,13 @@ import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
+interface Message {
+    sender: string;
+    receiver: string;
+    message: string;
+    roomId: string;
+}
+
 function Page() {
     const searchParams = useSearchParams();
     const roomDetailsString = searchParams.get('roomDetails');
@@ -11,22 +18,41 @@ function Page() {
     if (roomDetailsString) {
         roomDetails = JSON.parse(decodeURIComponent(roomDetailsString));
     }
-    const { _id, userId, companyId } = roomDetails
-    console.log(_id)
-    console.log(userId)
-    console.log(companyId)
-    const [message, setMessage] = useState('');
+    const { _id, userId, companyId } = roomDetails;
+    let roomId = _id;
 
+    const [message, setMessage] = useState('');
+    const [messages, setMessages] = useState<Message[]>([]); // Set messages type to Message[]
+
+    useEffect(() => {
+        async function getAllUserMessages() {
+            const response = await axios.get(`${CHAT_SERVICE_URL}/getMessages`, {
+                params: { companyId, roomId },
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                withCredentials: true
+            });
+            setMessages(response.data.getMessages); // Store messages in state
+        }
+        getAllUserMessages();
+    }, []);
 
     const handleSendMessage = async () => {
         console.log(message);
-        let response = await axios.post(`${CHAT_SERVICE_URL}/postMessage`, { sender:userId,receiver:companyId,message,roomId :_id }, {
+        let response = await axios.post(`${CHAT_SERVICE_URL}/postMessage`, { 
+            sender: userId, 
+            receiver: companyId, 
+            message, 
+            roomId: _id 
+        }, {
             headers: {
                 'Content-Type': 'application/json'
             },
             withCredentials: true
         });
         setMessage('');
+        setMessages(prevMessages => [...prevMessages, response.data]); // Add new message to state
     };
 
     return (
@@ -37,16 +63,18 @@ function Page() {
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    <div className="flex justify-start">
-                        <div className="bg-gray-700 p-3 rounded-lg max-w-xs">
-                            <p>Hello! How are you?</p>
+                    {messages.map((msg, index) => (
+                        <div 
+                            key={index} 
+                            className={`flex ${msg.sender === userId ? 'justify-end' : 'justify-start'}`}
+                        >
+                            <div 
+                                className={`${msg.sender === userId ? 'bg-green-600' : 'bg-gray-700'} p-3 rounded-lg max-w-xs`}
+                            >
+                                <p>{msg.message}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div className="flex justify-end">
-                        <div className="bg-green-600 p-3 rounded-lg max-w-xs">
-                            <p>I'm good, thanks! How about you?</p>
-                        </div>
-                    </div>
+                    ))}
                 </div>
 
                 <div className="flex items-center p-4 bg-gray-900">
