@@ -17,6 +17,23 @@ export class ChatService {
             throw error
         }
     }
+    async getRoom(companyId:any) {
+        try {
+            const getRoom = await ChatRepository.getRoom(companyId)
+            return getRoom
+        } catch (error) {
+            throw error
+        }
+    }
+    async getUserRoom(roomId:any) {
+        try {
+            const getUserRoom = await ChatRepository.getUserRoom(roomId)
+            return getUserRoom
+        } catch (error) {
+            throw error
+        }
+    }
+    
     
 }
 

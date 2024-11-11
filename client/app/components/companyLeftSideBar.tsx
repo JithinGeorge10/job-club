@@ -1,15 +1,35 @@
-import React from 'react';
+'use client'
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+
 function CompanyLeftSideBar() {
+    const [companyId, setCompanyId] = useState<string | null>(null);
+
+    useEffect(() => {
+        const company: string | null = localStorage.getItem('company');
+        if (company && company !== 'undefined') {
+            let companyDetails = JSON.parse(company);
+            setCompanyId(companyDetails._id);
+        }
+    }, []);
+    console.log(companyId)
+
     const router = useRouter();
 
     const handleJobListing = () => {
         router.push('companyJobListing');
     };
-    const handleMessage=()=>{
-        router.push('companychat');
-    }
+
+    const handleMessage = async () => {
+        try {
+    
+            router.push(`/companyChat`);
+        } catch (error) {
+            console.error("Error fetching room details:", error);
+        }
+    };
+    
 
 
     return (
