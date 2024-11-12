@@ -46,7 +46,7 @@ io.on("connection", (socket) => {
     socket.on("sendMessage", (messageData) => {
         console.log(messageData);
         const { roomId, message, sender } = messageData;
-        io.to(roomId).emit("receiveMessage", { message, sender });
+        io.to(roomId).emit("receiveMessage", { message, sender,roomId });
     });
 
     socket.on("disconnect", () => {

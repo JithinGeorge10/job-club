@@ -1,11 +1,11 @@
-'use client';
-
+'use client'
+import React, { useEffect, useRef, useState } from 'react';
 import { CHAT_SERVICE_URL } from '@/utils/constants';
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
 import io from "socket.io-client";
 const socket = io('http://localhost:4003');
 
+// Define Room and Message interfaces
 interface Room {
     firstName: string;
     lastName: string;
@@ -39,9 +39,9 @@ function Page() {
     };
 
     useEffect(() => {
-        const company: string | null = localStorage.getItem('company');
+        const company = localStorage.getItem('company');
         if (company && company !== 'undefined') {
-            let companyDetails = JSON.parse(company);
+            const companyDetails = JSON.parse(company);
             setCompanyId(companyDetails._id);
         }
     }, []);
@@ -65,32 +65,29 @@ function Page() {
     useEffect(() => {
         if (selectedRoom) {
             const roomId = selectedRoom.roomId;
-            socket.emit("joinRoom", roomId);
 
             const receiveMessageListener = (newMessage: Message) => {
-                console.log("Received message:", newMessage);
+                console.log(newMessage)
+                console.log(roomId)
                 if (newMessage.roomId === roomId) {
-                    setMessages((prevMessages) => [...prevMessages, newMessage]);
+                    handleRoomClick(roomId);
                 }
             };
-
             socket.on("receiveMessage", receiveMessageListener);
-
-
             return () => {
                 socket.off("receiveMessage", receiveMessageListener);
             };
         }
-    }, [selectedRoom]);
+    }, [selectedRoom]);  // Dependency to run effect only when selectedRoom changes
 
     useEffect(() => {
-        if (selectedRoom) {
-            const roomId = selectedRoom.roomId;
-            const joinRoomAndFetchMessages = async () => {
-                await handleRoomClick(roomId); 
-            };
-            joinRoomAndFetchMessages();
-        }
+        // if (selectedRoom) {
+        //     const roomId = selectedRoom.roomId;
+        //     const joinRoomAndFetchMessages = async () => {
+        //         await handleRoomClick(roomId); 
+        //     };
+        //     joinRoomAndFetchMessages();
+        // }
         scrollToBottom();
     }, [messages]);
 
@@ -112,34 +109,42 @@ function Page() {
             setMessages([]);
         }
     };
-
     const handleSendMessage = async () => {
         if (selectedRoom && message.trim() !== '' && companyId) {
             const roomId = selectedRoom.roomId;
             const userId = selectedRoom.userId;
 
             try {
+                const timestamp = new Date().toISOString();  // Valid timestamp
+
                 const newMessage = {
                     sender: companyId,
                     receiver: userId,
                     message,
                     roomId,
-                    timestamp: new Date().toISOString(),
+                    timestamp,
                     _id: Math.random().toString(36).substring(7) // Temporary ID for UI
                 };
 
+                // Send the message through the API
                 await axios.post(`${CHAT_SERVICE_URL}/postMessage`, {
                     sender: companyId,
                     receiver: userId,
                     message,
-                    roomId
+                    roomId,
+                    timestamp
                 }, {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
                 });
 
+                // Emit the message to the socket
                 socket.emit('sendMessage', newMessage);
+
+                // Update the messages state once the message is sent
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+                // Reset the input field
                 setMessage('');
             } catch (error) {
                 console.error('Error sending message:', error);
@@ -174,23 +179,32 @@ function Page() {
                     <>
                         <div className="flex-1 overflow-y-auto space-y-4 p-4 bg-gray-700 rounded-lg">
                             <div className="flex flex-col space-y-3">
-                                {messages.map((msg) => (
-                                    <div
-                                        key={msg._id}
-                                        className={`flex ${msg.receiver === companyId ? 'justify-start' : 'justify-end'}`}
-                                    >
+                                {messages.map((msg, index) => {
+                                    if (!companyId || !selectedRoom) return null;
+
+                                    const messageKey = msg._id || `${msg.roomId || 'room'}-${msg.sender || 'sender'}-${msg.timestamp || Date.now()}-${index}`;
+
+                                    return (
                                         <div
-                                            className={`${msg.receiver === companyId ? 'bg-gray-600' : 'bg-green-600'} p-3 rounded-lg text-white max-w-xs`}
+                                            key={messageKey}
+                                            className={`flex ${msg.receiver === companyId ? 'justify-start' : 'justify-end'}`}
                                         >
-                                            <p>{msg.message}</p>
-                                            <p className="text-xs text-gray-300 mt-1">
-                                                {new Date(msg.timestamp).toLocaleString()}
-                                            </p>
+                                            <div
+                                                className={`${msg.receiver === companyId ? 'bg-gray-600' : 'bg-green-600'} p-3 rounded-lg text-white max-w-xs`}
+                                            >
+                                                <p>{msg.message}</p>
+                                                <p className="text-xs text-gray-300 mt-1">
+                                                    {new Date(msg.timestamp).toLocaleString()}
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
+
+
                                 <div ref={messagesEndRef} />
                             </div>
+
                         </div>
 
                         <div className="flex items-center mt-4 p-2 bg-gray-800 rounded-lg">

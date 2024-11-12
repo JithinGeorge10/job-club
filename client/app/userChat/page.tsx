@@ -101,19 +101,19 @@ function Page() {
 
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {messages.map((msg, index) => (
-                    <div 
-                        key={index} 
-                        className={`flex ${msg.sender === userId ? 'justify-end' : 'justify-start'}`}
-                    >
-                        <div
-                            className={`p-3 rounded-lg ${msg.sender === userId ? 'bg-green-600' : 'bg-gray-700'}`}
-                            style={{ maxWidth: '75%', wordWrap: 'break-word' }} // Adjust width dynamically
-                        >
-                            <p>{msg.message}</p>
-                        </div>
-                    </div>
+                   <div 
+                   key={index} 
+                   className={`flex ${msg.sender === userId ? 'justify-end' : 'justify-start'}`}
+               >
+                   <div
+                       className={`p-3 ${msg.sender === userId ? 'bg-green-600' : 'bg-gray-700'} rounded-md`}
+                       style={{ maxWidth: '75%', wordWrap: 'break-word', borderRadius: '10px' }} 
+                   >
+                       <p>{msg.message}</p>
+                   </div>
+               </div>
+               
                 ))}
-                {/* This div is used to scroll to the bottom */}
                 <div ref={messagesEndRef} />
             </div>
 
