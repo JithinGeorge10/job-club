@@ -28,7 +28,6 @@ function Page() {
 
     const messagesEndRef = useRef<HTMLDivElement | null>(null); 
 
-    // Scroll to bottom whenever messages change
     useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -40,7 +39,6 @@ function Page() {
 
         const handleReceiveMessage = (msg: Message) => {
             setMessages(prevMessages => {
-                // Check if the message already exists to avoid duplication
                 if (!prevMessages.some((message) => message.message === msg.message && message.sender === msg.sender)) {
                     return [...prevMessages, msg];
                 }
@@ -58,7 +56,6 @@ function Page() {
                 },
                 withCredentials: true
             });
-            // Set initial messages only if the messages array is empty
             setMessages((prevMessages) => {
                 if (prevMessages.length === 0) {
                     return response.data.getMessages; 
@@ -68,14 +65,13 @@ function Page() {
         }
         getAllUserMessages();
 
-        // Cleanup the socket event listener when the component unmounts or the roomId changes
         return () => {
             socket.off("receiveMessage", handleReceiveMessage);
         };
     }, [roomId, companyId]);
 
     const handleSendMessage = async () => {
-        if (!message.trim()) return;  // Prevent sending empty messages
+        if (!message.trim()) return; 
 
         console.log(message);
         let response = await axios.post(`${CHAT_SERVICE_URL}/postMessage`, { 
@@ -90,13 +86,10 @@ function Page() {
             withCredentials: true
         });
         
-        // Send the message via socket
         socket.emit('sendMessage', { roomId: _id, message, sender: userId });
         
-        // Add the message to state (only after posting to the server)
         setMessages(prevMessages => [...prevMessages, response.data]);
 
-        // Clear the input after sending
         setMessage('');
     };
 

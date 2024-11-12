@@ -63,28 +63,34 @@ function Page() {
     }, [companyId]);
 
     useEffect(() => {
-        const receiveMessageListener = (newMessage: any) => {
-            if (selectedRoom && selectedRoom.roomId === newMessage.roomId) {
-                setMessages((prevMessages) => [...prevMessages, newMessage]);
-            } else {
-                setRooms((prevRooms) =>
-                    prevRooms.map((room) =>
-                        room.roomId === newMessage.roomId
-                            ? { ...room, lastMessage: newMessage.message, timestamp: newMessage.timestamp }
-                            : room
-                    )
-                );
-            }
-        };
+        if (selectedRoom) {
+            const roomId = selectedRoom.roomId;
+            socket.emit("joinRoom", roomId);
 
-        socket.on('receiveMessage', receiveMessageListener);
+            const receiveMessageListener = (newMessage: Message) => {
+                console.log("Received message:", newMessage);
+                if (newMessage.roomId === roomId) {
+                    setMessages((prevMessages) => [...prevMessages, newMessage]);
+                }
+            };
 
-        return () => {
-            socket.off('receiveMessage', receiveMessageListener);
-        };
+            socket.on("receiveMessage", receiveMessageListener);
+
+
+            return () => {
+                socket.off("receiveMessage", receiveMessageListener);
+            };
+        }
     }, [selectedRoom]);
 
     useEffect(() => {
+        if (selectedRoom) {
+            const roomId = selectedRoom.roomId;
+            const joinRoomAndFetchMessages = async () => {
+                await handleRoomClick(roomId); 
+            };
+            joinRoomAndFetchMessages();
+        }
         scrollToBottom();
     }, [messages]);
 
@@ -92,7 +98,7 @@ function Page() {
         try {
             const selected = rooms.find((room) => room.roomId === roomId);
             setSelectedRoom(selected || null);
-            socket.emit("joinRoom", roomId); 
+            socket.emit("joinRoom", roomId);
             const response = await axios.get(`${CHAT_SERVICE_URL}/getMessages`, {
                 params: { companyId, roomId },
                 headers: {
@@ -109,33 +115,30 @@ function Page() {
 
     const handleSendMessage = async () => {
         if (selectedRoom && message.trim() !== '' && companyId) {
-            let roomId = selectedRoom.roomId;
-            let userId = selectedRoom.userId;
-
-            const newMessage = {
-                sender: companyId,
-                receiver: userId,
-                message,
-                roomId,
-                timestamp: new Date().toISOString(),
-                _id: Math.random().toString(36).substring(7) // Temporary ID for rendering
-            };
+            const roomId = selectedRoom.roomId;
+            const userId = selectedRoom.userId;
 
             try {
+                const newMessage = {
+                    sender: companyId,
+                    receiver: userId,
+                    message,
+                    roomId,
+                    timestamp: new Date().toISOString(),
+                    _id: Math.random().toString(36).substring(7) // Temporary ID for UI
+                };
+
                 await axios.post(`${CHAT_SERVICE_URL}/postMessage`, {
-                    sender: companyId, 
-                    receiver: userId, 
-                    message, 
+                    sender: companyId,
+                    receiver: userId,
+                    message,
                     roomId
                 }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
                 });
 
-                socket.emit('sendMessage', { roomId, message, sender: companyId });
-
+                socket.emit('sendMessage', newMessage);
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
                 setMessage('');
             } catch (error) {
@@ -143,6 +146,7 @@ function Page() {
             }
         }
     };
+
 
     return (
         <div className="flex bg-gray-900 h-screen p-4 space-x-4">
