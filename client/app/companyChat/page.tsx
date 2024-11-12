@@ -30,7 +30,7 @@ function Page() {
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [message, setMessage] = useState<string>('');
-    const messagesEndRef = useRef<HTMLDivElement>(null); // Ref to track the end of messages
+    const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
@@ -66,6 +66,14 @@ function Page() {
         const receiveMessageListener = (newMessage: any) => {
             if (selectedRoom && selectedRoom.roomId === newMessage.roomId) {
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
+            } else {
+                setRooms((prevRooms) =>
+                    prevRooms.map((room) =>
+                        room.roomId === newMessage.roomId
+                            ? { ...room, lastMessage: newMessage.message, timestamp: newMessage.timestamp }
+                            : room
+                    )
+                );
             }
         };
 
@@ -77,13 +85,14 @@ function Page() {
     }, [selectedRoom]);
 
     useEffect(() => {
-        // Scroll to the bottom whenever messages update
         scrollToBottom();
     }, [messages]);
 
     const handleRoomClick = async (roomId: string) => {
         try {
-            socket.emit("joinRoom", roomId);
+            const selected = rooms.find((room) => room.roomId === roomId);
+            setSelectedRoom(selected || null);
+            socket.emit("joinRoom", roomId); 
             const response = await axios.get(`${CHAT_SERVICE_URL}/getMessages`, {
                 params: { companyId, roomId },
                 headers: {
@@ -92,8 +101,6 @@ function Page() {
                 withCredentials: true
             });
             setMessages(response.data.getMessages || []);
-            const selected = rooms.find((room) => room.roomId === roomId);
-            setSelectedRoom(selected || null);
         } catch (error) {
             console.error('Error fetching messages:', error);
             setMessages([]);
@@ -178,7 +185,6 @@ function Page() {
                                         </div>
                                     </div>
                                 ))}
-                                {/* Dummy div to track the end of messages */}
                                 <div ref={messagesEndRef} />
                             </div>
                         </div>
