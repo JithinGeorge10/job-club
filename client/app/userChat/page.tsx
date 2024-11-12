@@ -26,7 +26,7 @@ function Page() {
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
 
-    const messagesEndRef = useRef<HTMLDivElement | null>(null); // Reference to the end of the message container
+    const messagesEndRef = useRef<HTMLDivElement | null>(null); 
 
     // Scroll to bottom whenever messages change
     useEffect(() => {

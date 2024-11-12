@@ -1,8 +1,10 @@
-'use client'
+'use client';
 
 import { CHAT_SERVICE_URL } from '@/utils/constants';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import io from "socket.io-client";
+const socket = io('http://localhost:4003');
 
 interface Room {
     firstName: string;
@@ -28,6 +30,13 @@ function Page() {
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [message, setMessage] = useState<string>('');
+    const messagesEndRef = useRef<HTMLDivElement>(null); // Ref to track the end of messages
+
+    const scrollToBottom = () => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
 
     useEffect(() => {
         const company: string | null = localStorage.getItem('company');
@@ -53,8 +62,28 @@ function Page() {
         getRoom();
     }, [companyId]);
 
+    useEffect(() => {
+        const receiveMessageListener = (newMessage: any) => {
+            if (selectedRoom && selectedRoom.roomId === newMessage.roomId) {
+                setMessages((prevMessages) => [...prevMessages, newMessage]);
+            }
+        };
+
+        socket.on('receiveMessage', receiveMessageListener);
+
+        return () => {
+            socket.off('receiveMessage', receiveMessageListener);
+        };
+    }, [selectedRoom]);
+
+    useEffect(() => {
+        // Scroll to the bottom whenever messages update
+        scrollToBottom();
+    }, [messages]);
+
     const handleRoomClick = async (roomId: string) => {
         try {
+            socket.emit("joinRoom", roomId);
             const response = await axios.get(`${CHAT_SERVICE_URL}/getMessages`, {
                 params: { companyId, roomId },
                 headers: {
@@ -62,7 +91,6 @@ function Page() {
                 },
                 withCredentials: true
             });
-            console.log(response)
             setMessages(response.data.getMessages || []);
             const selected = rooms.find((room) => room.roomId === roomId);
             setSelectedRoom(selected || null);
@@ -73,18 +101,39 @@ function Page() {
     };
 
     const handleSendMessage = async () => {
-        if (selectedRoom && message.trim() !== '') {
-            console.log('Message sent:', message);
-            console.log(selectedRoom)
-            let _id=selectedRoom.roomId
-            let userId=selectedRoom.userId
-            let response = await axios.post(`${CHAT_SERVICE_URL}/postMessage`, { sender: companyId, receiver: userId, message, roomId: _id }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                withCredentials: true
-            });
-            setMessage('');
+        if (selectedRoom && message.trim() !== '' && companyId) {
+            let roomId = selectedRoom.roomId;
+            let userId = selectedRoom.userId;
+
+            const newMessage = {
+                sender: companyId,
+                receiver: userId,
+                message,
+                roomId,
+                timestamp: new Date().toISOString(),
+                _id: Math.random().toString(36).substring(7) // Temporary ID for rendering
+            };
+
+            try {
+                await axios.post(`${CHAT_SERVICE_URL}/postMessage`, {
+                    sender: companyId, 
+                    receiver: userId, 
+                    message, 
+                    roomId
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    withCredentials: true
+                });
+
+                socket.emit('sendMessage', { roomId, message, sender: companyId });
+
+                setMessages((prevMessages) => [...prevMessages, newMessage]);
+                setMessage('');
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
         }
     };
 
@@ -117,12 +166,10 @@ function Page() {
                                 {messages.map((msg) => (
                                     <div
                                         key={msg._id}
-                                        className={`flex ${msg.receiver === companyId ? 'justify-start' : 'justify-end'
-                                            }`}
+                                        className={`flex ${msg.receiver === companyId ? 'justify-start' : 'justify-end'}`}
                                     >
                                         <div
-                                            className={`${msg.receiver === companyId ? 'bg-gray-600' : 'bg-green-600'
-                                                } p-3 rounded-lg text-white max-w-xs`}
+                                            className={`${msg.receiver === companyId ? 'bg-gray-600' : 'bg-green-600'} p-3 rounded-lg text-white max-w-xs`}
                                         >
                                             <p>{msg.message}</p>
                                             <p className="text-xs text-gray-300 mt-1">
@@ -131,6 +178,8 @@ function Page() {
                                         </div>
                                     </div>
                                 ))}
+                                {/* Dummy div to track the end of messages */}
+                                <div ref={messagesEndRef} />
                             </div>
                         </div>
 
