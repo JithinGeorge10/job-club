@@ -48,8 +48,6 @@ export class ChatController {
     async getMessagesController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const roomId = req.query.roomId as string; 
-            console.log(roomId); 
-
             const getMessages = await this.chatService.getMessages(roomId)
             res.status(200).send({ getMessages })
 

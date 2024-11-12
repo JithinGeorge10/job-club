@@ -7,7 +7,6 @@ class ChatRepository {
         try {
             const { userId, companyId } = messageDetails;
             const existingRoom = await roomModel.findOne({ userId, companyId });
-            console.log(existingRoom)
             if (existingRoom) {
                 return existingRoom;
             }
@@ -22,7 +21,6 @@ class ChatRepository {
 
     async postMessage(messageDetails: any) {
         try {
-            console.log(messageDetails);
             const { sender, receiver, roomId, message } = messageDetails;
 
             const newMessage = new messageModel({
@@ -50,7 +48,7 @@ class ChatRepository {
 
     async getRoom(companyId: string) {
         try {
-            console.log(companyId);
+          
             
             // Fetch rooms for the given companyId
             const rooms = await roomModel.find({ companyId });
@@ -74,7 +72,7 @@ class ChatRepository {
                 timestamp: room.timestamp,
             }));
     
-            console.log('rooms', roomDetails);
+    
             return roomDetails;
         } catch (error) {
             console.error("Error fetching room details:", error);
@@ -97,7 +95,6 @@ class ChatRepository {
     async getMessages(roomId:any) {
         try {
             const rooms = await messageModel.find({ roomId })
-            console.log(rooms)
             return rooms
         } catch (error) {
             console.log(error);

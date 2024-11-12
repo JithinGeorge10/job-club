@@ -20,7 +20,8 @@
     "kafkajs": "^2.2.4",
     "mongoose": "^8.8.1",
     "morgan": "^1.10.0",
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "socket.io": "^4.8.1"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.7",
