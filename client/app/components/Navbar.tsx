@@ -1,20 +1,30 @@
-'use client'
+'use client';
 import { FaBriefcase, FaBell, FaUser } from 'react-icons/fa';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
+import axios from 'axios';
+import { CHAT_SERVICE_URL } from '@/utils/constants';
+import io from "socket.io-client";
+const socket = io('http://localhost:4003');
 
 function Navbar() {
+  interface Room {
+    _id: string;
+  }
+
   const router = useRouter();
   const [userName, setUserName] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [roomIds, setRoomIds] = useState<string[]>([]);
+  const [notificationCount, setNotificationCount] = useState<number>(0);
 
   useEffect(() => {
-    const user: string | null = localStorage.getItem('user');
+    const user = localStorage.getItem('user');
     if (user && user !== 'undefined') {
-      let userDetails = JSON.parse(user);
+      const userDetails = JSON.parse(user);
       setUserName(userDetails.firstName);
       setUserId(userDetails._id);
     }
@@ -33,32 +43,72 @@ function Navbar() {
   const handleChangePassword = () => {
     router.push(`/changePassword`);
   };
-  const handleMyjobs = () => {
+
+  const handleMyJobs = () => {
     router.push(`/myJobs?id=${userId}`);
   };
+
   const handleNotifications = () => {
     router.push(`/userNotifiations?id=${userId}`);
+    setNotificationCount(0); // Reset the notification count
   };
-  
+
+  useEffect(() => {
+    const getRoom = async () => {
+      if (userId) {
+        const response = await axios.get<{ getRoom: Room[] }>(`${CHAT_SERVICE_URL}/getUserRoomDetails`, {
+          params: { userId },
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true
+        });
+        setRoomIds(response.data.getRoom.map((room: Room) => room._id));
+      }
+    };
+    getRoom();
+  }, [userId]);
+
+  useEffect(() => {
+    roomIds.forEach(roomId => {
+      socket.emit("joinRoom", roomId);
+    });
+
+    const handleReceiveMessage = (msg: any) => {
+      console.log(msg);
+      setNotificationCount(prevCount => prevCount + 1); // Increment the notification count
+    };
+
+    socket.on("receiveMessage", handleReceiveMessage);
+
+    return () => {
+      roomIds.forEach(roomId => {
+        socket.emit("leaveRoom", roomId);
+      });
+      socket.off("receiveMessage", handleReceiveMessage);
+    };
+  }, [roomIds]);
+
   return (
     <nav className="bg-black p-4">
       <div className="container mx-auto flex justify-between items-center">
         <Link href={'/'}>
-          <div className="text-green-400 font-bold text-2xl">
-            _JobClub.
-          </div>
+          <div className="text-green-400 font-bold text-2xl">_JobClub.</div>
         </Link>
 
         {userName ? (
           <div className="flex space-x-6 items-center">
             <div className="flex space-x-4">
-              <div onClick={handleMyjobs} className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
+              <div onClick={handleMyJobs} className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
                 <FaBriefcase />
-                <span>My jobs</span>
+                <span>My Jobs</span>
               </div>
-              <div  onClick={handleNotifications} className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
+              <div onClick={handleNotifications} className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer relative">
                 <FaBell />
                 <span>Notifications</span>
+                {notificationCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {notificationCount}
+                  </span>
+                )}
               </div>
               <div onClick={handleUserProfile} className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
                 <FaUser />
@@ -117,14 +167,6 @@ function Navbar() {
             </Link>
           </div>
         )}
-
-        <div className="md:hidden">
-          <button className="text-white focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-            </svg>
-          </button>
-        </div>
       </div>
     </nav>
   );
