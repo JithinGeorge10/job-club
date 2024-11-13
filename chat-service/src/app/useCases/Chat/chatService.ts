@@ -41,7 +41,22 @@ export class ChatService {
             throw error
         }
     }
-    
+    async saveNotification(notificationDetails:any) {
+        try {
+            const saveNotification = await ChatRepository.saveNotification(notificationDetails)
+            return saveNotification
+        } catch (error) {
+            throw error
+        }
+    }
+    async notifications(userId:any) {
+        try {
+            const notifications = await ChatRepository.notifications(userId)
+            return notifications
+        } catch (error) {
+            throw error
+        }
+    }
     
     
     

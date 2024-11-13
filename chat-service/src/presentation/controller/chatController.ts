@@ -41,12 +41,12 @@ export class ChatController {
             next(error)
         }
     }
-   
+
 
 
     async getMessagesController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const roomId = req.query.roomId as string; 
+            const roomId = req.query.roomId as string;
             const getMessages = await this.chatService.getMessages(roomId)
             res.status(200).send({ getMessages })
 
@@ -54,6 +54,29 @@ export class ChatController {
             next(error)
         }
     }
-   
-    
+    async sendNotificationsController(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            console.log('reached');
+            console.log(req.body)
+            const saveNotification = await this.chatService.saveNotification(req.body)
+            res.status(200).send({ saveNotification })
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async getNotificationsController(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const userId = req.query.userId as string;
+            console.log(userId)
+            const notifications = await this.chatService.notifications(userId)
+            res.status(200).send({ notifications })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+
 }

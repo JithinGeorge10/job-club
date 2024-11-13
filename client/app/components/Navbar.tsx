@@ -16,6 +16,7 @@ function Navbar() {
 
   const router = useRouter();
   const [userName, setUserName] = useState<string | null>(null);
+  const [recentMessages, setRecentMessages] = useState<any[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [roomIds, setRoomIds] = useState<string[]>([]);
@@ -48,9 +49,21 @@ function Navbar() {
     router.push(`/myJobs?id=${userId}`);
   };
 
-  const handleNotifications = () => {
+  const handleNotifications = async () => {
     router.push(`/userNotifiations?id=${userId}`);
-    setNotificationCount(0); // Reset the notification count
+    
+    if (notificationCount > 0) {
+      try {
+        await axios.post(`${CHAT_SERVICE_URL}/sendNotifications`, {
+          userId,
+          messages: recentMessages
+        });
+        setNotificationCount(0); 
+        setRecentMessages([]);
+      } catch (error) {
+        console.error("Error sending notifications:", error);
+      }
+    }
   };
 
   useEffect(() => {
@@ -74,8 +87,10 @@ function Navbar() {
 
     const handleReceiveMessage = (msg: any) => {
       console.log(msg);
-      setNotificationCount(prevCount => prevCount + 1); // Increment the notification count
+      setNotificationCount(prevCount => prevCount + 1);
+      setRecentMessages(prevMessages => [...prevMessages, msg]);
     };
+
 
     socket.on("receiveMessage", handleReceiveMessage);
 

@@ -9,7 +9,8 @@ chatRoute.get('/getRoomDetails', chatController.getRoomDetailsController.bind(ch
 // chatRoute.get('/userRoomDetails', chatController.userRoomDetailsController.bind(chatController));
 chatRoute.get('/getMessages', chatController.getMessagesController.bind(chatController));
 chatRoute.get('/getUserRoomDetails', chatController.getUserRoomDetailsController.bind(chatController));
-
+chatRoute.post('/sendNotifications', chatController.sendNotificationsController.bind(chatController));
+chatRoute.get('/getNotifications', chatController.getNotificationsController.bind(chatController));
 
 
 
