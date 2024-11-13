@@ -30,6 +30,7 @@ function Page() {
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [message, setMessage] = useState<string>('');
+    const [newRoomNotification, setNewRoomNotification] = useState<boolean>(false);  // For new room notification
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
@@ -56,7 +57,18 @@ function Page() {
                     },
                     withCredentials: true
                 });
-                setRooms(response.data.getRoom);
+
+                // Sort rooms by timestamp in descending order and filter out rooms with no messages
+                const roomsData = response.data.getRoom;
+                const filteredRooms = roomsData.filter((room: Room) => room.lastMessage); // Filter rooms with no messages
+                const sortedRooms = filteredRooms.sort((a: Room, b: Room) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+                setRooms(sortedRooms);
+
+                // Automatically select the first room
+                if (sortedRooms.length > 0) {
+                    setSelectedRoom(sortedRooms[0]);
+                }
             }
         };
         getRoom();
@@ -67,8 +79,6 @@ function Page() {
             const roomId = selectedRoom.roomId;
 
             const receiveMessageListener = (newMessage: Message) => {
-                console.log(newMessage)
-                console.log(roomId)
                 if (newMessage.roomId === roomId) {
                     // Update the last message in the room list when a new message is received
                     setRooms(prevRooms => {
@@ -93,7 +103,7 @@ function Page() {
                 socket.off("receiveMessage", receiveMessageListener);
             };
         }
-    }, [selectedRoom]);  // Dependency to run effect only when selectedRoom changes
+    }, [selectedRoom]);
 
     useEffect(() => {
         scrollToBottom();
@@ -169,25 +179,48 @@ function Page() {
         }
     };
 
+    useEffect(() => {
+        // Show notification when a new room is created
+        const handleNewRoom = (newRoom: Room) => {
+            setRooms(prevRooms => [newRoom, ...prevRooms]); // Add new room to the top of the list
+            setNewRoomNotification(true); // Show the notification
+            setTimeout(() => {
+                setNewRoomNotification(false); // Hide the notification after 3 seconds
+            }, 3000);
+        };
+
+        socket.on("newRoom", handleNewRoom);
+        return () => {
+            socket.off("newRoom", handleNewRoom);
+        };
+    }, []);
+
     return (
         <div className="flex bg-gray-900 h-screen p-4 space-x-4">
             <div className="w-1/3 bg-gray-800 p-4 rounded-lg space-y-4">
-    <h2 className="text-white text-lg font-bold mb-4">CHAT</h2>
-    {rooms.map((room) => (
-        <div
-            key={room.roomId}
-            className={`flex items-center p-3 rounded-lg cursor-pointer ${selectedRoom?.roomId === room.roomId ? 'bg-green-600' : 'bg-gray-600'}`}
-            onClick={() => handleRoomClick(room.roomId)}
-        >
-            <div className="flex-1">
-                <p className="text-black font-semibold">{room.firstName} {room.lastName || ''}</p>
-                <p className="text-black text-sm">{room.lastMessage || 'No message'}</p>
+                <h2 className="text-white text-lg font-bold mb-4">CHAT</h2>
+                {newRoomNotification && (
+                    <div className="text-green-500 text-xl font-semibold bg-gray-700 p-3 rounded-lg mb-4">
+                        New room created with a new message!
+                    </div>
+                )}
+                {rooms.length === 0 ? (
+                    <div className="text-white">No rooms available.</div>
+                ) : (
+                    rooms.map((room) => (
+                        <div
+                            key={room.roomId}
+                            className={`flex items-center p-3 rounded-lg cursor-pointer ${selectedRoom?.roomId === room.roomId ? 'bg-green-600' : 'bg-gray-600'}`}
+                            onClick={() => handleRoomClick(room.roomId)}
+                        >
+                            <div className="flex-1">
+                                <p className="text-black font-semibold">{room.firstName} {room.lastName || ''}</p>
+                                <p className="text-black text-sm">{room.lastMessage || 'No message'}</p>
+                            </div>
+                        </div>
+                    ))
+                )}
             </div>
-          
-        </div>
-    ))}
-</div>
-
 
             <div className="flex-1 bg-gray-800 p-4 rounded-lg flex flex-col">
                 {selectedRoom ? (
@@ -218,27 +251,31 @@ function Page() {
 
                                 <div ref={messagesEndRef} />
                             </div>
-
                         </div>
 
-                        <div className="flex items-center mt-4 p-2 bg-gray-800 rounded-lg">
+                        <div className="mt-4 flex space-x-4">
                             <input
                                 type="text"
+                                className="w-full p-2 bg-gray-600 text-white rounded-lg"
+                                placeholder="Type a message"
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
-                                placeholder="Type a message..."
-                                className="flex-1 bg-gray-600 text-white p-3 rounded-lg outline-none"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleSendMessage();
+                                    }
+                                }}
                             />
                             <button
+                                className="bg-green-600 text-white p-2 rounded-lg"
                                 onClick={handleSendMessage}
-                                className="ml-3 p-3 bg-green-600 text-white rounded-lg"
                             >
                                 Send
                             </button>
                         </div>
                     </>
                 ) : (
-                    <div className="text-white">Select a room to start chatting.</div>
+                    <div className="text-white">Select a room to chat.</div>
                 )}
             </div>
         </div>
