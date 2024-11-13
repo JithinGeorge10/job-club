@@ -70,9 +70,24 @@ function Page() {
                 console.log(newMessage)
                 console.log(roomId)
                 if (newMessage.roomId === roomId) {
-                    handleRoomClick(roomId);
+                    // Update the last message in the room list when a new message is received
+                    setRooms(prevRooms => {
+                        return prevRooms.map(room => {
+                            if (room.roomId === roomId) {
+                                return {
+                                    ...room,
+                                    lastMessage: newMessage.message,
+                                    timestamp: newMessage.timestamp,
+                                };
+                            }
+                            return room;
+                        });
+                    });
+
+                    handleRoomClick(roomId); // Refresh the messages for the selected room
                 }
             };
+
             socket.on("receiveMessage", receiveMessageListener);
             return () => {
                 socket.off("receiveMessage", receiveMessageListener);
@@ -81,13 +96,6 @@ function Page() {
     }, [selectedRoom]);  // Dependency to run effect only when selectedRoom changes
 
     useEffect(() => {
-        // if (selectedRoom) {
-        //     const roomId = selectedRoom.roomId;
-        //     const joinRoomAndFetchMessages = async () => {
-        //         await handleRoomClick(roomId); 
-        //     };
-        //     joinRoomAndFetchMessages();
-        // }
         scrollToBottom();
     }, [messages]);
 
@@ -109,6 +117,7 @@ function Page() {
             setMessages([]);
         }
     };
+
     const handleSendMessage = async () => {
         if (selectedRoom && message.trim() !== '' && companyId) {
             const roomId = selectedRoom.roomId;
@@ -144,6 +153,14 @@ function Page() {
                 // Update the messages state once the message is sent
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
 
+                // Update last message in the room list
+                setRooms(prevRooms => prevRooms.map(room => {
+                    if (room.roomId === roomId) {
+                        return { ...room, lastMessage: message, timestamp };
+                    }
+                    return room;
+                }));
+
                 // Reset the input field
                 setMessage('');
             } catch (error) {
@@ -152,27 +169,25 @@ function Page() {
         }
     };
 
-
     return (
         <div className="flex bg-gray-900 h-screen p-4 space-x-4">
             <div className="w-1/3 bg-gray-800 p-4 rounded-lg space-y-4">
-                <h2 className="text-white text-lg font-bold mb-4">CHAT</h2>
-                {rooms.map((room) => (
-                    <div
-                        key={room.roomId}
-                        className="flex items-center bg-green-600 p-3 rounded-lg cursor-pointer"
-                        onClick={() => handleRoomClick(room.roomId)}
-                    >
-                        <div>
-                            <p className="text-black font-semibold">{room.firstName} {room.lastName || ''}</p>
-                            <p className="text-black text-sm">{room.lastMessage || 'No message'}</p>
-                        </div>
-                        <span className="ml-auto text-black text-sm">
-                            {new Date(room.timestamp).toLocaleString()}
-                        </span>
-                    </div>
-                ))}
+    <h2 className="text-white text-lg font-bold mb-4">CHAT</h2>
+    {rooms.map((room) => (
+        <div
+            key={room.roomId}
+            className={`flex items-center p-3 rounded-lg cursor-pointer ${selectedRoom?.roomId === room.roomId ? 'bg-green-600' : 'bg-gray-600'}`}
+            onClick={() => handleRoomClick(room.roomId)}
+        >
+            <div className="flex-1">
+                <p className="text-black font-semibold">{room.firstName} {room.lastName || ''}</p>
+                <p className="text-black text-sm">{room.lastMessage || 'No message'}</p>
             </div>
+          
+        </div>
+    ))}
+</div>
+
 
             <div className="flex-1 bg-gray-800 p-4 rounded-lg flex flex-col">
                 {selectedRoom ? (
@@ -200,7 +215,6 @@ function Page() {
                                         </div>
                                     );
                                 })}
-
 
                                 <div ref={messagesEndRef} />
                             </div>

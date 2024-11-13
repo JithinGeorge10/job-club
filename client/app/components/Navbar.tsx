@@ -36,6 +36,9 @@ function Navbar() {
   const handleMyjobs = () => {
     router.push(`/myJobs?id=${userId}`);
   };
+  const handleNotifications = () => {
+    router.push(`/userNotifiations?id=${userId}`);
+  };
   
   return (
     <nav className="bg-black p-4">
@@ -53,7 +56,7 @@ function Navbar() {
                 <FaBriefcase />
                 <span>My jobs</span>
               </div>
-              <div className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
+              <div  onClick={handleNotifications} className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
                 <FaBell />
                 <span>Notifications</span>
               </div>
