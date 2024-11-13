@@ -32,17 +32,16 @@ export class ChatController {
             next(error)
         }
     }
-    // async userRoomDetailsController(req: Request, res: Response, next: NextFunction): Promise<void> {
-    //     try {
-    //         const roomId = req.query.roomId as string; 
-
-    //         const  getUserRoom = await this.chatService. getUserRoom(roomId)
-    //         res.status(200).send({  getUserRoom })
-
-    //     } catch (error) {
-    //         next(error)
-    //     }
-    // }
+    async getUserRoomDetailsController(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const userId = req.query.userId as string;
+            const getRoom = await this.chatService.getUserRoom(userId)
+            res.status(200).send({ getRoom })
+        } catch (error) {
+            next(error)
+        }
+    }
+   
 
 
     async getMessagesController(req: Request, res: Response, next: NextFunction): Promise<void> {

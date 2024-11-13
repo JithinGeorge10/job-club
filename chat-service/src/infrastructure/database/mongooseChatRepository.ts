@@ -81,16 +81,16 @@ class ChatRepository {
     }
     
     
-    // async getUserRoom(roomId: string) {
-    //     try {
-    //         const rooms = await roomModel.find({ _id: roomId })
-    //         console.log(rooms);
-    //         return rooms;
-    //     } catch (error) {
-    //         console.log(error);
-    //         throw error;
-    //     }
-    // }
+    async getUserRoom(userId: string) {
+        try {
+            const rooms = await roomModel.find({ userId })
+
+            return rooms;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
 
     async getMessages(roomId:any) {
         try {

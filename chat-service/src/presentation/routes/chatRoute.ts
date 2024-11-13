@@ -8,6 +8,8 @@ chatRoute.post('/postMessage', chatController.postMessageController.bind(chatCon
 chatRoute.get('/getRoomDetails', chatController.getRoomDetailsController.bind(chatController));
 // chatRoute.get('/userRoomDetails', chatController.userRoomDetailsController.bind(chatController));
 chatRoute.get('/getMessages', chatController.getMessagesController.bind(chatController));
+chatRoute.get('/getUserRoomDetails', chatController.getUserRoomDetailsController.bind(chatController));
+
 
 
 
