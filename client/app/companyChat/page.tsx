@@ -5,7 +5,7 @@ import axios from 'axios';
 import io from "socket.io-client";
 const socket = io('http://localhost:4003');
 
-// Define Room and Message interfaces
+
 interface Room {
     firstName: string;
     lastName: string;
@@ -30,7 +30,7 @@ function Page() {
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [message, setMessage] = useState<string>('');
-    const [newRoomNotification, setNewRoomNotification] = useState<boolean>(false);  // For new room notification
+    const [newRoomNotification, setNewRoomNotification] = useState<boolean>(false);  
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
@@ -58,14 +58,12 @@ function Page() {
                     withCredentials: true
                 });
 
-                // Sort rooms by timestamp in descending order and filter out rooms with no messages
                 const roomsData = response.data.getRoom;
-                const filteredRooms = roomsData.filter((room: Room) => room.lastMessage); // Filter rooms with no messages
+                const filteredRooms = roomsData.filter((room: Room) => room.lastMessage); 
                 const sortedRooms = filteredRooms.sort((a: Room, b: Room) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
                 setRooms(sortedRooms);
 
-                // Automatically select the first room
                 if (sortedRooms.length > 0) {
                     setSelectedRoom(sortedRooms[0]);
                 }
@@ -80,7 +78,7 @@ function Page() {
 
             const receiveMessageListener = (newMessage: Message) => {
                 if (newMessage.roomId === roomId) {
-                    // Update the last message in the room list when a new message is received
+                 
                     setRooms(prevRooms => {
                         return prevRooms.map(room => {
                             if (room.roomId === roomId) {
@@ -94,7 +92,7 @@ function Page() {
                         });
                     });
 
-                    handleRoomClick(roomId); // Refresh the messages for the selected room
+                    handleRoomClick(roomId); 
                 }
             };
 
@@ -134,7 +132,7 @@ function Page() {
             const userId = selectedRoom.userId;
 
             try {
-                const timestamp = new Date().toISOString();  // Valid timestamp
+                const timestamp = new Date().toISOString();
 
                 const newMessage = {
                     sender: companyId,
@@ -142,10 +140,9 @@ function Page() {
                     message,
                     roomId,
                     timestamp,
-                    _id: Math.random().toString(36).substring(7) // Temporary ID for UI
+                    _id: Math.random().toString(36).substring(7) 
                 };
 
-                // Send the message through the API
                 await axios.post(`${CHAT_SERVICE_URL}/postMessage`, {
                     sender: companyId,
                     receiver: userId,
@@ -157,13 +154,10 @@ function Page() {
                     withCredentials: true
                 });
 
-                // Emit the message to the socket
                 socket.emit('sendMessage', newMessage);
 
-                // Update the messages state once the message is sent
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
 
-                // Update last message in the room list
                 setRooms(prevRooms => prevRooms.map(room => {
                     if (room.roomId === roomId) {
                         return { ...room, lastMessage: message, timestamp };
@@ -171,7 +165,7 @@ function Page() {
                     return room;
                 }));
 
-                // Reset the input field
+               
                 setMessage('');
             } catch (error) {
                 console.error('Error sending message:', error);
@@ -180,12 +174,12 @@ function Page() {
     };
 
     useEffect(() => {
-        // Show notification when a new room is created
+  
         const handleNewRoom = (newRoom: Room) => {
-            setRooms(prevRooms => [newRoom, ...prevRooms]); // Add new room to the top of the list
-            setNewRoomNotification(true); // Show the notification
+            setRooms(prevRooms => [newRoom, ...prevRooms]); 
+            setNewRoomNotification(true); 
             setTimeout(() => {
-                setNewRoomNotification(false); // Hide the notification after 3 seconds
+                setNewRoomNotification(false); 
             }, 3000);
         };
 

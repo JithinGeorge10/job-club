@@ -1,21 +1,31 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import AdminLeftSideBar from '../components/adminLeftSideBar';
 import axios from 'axios';
 import { AUTH_SERVICE_URL } from '@/utils/constants';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
 
+interface Company {
+    _id: string;
+    companyName: string;
+    email: string;
+    status?: string;
+    createdAt?: string;
+    isBlocked: boolean;
+}
+
 function Page() {
     const router = useRouter();
-    const [companyDetails, setCompanyDetails] = useState<any[]>([]);
+    const [companyDetails, setCompanyDetails] = useState<Company[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [companiesPerPage] = useState(7);
-    const [loading, setLoading] = useState(true);   
+    const companiesPerPage = 7;
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             try {
                 const response = await axios.get(`${AUTH_SERVICE_URL}/get-companyDetails`, {
                     headers: { 'Content-Type': 'application/json' },
@@ -25,20 +35,19 @@ function Page() {
             } catch (error) {
                 console.error("Error fetching company details:", error);
             } finally {
-                setLoading(false); 
+                setLoading(false);
             }
         };
         fetchData();
     }, []);
-
-    const indexOfLastCompany = currentPage * companiesPerPage;
-    const indexOfFirstCompany = indexOfLastCompany - companiesPerPage;
 
     const filteredCompanies = companyDetails.filter(company =>
         company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         company.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const indexOfLastCompany = currentPage * companiesPerPage;
+    const indexOfFirstCompany = indexOfLastCompany - companiesPerPage;
     const currentCompanies = filteredCompanies.slice(indexOfFirstCompany, indexOfLastCompany);
     const totalPages = Math.ceil(filteredCompanies.length / companiesPerPage);
 
@@ -52,60 +61,36 @@ function Page() {
         });
     };
 
-    const blockCompany = async (companyId: any) => {
+    const handleCompanyAction = useCallback(async (companyId: string, action: 'block' | 'unblock') => {
+        const actionText = action === 'block' ? 'block' : 'unblock';
+        const confirmationText = `You want to ${actionText} this company.`;
+        const confirmButtonColor = action === 'block' ? '#d33' : '#3085d6';
+        
         const result = await Swal.fire({
             title: 'Are you sure?',
-            text: "You want to block this company.",
+            text: confirmationText,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, block it!',
-        });
-
-        if (result.isConfirmed) {
-            try {
-                await axios.post(`${AUTH_SERVICE_URL}/block-company`, { companyId });
-                setCompanyDetails(prevDetails =>
-                    prevDetails.map(company =>
-                        company._id === companyId ? { ...company, isBlocked: true } : company
-                    )
-                );
-                Swal.fire('Blocked!', 'The company has been blocked.', 'success');
-                router.push(`companyManagement`)
-            } catch (error) {
-                console.error("Error blocking the company:", error);
-                Swal.fire('Error', 'There was an issue blocking the company.', 'error');
-            }
-        }
-    };
-
-    const unblockCompany = async (companyId: any) => {
-        const result = await Swal.fire({
-            title: 'Are you sure?',
-            text: "You want to unblock this company.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor,
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, unblock it!',
+            confirmButtonText: `Yes, ${actionText} it!`,
         });
 
         if (result.isConfirmed) {
             try {
-                await axios.post(`${AUTH_SERVICE_URL}/unblock-company`, { companyId });
+                await axios.post(`${AUTH_SERVICE_URL}/${action}-company`, { companyId });
                 setCompanyDetails(prevDetails =>
                     prevDetails.map(company =>
-                        company._id === companyId ? { ...company, isBlocked: false } : company
+                        company._id === companyId ? { ...company, isBlocked: action === 'block' } : company
                     )
                 );
-                Swal.fire('Unblocked!', 'The company has been unblocked.', 'success');
+                Swal.fire(actionText.charAt(0).toUpperCase() + actionText.slice(1), `The company has been ${actionText}ed.`, 'success');
             } catch (error) {
-                console.error("Error unblocking the company:", error);
-                Swal.fire('Error', 'There was an issue unblocking the company.', 'error');
+                console.error(`Error ${actionText}ing the company:`, error);
+                Swal.fire('Error', `There was an issue ${actionText}ing the company.`, 'error');
             }
         }
-    };
+    }, []);
 
     return (
         <div className="flex min-h-screen bg-gray-100">
@@ -156,20 +141,20 @@ function Page() {
                                                         month: 'short',
                                                         year: 'numeric',
                                                     })
-                                                    : '07-Nov-2024'
+                                                    : 'N/A'
                                                 }
                                             </td>
                                             <td className="px-4 py-3">
                                                 {company.isBlocked ? (
                                                     <button
-                                                        onClick={() => unblockCompany(company._id)}
+                                                        onClick={() => handleCompanyAction(company._id, 'unblock')}
                                                         className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-md transition duration-200"
                                                     >
                                                         Unblock
                                                     </button>
                                                 ) : (
                                                     <button
-                                                        onClick={() => blockCompany(company._id)}
+                                                        onClick={() => handleCompanyAction(company._id, 'block')}
                                                         className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md transition duration-200"
                                                     >
                                                         Block

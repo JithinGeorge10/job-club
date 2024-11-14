@@ -44,7 +44,7 @@ class CompanyRepository {
 
     async getJob() {
         try {
-            const jobDetails = await jobModel.find().populate('companyId');
+            const jobDetails = await jobModel.find({status:true}).populate('companyId');
             return jobDetails
 
         } catch (error) {
@@ -89,8 +89,7 @@ class CompanyRepository {
     async filterJobs(filter: any) {
         try {
             const { salaryRanges, categories, employmentTypes } = filter;
-
-
+    
             const salaryFilter = salaryRanges.map((range: string) => {
                 const [min, max] = range.split('-').map(Number);
                 return {
@@ -101,17 +100,16 @@ class CompanyRepository {
                     ]
                 };
             });
-
-
+    
             const filterQuery = {
                 ...(salaryFilter.length > 0 && { $or: salaryFilter }),
                 ...(categories.length > 0 && { category: { $in: categories } }),
                 ...(employmentTypes.length > 0 && { employmentType: { $in: employmentTypes } }),
+                status: true,  // Add this line to filter by status:true
             };
-
-
+    
             const jobs = await jobModel.find(filterQuery).populate('companyId', 'companyName'); // Add populate here
-
+    
             console.log('Filtered Jobs:', jobs);
             return jobs;
         } catch (error) {
@@ -119,6 +117,7 @@ class CompanyRepository {
             throw error;
         }
     }
+    
 
     async editJob(JobDetails: any) {
         try {

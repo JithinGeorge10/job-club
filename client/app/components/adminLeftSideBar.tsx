@@ -19,25 +19,27 @@ function AdminLeftSideBar() {
   };
   
   return (
-    <aside className="bg-black text-white fixed h-full w-1/5 p-6 sm:w-1/4 md:w-1/5 lg:w-1/6">
-      <nav className="space-y-6">
+    <aside className="bg-black text-white h-full w-[235px] fixed"> 
+      <div className="p-6">
+        <nav className="space-y-6">
+          <button 
+            onClick={handleCompany} 
+            className="w-full text-left py-3 hover:bg-gray-700 rounded-md text-lg">
+            Companies
+          </button>
+          <button 
+            onClick={handleUsers} 
+            className="w-full text-left py-3 hover:bg-gray-700 rounded-md text-lg">
+            Users
+          </button>
+        </nav>
         <button 
-          onClick={handleCompany} 
-          className="w-full text-left py-3 hover:bg-gray-700 rounded-md text-lg">
-          Companies
+          onClick={handleLogout}
+          className="w-full mt-6 bg-red-900 hover:bg-red-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
+        >
+          Logout
         </button>
-        <button 
-          onClick={handleUsers} 
-          className="w-full text-left py-3 hover:bg-gray-700 rounded-md text-lg">
-          Users
-        </button>
-      </nav>
-      <button 
-        onClick={handleLogout}
-        className="w-full mt-6 bg-red-900 hover:bg-red-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
-      >
-        Logout
-      </button>
+      </div>
     </aside>
   );
 }

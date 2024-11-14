@@ -1,18 +1,14 @@
 'use client'
 import React from 'react'
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
 import AdminLeftSideBar from '../components/adminLeftSideBar';
 
 function Page() {
-  const router = useRouter()
- 
   return (
     <div className="flex min-h-screen bg-gray-100">
       <AdminLeftSideBar />
       
       {/* Main Content */}
-      <main className="bg-white text-black w-full md:w-4/5 lg:w-5/6 xl:w-4/5 p-6 sm:p-8 md:p-10">
+      <main className="bg-white text-black w-full p-6 sm:p-8 md:p-10 ml-[200px]"> {/* Adjusted margin to match sidebar width */}
         <header className="flex justify-between items-center mb-8">
           <div className="flex items-center">
             <div className="ml-4">
