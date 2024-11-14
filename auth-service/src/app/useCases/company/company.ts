@@ -57,7 +57,7 @@ export class CompanyService {
     async companyLogin(email: string, password: string) {
         try {
 
-            const isCompanyBlock=await getCompanyRepository.isCompanyBlock(email, password)
+            const isCompanyBlock=await getCompanyRepository.isCompanyBlock(email)
 
             if(isCompanyBlock){
                 throw new Error("User is blocked");

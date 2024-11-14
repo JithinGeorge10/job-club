@@ -65,19 +65,25 @@ export class UserService {
     }
     async userLogin(email: string, password: string) {
         try {
-
-            const userDetails = await getUserRepository.verifyUser(email, password)
-            console.log('gotcha', userDetails);
-
-            if (userDetails) {
-                return userDetails
-            } else { 
-                throw new Error("Give valid credentials");
+            const isUserBlock=await getUserRepository.isUserBlock(email)
+            if(isUserBlock){
+                throw new Error("User is blocked");
+            }else{
+                const userDetails = await getUserRepository.verifyUser(email, password)
+                console.log('gotcha', userDetails);
+    
+                if (userDetails) {
+                    return userDetails
+                } else { 
+                    throw new Error("Give valid credentials");
+                }
             }
+           
 
         } catch (error) {
             throw error
         }
+
     }
 
     async changePassword(password: any) {

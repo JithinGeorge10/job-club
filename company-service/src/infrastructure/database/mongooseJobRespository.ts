@@ -52,6 +52,8 @@ class CompanyRepository {
             throw error;
         }
     }
+
+    
     async singleJobDetails(jobId: any) {
         try {
             const jobDetails = await jobModel.find({ _id: jobId }).populate('companyId');
@@ -66,7 +68,6 @@ class CompanyRepository {
         try {
             console.log(application)
 
-            // return jobDetails
         } catch (error) {
             console.log(error);
             throw error;
@@ -105,10 +106,10 @@ class CompanyRepository {
                 ...(salaryFilter.length > 0 && { $or: salaryFilter }),
                 ...(categories.length > 0 && { category: { $in: categories } }),
                 ...(employmentTypes.length > 0 && { employmentType: { $in: employmentTypes } }),
-                status: true,  // Add this line to filter by status:true
+                status: true, 
             };
     
-            const jobs = await jobModel.find(filterQuery).populate('companyId', 'companyName'); // Add populate here
+            const jobs = await jobModel.find(filterQuery).populate('companyId', 'companyName');
     
             console.log('Filtered Jobs:', jobs);
             return jobs;

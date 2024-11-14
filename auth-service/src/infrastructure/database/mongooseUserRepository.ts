@@ -78,6 +78,20 @@ class UserRepository {
         }
     }
 
+    
+    async isUserBlock(email:string) {
+        try {
+           const userData = await UserModel.findOne({ email,isBlock:true });
+           if(userData){
+                return true
+           }
+         
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
+
     async changePassword(data: any) {
         const { oldPassword, newPassword, confirmPassword } = data.data;
         const userId = data.userId;

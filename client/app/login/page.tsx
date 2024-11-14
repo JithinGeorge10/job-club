@@ -17,23 +17,43 @@ function page() {
   }
   const { register, handleSubmit, formState: { errors } } = useForm<login>();
   const onSubmit = async (data: login) => {
-    let response = await axios.post(`${AUTH_SERVICE_URL}/user-login`, data, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      withCredentials: true
-    })
+    try {
+      let response = await axios.post(`${AUTH_SERVICE_URL}/user-login`, data, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      })
 
-    const user=response.data.user
-    if (response.data.success) {
-      localStorage.setItem('user',JSON.stringify(user));
-      toast.success('Welcome')
-      setTimeout(() => {
-        router.replace(`jobListingPage`)
-      }, 3000);
-    } else {
-      toast.error('Invalid credentials')
+      const user = response.data.user
+      if (response.data.success) {
+        localStorage.setItem('user', JSON.stringify(user));
+        toast.success('Welcome')
+        setTimeout(() => {
+          router.replace(`jobListingPage`)
+        }, 3000);
+      }
+      if (response.data.errorMessage == 'Give valid credentials') {
+        toast.info('Give valid credentials');
+      }
+      if (response.data.errorMessage == 'User is blocked') {
+        toast.error('You are blocked');
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 403) {
+          toast.error('User is blocked');
+        } else if (error.response?.status === 401) {
+          toast.error('Invalid credentials');
+        } else {
+          toast.error('An unexpected error occurred');
+        }
+      } else {
+        toast.error('An unexpected error occurred');
+        console.error(error);
+      }
     }
+
   };
 
 
