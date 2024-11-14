@@ -30,7 +30,7 @@ function Page() {
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [message, setMessage] = useState<string>('');
-    const [newRoomNotification, setNewRoomNotification] = useState<boolean>(false);  
+    const [newRoomNotification, setNewRoomNotification] = useState<boolean>(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
@@ -59,8 +59,12 @@ function Page() {
                 });
 
                 const roomsData = response.data.getRoom;
-                const filteredRooms = roomsData.filter((room: Room) => room.lastMessage); 
-                const sortedRooms = filteredRooms.sort((a: Room, b: Room) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+                console.log(roomsData)
+                const filteredRooms = roomsData.filter((room: Room) => room.lastMessage);
+                console.log(filteredRooms)
+                const sortedRooms = filteredRooms.sort((a: Room, b: Room) => {
+                    return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+                });
 
                 setRooms(sortedRooms);
 
@@ -69,8 +73,10 @@ function Page() {
                 }
             }
         };
+
         getRoom();
     }, [companyId]);
+
 
     useEffect(() => {
         if (selectedRoom) {
@@ -78,7 +84,7 @@ function Page() {
 
             const receiveMessageListener = (newMessage: Message) => {
                 if (newMessage.roomId === roomId) {
-                 
+
                     setRooms(prevRooms => {
                         return prevRooms.map(room => {
                             if (room.roomId === roomId) {
@@ -92,7 +98,7 @@ function Page() {
                         });
                     });
 
-                    handleRoomClick(roomId); 
+                    handleRoomClick(roomId);
                 }
             };
 
@@ -140,7 +146,7 @@ function Page() {
                     message,
                     roomId,
                     timestamp,
-                    _id: Math.random().toString(36).substring(7) 
+                    _id: Math.random().toString(36).substring(7)
                 };
 
                 await axios.post(`${CHAT_SERVICE_URL}/postMessage`, {
@@ -165,7 +171,7 @@ function Page() {
                     return room;
                 }));
 
-               
+
                 setMessage('');
             } catch (error) {
                 console.error('Error sending message:', error);
@@ -174,12 +180,12 @@ function Page() {
     };
 
     useEffect(() => {
-  
+
         const handleNewRoom = (newRoom: Room) => {
-            setRooms(prevRooms => [newRoom, ...prevRooms]); 
-            setNewRoomNotification(true); 
+            setRooms(prevRooms => [newRoom, ...prevRooms]);
+            setNewRoomNotification(true);
             setTimeout(() => {
-                setNewRoomNotification(false); 
+                setNewRoomNotification(false);
             }, 3000);
         };
 
@@ -214,6 +220,7 @@ function Page() {
                         </div>
                     ))
                 )}
+
             </div>
 
             <div className="flex-1 bg-gray-800 p-4 rounded-lg flex flex-col">

@@ -34,7 +34,7 @@ class ChatRepository {
 
             await roomModel.findByIdAndUpdate(
                 roomId,
-                { lastMessage: message },
+                { lastMessage: message, timestamp: new Date().toISOString() },
                 { new: true }
             );
 
@@ -48,37 +48,33 @@ class ChatRepository {
 
     async getRoom(companyId: string) {
         try {
+            const rooms = await roomModel.find({ companyId }).sort({ timestamp: -1 });
 
-
-            // Fetch rooms for the given companyId
-            const rooms = await roomModel.find({ companyId });
-
-            // Create an array of userId values from rooms
             const userIds = rooms.map(room => room.userId);
 
-            // Fetch user details for each userId
             const userDetails = await Promise.all(userIds.map(async (userId) => {
                 const user = await userModel.findById(userId);
                 return user ? { firstName: user.firstName, lastName: user.lastName } : null;
             }));
 
-            // Combine room and user details, adding userId, roomId (as a string)
-            const roomDetails = rooms.map((room, index) => ({
-                userId: room.userId, // userId from the room document
-                roomId: room._id.toString(), // convert ObjectId to string
-                firstName: userDetails[index] ? userDetails[index].firstName : null,
-                lastName: userDetails[index] ? userDetails[index].lastName : null,
-                lastMessage: room.lastMessage,
-                timestamp: room.timestamp,
-            }));
-
-
+            const roomDetails = rooms
+                .map((room, index) => ({
+                    userId: room.userId,
+                    roomId: room._id.toString(),
+                    firstName: userDetails[index] ? userDetails[index].firstName : null,
+                    lastName: userDetails[index] ? userDetails[index].lastName : null,
+                    lastMessage: room.lastMessage,
+                    timestamp: room.timestamp,
+                }))
+              
+            console.log(roomDetails)
             return roomDetails;
         } catch (error) {
             console.error("Error fetching room details:", error);
             throw error;
         }
     }
+
 
 
     async getUserRoom(userId: string) {
