@@ -30,8 +30,15 @@ export class UserController {
         }
     }
     
-    async addEmploymentController(req: Request, res: Response, next: NextFunction): Promise<any> {
+    async addEmploymentController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
+            console.log(req.body);
+            const { userId } = req.body;
+            const userIdFromToken = req.user?.user;
+            if (userId !== userIdFromToken) {
+                res.status(200).send({ success:false,message: 'Unauthorized: User ID does not match' });
+            }
+
             const userDetails = await this.userService.addEmployment(req.body)
             res.status(200).send({ userDetails })
         } catch (error) {
