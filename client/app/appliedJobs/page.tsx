@@ -45,7 +45,6 @@ const MyJobsPage = () => {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true,
                 });
-                console.log(response.data.jobDetails)
                 setJobDetails(response.data.jobDetails);
             } catch (error) {
                 console.error("Error fetching job details", error);
@@ -60,7 +59,6 @@ const MyJobsPage = () => {
     const appliedJobs = jobDetails.filter((job) =>
         userDetails?.profile?.applied_jobs?.includes(job._id)
     );
-console.log(appliedJobs)
     const handleJobClick = async (jobId: any, companyId: any) => {
         router.push(`jobView?jobId=${jobId}`);
     }

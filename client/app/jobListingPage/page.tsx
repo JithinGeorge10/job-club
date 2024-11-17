@@ -75,11 +75,7 @@ function Page() {
   }, [searchTerm, debouncedSearch]);
 
   const applyFilters = async () => {
-    console.log('Applying filters:', {
-      selectedSalaryRanges,
-      selectedCategories,
-      selectedEmploymentTypes,
-    });
+   
 
     try {
       const response = await axios.post(`${COMPANY_SERVICE_URL}/get-filteredJobs`, {
@@ -119,7 +115,6 @@ function Page() {
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
   const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
-  console.log(currentJobs)
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
 
   const handlePageChange = (pageNumber: number) => {

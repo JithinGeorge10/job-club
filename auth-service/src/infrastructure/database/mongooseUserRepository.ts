@@ -102,7 +102,6 @@ class UserRepository {
             }
             const isMatch = await bcrypt.compare(oldPassword, user.password);
             if (!isMatch) {
-                console.log("Enter correct password");
                 throw new Error("Incorrect password");
             }
             if (newPassword === oldPassword) {
@@ -115,7 +114,6 @@ class UserRepository {
             user.password = newPassword;
             await user.save();
 
-            console.log("Password updated successfully");
             console.log(user)
         } catch (error) {
             console.log(error);
@@ -128,7 +126,6 @@ class UserRepository {
     async userDetails() {
         try {
             const userDetails = await UserModel.find();
-            console.log(userDetails)
             return userDetails
         } catch (error) {
             console.log(error);
@@ -144,7 +141,6 @@ class UserRepository {
                 { $set: { isBlock: true } },
                 { new: true }
             );
-            console.log(updatedUser)
             return updatedUser;
         } catch (error) {
             console.error("Error blocking user:", error);
@@ -160,7 +156,6 @@ class UserRepository {
                 { $set: { isBlock: false } },
                 { new: true }
             );
-            console.log(updatedUser)
             return updatedUser;
         } catch (error) {
             console.error("Error blocking user:", error);

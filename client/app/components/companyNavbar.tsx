@@ -12,10 +12,8 @@ function Navbar() {
   useEffect(() => {
     const company: string | null = localStorage.getItem('company');
 
-    console.log(company)
     if (company && company !== 'undefined') {
       let companyDetails = JSON.parse(company)
-      console.log(companyDetails);
       setCompanyName(companyDetails.companyName)
     }
   }, []);

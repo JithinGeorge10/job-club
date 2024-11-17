@@ -56,14 +56,12 @@ const PostJob: React.FC = () => {
   };
 
   const onSubmit: SubmitHandler<PostJobForm> = async (data) => {
-    console.log('Form submitted', data);
     let response = await axios.post(`${COMPANY_SERVICE_URL}/post-job`, { data, companyId }, {
       headers: {
         'Content-Type': 'application/json'
       },
       withCredentials: true
     })
-    console.log(response)
     if (response.status === 200) {
       toast.success('Job Posted');
       router.push(`companyDashboard?id=${companyId}`)

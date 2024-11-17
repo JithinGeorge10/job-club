@@ -21,14 +21,12 @@ function ChangePassword() {
         }
     }, []);
     const onSubmit = async (data: any) => {
-        console.log('Password changed', data);
         const response = await axios.post(`${AUTH_SERVICE_URL}/changePassword`, { data, userId }, {
             headers: {
                 'Content-Type': 'application/json',
             },
             withCredentials: true,
         })
-        console.log(response)
         if (response.data.errorMessage) {
             toast.error(response.data.errorMessage)
         } else {

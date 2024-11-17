@@ -27,7 +27,6 @@ function Page() {
                     withCredentials: true,
                 });
                 const allApplicants = response.data.applicants;
-                console.log(allApplicants);
 
                 if (companyId) {
                     const filteredApplicants = allApplicants.filter(
@@ -41,7 +40,6 @@ function Page() {
         })();
     }, [companyId]);
 
-    console.log(applicants);
 
     return (
         <>

@@ -16,10 +16,8 @@ export class UserController {
     async userSignupController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const user: User | undefined = await this.userService.createUser(req.body);
-            console.log('controller')
-            console.log(user)
+           
             if (user) {
-                console.log('ok')            
                 res.status(200).send({ user, success: true });
             }
         } catch (error) {
@@ -43,7 +41,6 @@ export class UserController {
     async verifyOtpController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { email } = req.body
-            console.log('---==',email);
             
             const otp = req.body.otp
             const userOtp = Number(otp.join(''))
@@ -51,7 +48,6 @@ export class UserController {
             if (verifiedUser) {
 
                 const userJwtToken = await this.JwtService.createJwt(verifiedUser._id, 'user')
-                console.log(userJwtToken);
 
                 res.status(200).cookie('userToken', userJwtToken, {
                     maxAge: 60 * 60 * 24 * 1000
@@ -64,15 +60,11 @@ export class UserController {
 
     async userLoginController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            console.log(req.body);
             const { email, password } = req.body
             const user = await this.userService.userLogin(email, password)
-            console.log('gotcha2',user);
             
             if (user) {
-                console.log(user)
                 const userJwtToken = await this.JwtService.createJwt(user._id, 'user')
-                console.log(userJwtToken);
 
                 res.status(200).cookie('userToken', userJwtToken, {
                     maxAge: 60 * 60 * 24 * 1000
@@ -104,7 +96,6 @@ export class UserController {
     
     async blockUserController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-           console.log(req.body)
            const blockUser = await this.userService.blockUser(req.body)
            res.send({ blockUser, success: true })
         } catch (error) {
@@ -113,7 +104,6 @@ export class UserController {
     }
     async unBlockUserController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-           console.log(req.body)
            const unblockUser = await this.userService.unblockUser(req.body)
            res.send({ unblockUser, success: true })
         } catch (error) {

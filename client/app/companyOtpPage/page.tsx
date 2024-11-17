@@ -71,7 +71,6 @@ export default function OTPVerification({ params }: { params: { email: string } 
     const onSubmit = async (data: any) => {
         try {
             const { otp } = data
-            console.log('---->' + email)
 
             let response = await axios.post(`${AUTH_SERVICE_URL}/company-verify-otp`, { otp, email }, {
                 headers: {
@@ -79,7 +78,6 @@ export default function OTPVerification({ params }: { params: { email: string } 
                 },
                 withCredentials: true
             })
-            console.log(response.data);
             const company=response.data.verifiedCompany
             if (response.data.success) {
                 localStorage.setItem('company',JSON.stringify(company));
@@ -115,15 +113,12 @@ export default function OTPVerification({ params }: { params: { email: string } 
                 }
             })
         }, 1000)
-        console.log({ email })
         let response = await axios.post(`${AUTH_SERVICE_URL}/company-resend-otp`, { email }, {
             headers: {
                 'Content-Type': 'application/json'
             }
         })
-        console.log(response.data);
         const company=response.data.verifiedCompany
-        console.log(company)
         if (response.data.success) {
             localStorage.setItem('company',JSON.stringify(company));
             toast.success('Account created')

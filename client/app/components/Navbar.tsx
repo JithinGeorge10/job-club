@@ -86,7 +86,6 @@ function Navbar() {
     });
 
     const handleReceiveMessage = (msg: any) => {
-      console.log(msg);
       setNotificationCount(prevCount => prevCount + 1);
       setRecentMessages(prevMessages => [...prevMessages, msg]);
     };

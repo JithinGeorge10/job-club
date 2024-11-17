@@ -26,9 +26,7 @@ class companyRepository {
 
     async saveOtp(otp: string, companyId: any) {
         try {
-            const otpDetail=await otpModel.create({ companyId, otpCode: otp });
-            console.log('otototot'+otpDetail);
-            
+            const otpDetail=await otpModel.create({ companyId, otpCode: otp });            
         } catch (error) {
             console.log(error);
         }
@@ -98,7 +96,6 @@ class companyRepository {
     async getCompany() {
         try {
           const companyDetails=await  companyModel.find();
-          console.log(companyDetails)
           return companyDetails
         } catch (error) {
             console.log(error);
@@ -114,7 +111,6 @@ class companyRepository {
                 { $set: { isBlock: true } },
                 { new: true }
             );
-    console.log(updatedUser)
             return updatedUser;
         } catch (error) {
             console.error("Error blocking user:", error);
@@ -133,7 +129,6 @@ class companyRepository {
                 { $set: { isBlock: false } },
                 { new: true }
             );
-            console.log(updatedUser)
             return updatedUser;
         } catch (error) {
             console.error("Error blocking user:", error);

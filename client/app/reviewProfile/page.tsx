@@ -48,12 +48,10 @@ function ProfilePage() {
             },
             withCredentials: true
         });
-        console.log(applyResponse);
         const response = await axios.post(`${COMPANY_SERVICE_URL}/submitApplication`, { userDetails, jobId }, {
             headers: { 'Content-Type': 'application/json' },
             withCredentials: true,
         })
-        console.log(response)
         toast.success('Job Applied');
         setTimeout(() => {
             router.push(`/jobListingPage`);

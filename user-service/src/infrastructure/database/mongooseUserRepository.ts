@@ -16,9 +16,7 @@ class UserRepository {
     }
     async getUser(userId: User) {
         try {
-            // const userDetails = await userModel.findOne({ _id: userId })
-            // console.log(userDetails);
-            // return userDetails
+          
 
             const [userDetails, userProfile] = await Promise.all([
                 userModel.findOne({ _id: userId }),
@@ -32,7 +30,6 @@ class UserRepository {
                 profile: userProfile ? userProfile.toObject() : null
             };
 
-            console.log(fullUserDetails);
             return fullUserDetails;
         } catch (error) {
             console.log(error);
@@ -41,24 +38,17 @@ class UserRepository {
     }
     async addEmployment(userData: any) {
         try {
-            console.log('reache repo');
-            console.log(userData);
             const { companyName, jobTitle, experience, salary, skills, fromDate, toDate } = userData.data;
-
-            console.log(userData.userId)
             const employmentDetails = {
                 companyName, jobTitle, experience, salary, skills, fromDate, toDate
             };
 
             const userId = userData.userId;
-
             const result = await UserProfileModel.updateOne(
                 { userId: userId },
                 { $push: { employment_details: employmentDetails } },
                 { new: true, upsert: true }
             );
-
-            console.log('Employment added:', result);
             return true
         } catch (error) {
             console.log(error);
@@ -67,25 +57,16 @@ class UserRepository {
     }
     async addEducation(educationData: any) {
         try {
-            console.log('reache repo');
-            console.log(educationData);
-
             const { education, university, course, specialization, courseType, cgpa, fromYear, toYear } = educationData.data;
-
-            console.log(educationData.userId)
             const educationDetails = {
                 education, university, course, specialization, courseType, cgpa, fromYear, toYear
             };
-
             const userId = educationData.userId;
-
             const result = await UserProfileModel.updateOne(
                 { userId: userId },
                 { $push: { education_details: educationDetails } },
                 { new: true, upsert: true }
             );
-
-            console.log('Education added:', result);
             return true
         } catch (error) {
             console.log(error);
@@ -97,8 +78,7 @@ class UserRepository {
 
     async addSkills(educationData: any) {
         try {
-            console.log('reache repo');
-            console.log(educationData);
+         
 
             const { userId, skills } = educationData;
 
@@ -111,7 +91,6 @@ class UserRepository {
                 }
             );
 
-            console.log(updateResult);
             return true;
         } catch (error) {
             console.log(error);
@@ -122,8 +101,7 @@ class UserRepository {
 
     async addResume(resume: any) {
         try {
-            console.log('reache repo');
-            console.log(resume);
+            
 
             const { uploadImageUrl, userId } = resume;
             const addResume = await UserProfileModel.updateOne(
@@ -142,8 +120,7 @@ class UserRepository {
     }
     async addProfileImage(resume: any) {
         try {
-            console.log('reache repo');
-            console.log(resume);
+           
 
             const { uploadImageUrl, userId } = resume;
             const addResume = await UserProfileModel.updateOne(
@@ -161,8 +138,7 @@ class UserRepository {
     }
     async deleteResume(resume: any) {
         try {
-            console.log('reache repo');
-            console.log(resume);
+            
             const { userId } = resume
             const deleteResume = await UserProfileModel.updateOne(
                 { userId },
@@ -179,8 +155,7 @@ class UserRepository {
 
     async startPayment(userId: any) {
         try {
-            console.log('reache repo');
-            console.log(userId);
+           
             const actualUserId = new mongoose.Types.ObjectId(userId.userId);
 
             const result = await userPaymentModel.findOneAndUpdate(
@@ -198,8 +173,7 @@ class UserRepository {
 
     async successPayment(userDetails: any) {
         try {
-            console.log('reache repo');
-            console.log(userDetails);
+           
             const actualUserId = new mongoose.Types.ObjectId(userDetails.productinfo);
 
             const result = await userPaymentModel.findOneAndUpdate(
@@ -219,7 +193,6 @@ class UserRepository {
                 { $set: { subscriber: true, subscriptionExpiry: oneYearFromNow } }
             );
 
-            console.log(result)
             return result
         } catch (error) {
             console.log(error);

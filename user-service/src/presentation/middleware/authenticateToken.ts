@@ -11,11 +11,9 @@ interface AuthenticatedRequest extends Request {
 }
 
 export const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction): any => {
-    console.log('reached auth');
 
     const token = req.cookies['userToken'];
 
-    console.log(token);
     if (!token) {
         return res.send({ failToken: true });
     }

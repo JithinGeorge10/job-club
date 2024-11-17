@@ -11,7 +11,6 @@ export class UserService {
                 throw new Error("User already existssss");
             }
             const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString()
-            console.log(JSON.stringify(existingUser));
 
             let userDetails 
             if (!existingUser) {
@@ -30,7 +29,6 @@ export class UserService {
 
     async resendOTP(userDetail: User) {
         try {
-            console.log(userDetail.email);
             const user_id = await getUserRepository.findUserId(userDetail.email)
             const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString()
             await sendotp(userDetail, generatedOtp)
@@ -50,7 +48,6 @@ export class UserService {
                 try {
                     await produce('add-user', userDetails)
                 } catch (error) {
-                    console.log('Kafka producer add-user error')
                     console.log(error)
                 }
                 return userDetails
@@ -70,7 +67,6 @@ export class UserService {
                 throw new Error("User is blocked");
             }else{
                 const userDetails = await getUserRepository.verifyUser(email, password)
-                console.log('gotcha', userDetails);
     
                 if (userDetails) {
                     return userDetails

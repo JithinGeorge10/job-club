@@ -3,11 +3,8 @@ import jobRepository from '../../../infrastructure/database/mongooseJobResposito
 export class CompanyService {
     async addJob(jobData: any) {
         try {
-            console.log('reached service');
-            console.log('service' + jobData);
-
             const company = await jobRepository.addJob(jobData)
-return company
+            return company
         } catch (error) {
             throw error
         }
@@ -15,7 +12,7 @@ return company
 
     async getJobDetails() {
         try {
-    
+
             const jobs = await jobRepository.getJob()
             return jobs
         } catch (error) {
@@ -23,7 +20,7 @@ return company
         }
     }
 
-    async getSingleJobDetails(jobId:any) {
+    async getSingleJobDetails(jobId: any) {
         try {
             const jobs = await jobRepository.singleJobDetails(jobId)
             return jobs
@@ -32,7 +29,7 @@ return company
         }
     }
 
-    async submitApplication(application:any) {
+    async submitApplication(application: any) {
         try {
             const submitApplication = await jobRepository.submitApplication(application)
             return submitApplication
@@ -40,8 +37,8 @@ return company
             throw error
         }
     }
-    
-    async changeStatus(closeJob:any) {
+
+    async changeStatus(closeJob: any) {
         try {
             const changeStatus = await jobRepository.changeStatus(closeJob)
             return changeStatus
@@ -49,7 +46,7 @@ return company
             throw error
         }
     }
-    async filteredJobs(filter:any) {
+    async filteredJobs(filter: any) {
         try {
             const filteredJobs = await jobRepository.filterJobs(filter)
             return filteredJobs
@@ -57,8 +54,8 @@ return company
             throw error
         }
     }
-    
-    async editJob(jobDetails:any) {
+
+    async editJob(jobDetails: any) {
         try {
             const updatedJob = await jobRepository.editJob(jobDetails)
             return updatedJob
@@ -66,7 +63,7 @@ return company
             throw error
         }
     }
-    async deleteJob(jobId:any) {
+    async deleteJob(jobId: any) {
         try {
             const deleteJob = await jobRepository.deleteJob(jobId)
             return deleteJob
@@ -82,5 +79,5 @@ return company
             throw error
         }
     }
-    
+
 }

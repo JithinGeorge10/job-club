@@ -4,8 +4,7 @@ import {Partitioners} from 'kafkajs'
 
 async function produce(topic:string, message:any) {
     try {
-        console.log(message);
-        console.log(topic);
+       
         
         const producer = kafka.producer({createPartitioner: Partitioners.LegacyPartitioner})
         await producer.connect()

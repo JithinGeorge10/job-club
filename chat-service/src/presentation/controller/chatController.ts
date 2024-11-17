@@ -56,8 +56,6 @@ export class ChatController {
     }
     async sendNotificationsController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            console.log('reached');
-            console.log(req.body)
             const saveNotification = await this.chatService.saveNotification(req.body)
             res.status(200).send({ saveNotification })
 
@@ -69,7 +67,6 @@ export class ChatController {
     async getNotificationsController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const userId = req.query.userId as string;
-            console.log(userId)
             const notifications = await this.chatService.notifications(userId)
             res.status(200).send({ notifications })
         } catch (error) {

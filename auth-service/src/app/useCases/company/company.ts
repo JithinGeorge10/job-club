@@ -8,7 +8,6 @@ export class CompanyService {
     async createCompany(companyData: Company): Promise<Company | undefined> {
         try {
             const existingCompany = await getCompanyRepository.findCompanyByEmail(companyData.email)
-            console.log(existingCompany);
 
             if (existingCompany) {
                 throw new Error("Company already existssss");
@@ -30,7 +29,6 @@ export class CompanyService {
                 try {
                     await produce('add-company', companyDetails)
                 } catch (error) {
-                    console.log('Kafka producer add-user error')
                     console.log(error)
                 }
                 return companyDetails
@@ -43,7 +41,6 @@ export class CompanyService {
     }
     async resendOTP(companyDetail: Company) {
         try {
-            console.log(companyDetail.email);
             const company_id = await getCompanyRepository.findUserId(companyDetail.email)
             const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString()
             await sendotp(companyDetail, generatedOtp)
@@ -63,7 +60,6 @@ export class CompanyService {
                 throw new Error("User is blocked");
             }else{
                 const companyDetails = await getCompanyRepository.verifyCompany(email, password)
-                console.log('gotcha', companyDetails);
     
                 if (companyDetails) {
                     return companyDetails
@@ -82,7 +78,6 @@ export class CompanyService {
         try {
 
             const companyDetails = await getCompanyRepository.getCompany()
-            console.log('gotcha', companyDetails);
             return companyDetails
 
 

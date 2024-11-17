@@ -67,7 +67,6 @@ class ChatRepository {
                     timestamp: room.timestamp,
                 }))
               
-            console.log(roomDetails)
             return roomDetails;
         } catch (error) {
             console.error("Error fetching room details:", error);
@@ -113,7 +112,6 @@ class ChatRepository {
             const notifications = await notificationModel.find({ userId })
                 .populate('messages.sender', 'companyName')
                 .sort({ createdAt: -1 });
-            console.log(notifications)
             return notifications;
         } catch (error) {
             console.error("Error retrieving notifications:", error);

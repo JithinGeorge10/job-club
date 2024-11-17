@@ -8,11 +8,8 @@ export class CompanyController {
     }
     async postJobController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            console.log(req.body);
 
             const jobDetails = await this.companyService.addJob(req.body)
-            // console.log(jobDetails);
-
             res.status(200).send({ jobDetails })
         } catch (error) {
             next(error)
@@ -22,10 +19,8 @@ export class CompanyController {
     async getJobController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
 
-            console.log('reached get job');
 
             const jobDetails = await this.companyService.getJobDetails()
-            // console.log(userDetails);
 
             res.status(200).send({ jobDetails })
         } catch (error) {
@@ -36,7 +31,6 @@ export class CompanyController {
         try {
             const { jobId } = req.query
             const jobDetails = await this.companyService.getSingleJobDetails(jobId)
-            console.log(jobDetails);
 
             res.status(200).send({ jobDetails })
         } catch (error) {
@@ -63,7 +57,6 @@ export class CompanyController {
     async getfilteredJobs(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
 
-            console.log(req.body);
             const filteredJobs = await this.companyService.filteredJobs(req.body)
             res.status(200).send({ filteredJobs })
         } catch (error) {
@@ -82,7 +75,6 @@ export class CompanyController {
     async deleteJobs(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
 
-          console.log(req.body)
           const {jobId}=req.body
           const deleteJob = await this.companyService.deleteJob(jobId)
         } catch (error) {

@@ -4,9 +4,7 @@ import applicantionModel from "./model/applicationModel";
 class CompanyRepository {
     async addJob(JobData: any) {
         try {
-            console.log('reached repo');
-            console.log(JobData);
-
+          
             const { data, companyId } = JobData;
 
 
@@ -33,7 +31,7 @@ class CompanyRepository {
 
 
             const savedJob = await newJob.save();
-            console.log('Job successfully added:', savedJob);
+          
 
             return savedJob;
 
@@ -93,7 +91,7 @@ class CompanyRepository {
             const newApplicant = new applicantionModel(applicantData);
             const savedApplicant = await newApplicant.save();
 
-            console.log('Applicant saved successfully:', savedApplicant);
+           
             return savedApplicant;
 
         } catch (error) {
@@ -139,7 +137,6 @@ class CompanyRepository {
 
             const jobs = await jobModel.find(filterQuery).populate('companyId', 'companyName');
 
-            console.log('Filtered Jobs:', jobs);
             return jobs;
         } catch (error) {
             console.log(error);
@@ -159,11 +156,9 @@ class CompanyRepository {
             );
 
             if (!updatedJob) {
-                console.log('Job not found');
                 return { success: false, message: 'Job not found' };
             }
 
-            console.log('Job updated successfully:', updatedJob);
             return { success: true, data: updatedJob };
         } catch (error) {
             console.log('Error updating job:', error);
@@ -176,10 +171,8 @@ class CompanyRepository {
         try {
             const result = await jobModel.findByIdAndDelete(jobId);
             if (result) {
-                console.log("Job deleted successfully:", result);
                 return { success: true, message: "Job deleted successfully" };
             } else {
-                console.log("Job not found");
                 return { success: false, message: "Job not found" };
             }
         } catch (error) {

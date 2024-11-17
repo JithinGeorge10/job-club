@@ -74,7 +74,6 @@ function page() {
         };
         fetchData();
     }, [jobId]);
-    console.log(jobDetails)
 
     const handleSaveJob = async (jobId: any) => {
         let response = await axios.post(`${USER_SERVICE_URL}/saveJob`, { jobId, userId }, {
@@ -83,7 +82,6 @@ function page() {
             },
             withCredentials: true
         });
-        console.log(response);
         if (response.status === 200) {
             setUserDetails((prevDetails: any) => ({
                 ...prevDetails,
@@ -114,7 +112,6 @@ function page() {
             },
             withCredentials: true
         });
-        console.log(response)
         const {chatRoom}=response.data
         router.push(`userChat?roomDetails=${encodeURIComponent(JSON.stringify(chatRoom))}`);
     }

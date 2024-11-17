@@ -36,7 +36,6 @@ function page() {
           'Content-Type': 'application/json'
         }
       })
-      console.log(response.data);
       if (response.data.success) {
         toast.info('Verify OTP')
          setTimeout(() => {

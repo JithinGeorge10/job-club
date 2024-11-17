@@ -8,7 +8,6 @@ export async function middleware(req: NextRequest) {
     if (url.pathname === '/jobListingPage') {
         const isValidUser = await userVerifyToken("userToken", req)
 
-        console.log(isValidUser);
 
         if (!isValidUser) {
             url.pathname = '/login';
@@ -19,7 +18,6 @@ export async function middleware(req: NextRequest) {
     if (url.pathname === '/login') {
         const isValidUser = await userVerifyToken("userToken", req);
         if (isValidUser) {
-            console.log(isValidUser);
             url.pathname = '/jobListingPage';
             return NextResponse.redirect(url);
         }
@@ -29,9 +27,7 @@ export async function middleware(req: NextRequest) {
     if (url.pathname === '/signup') {
         const isValidUser = await userVerifyToken("userToken", req);
         if (isValidUser) {
-            console.log('======');
 
-            console.log(isValidUser);
 
             url.pathname = '/jobListingPage';
             return NextResponse.redirect(url);
@@ -55,7 +51,6 @@ export async function middleware(req: NextRequest) {
     if (url.pathname === '/companyDashboard') {
         const isValidCompany = await companyVerifyToken("companyToken", req)
 
-        console.log(isValidCompany)
 
         if (!isValidCompany) {
             url.pathname = '/companyLogin';
@@ -66,7 +61,6 @@ export async function middleware(req: NextRequest) {
     if (url.pathname === '/companyLogin') {
         const isValidCompany = await companyVerifyToken("companyToken", req);
         if (isValidCompany) {
-            console.log(isValidCompany);
             url.pathname = '/companyDashboard';
             return NextResponse.redirect(url);
         }
@@ -76,9 +70,7 @@ export async function middleware(req: NextRequest) {
     if (url.pathname === '/companySignUp') {
         const isValidCompany = await companyVerifyToken("companyToken", req);
         if (isValidCompany) {
-            console.log('======');
-
-            console.log(isValidCompany);
+            
 
             url.pathname = '/companyDashboard';
             return NextResponse.redirect(url);
@@ -103,7 +95,6 @@ export async function middleware(req: NextRequest) {
 
         const isValidadmin = await adminVerifyToken("adminToken", req);
         if (isValidadmin) {
-            console.log(isValidadmin);
             url.pathname = '/adminDashboard';
             return NextResponse.redirect(url);
         }
@@ -115,7 +106,6 @@ export async function middleware(req: NextRequest) {
 
         const isValidadmin = await adminVerifyToken("adminToken", req);
         if (!isValidadmin) {
-            console.log(isValidadmin);
             url.pathname = '/admin';
             return NextResponse.redirect(url);
         }

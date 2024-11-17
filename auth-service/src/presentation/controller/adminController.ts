@@ -16,7 +16,6 @@ export class AdminController {
             const admin = await this.adminService.adminVerify(email, password)
             if (admin) {
                 const adminJwtToken = await this.JwtService.createJwt('admin@gmail.com', 'admin')
-                console.log(adminJwtToken);
                 res.status(200).cookie('adminToken', adminJwtToken, {
                     maxAge: 60 * 60 * 24 * 1000
                 }).send({ success: true, token: adminJwtToken });

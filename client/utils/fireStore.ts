@@ -9,16 +9,13 @@ const db = getFirestore(app);
 
 export async function uploadImagesToFireStore( file: any) {
     try {
-        console.log(file)
         const storage = getStorage();
         const storageRef = ref(storage, `resume/${file.name}`)
-        console.log(storageRef);
         
             await uploadBytes(storageRef, file).then((snapshot) => {
                 console.log('Uploaded a blob or file!');
             });
         let url = await getDownloadURL(storageRef);
-        console.log(url)
         return url
         
     } catch (error) {

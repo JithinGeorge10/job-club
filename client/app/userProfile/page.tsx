@@ -48,7 +48,6 @@ const Profile = () => {
             withCredentials: true,
           }
         );
-        console.log(response.data);
         if (response.data.failToken) {
           router.push('login');
         }
@@ -118,17 +117,14 @@ const Profile = () => {
       toast.info('Please select a PDF file to upload')
       return;
     }
-    console.log(selectedFile)
 
     const formData = new FormData();
 
     formData.append('resume', selectedFile);
     formData.append('userId', userId);
-    console.log(formData)
     try {
 
       let uploadImageUrl = await uploadImagesToFireStore(selectedFile)
-      console.log('File uploaded successfully:', uploadImageUrl);
       if (uploadImageUrl) {
         let response = await axios.post(`${USER_SERVICE_URL}/add-resume`, { uploadImageUrl, userId }, {
           headers: {
@@ -154,7 +150,6 @@ const Profile = () => {
       },
       withCredentials: true
     })
-    console.log(response)
     if (response.status) {
       toast.success('resume deleted')
     }
@@ -163,7 +158,6 @@ const Profile = () => {
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
-      console.log(file);
 
       setSelectedImage(file);
     } else {
@@ -178,7 +172,6 @@ const Profile = () => {
     }
     try {
       const uploadImageUrl = await uploadImagesToFireStore(selectedImage);
-      console.log('Image uploaded successfully:', uploadImageUrl);
 
       if (uploadImageUrl) {
         const response = await axios.post(`${USER_SERVICE_URL}/add-profile-image`, { uploadImageUrl, userId }, {
@@ -187,7 +180,6 @@ const Profile = () => {
           },
           withCredentials: true,
         });
-        console.log('ressss===' + response)
         toast.success('Profile image uploaded successfully');
       }
 

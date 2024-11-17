@@ -24,15 +24,12 @@ export class CompanyController {
     async verifyOtpController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { email } = req.body
-            console.log('company ooo');
-            console.log(req.body);
             const otp = req.body.otp
             const userOtp = Number(otp.join(''))
             const verifiedCompany = await this.companyService.verifyOtp(userOtp, email)
             if (verifiedCompany) {
 
                 const comapanyJwtToken = await this.JwtService.createJwt(verifiedCompany._id, 'company')
-                console.log(comapanyJwtToken);
 
                 res.status(200).cookie('companyToken', comapanyJwtToken, {
                     maxAge: 60 * 60 * 24 * 1000
@@ -89,7 +86,6 @@ export class CompanyController {
     }
     async blockCompanyController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-           console.log(req.body)
            const blockCompany = await this.companyService.blockCompany(req.body)
            res.send({ blockCompany, success: true })
         } catch (error) {
@@ -98,7 +94,6 @@ export class CompanyController {
     }
     async unBlockCompanyController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-           console.log(req.body)
            const unBlockCompany = await this.companyService.unBlockCompany(req.body)
            res.send({ unBlockCompany, success: true })
         } catch (error) {

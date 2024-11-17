@@ -59,9 +59,8 @@ function Page() {
                 });
 
                 const roomsData = response.data.getRoom;
-                console.log(roomsData)
+             
                 const filteredRooms = roomsData.filter((room: Room) => room.lastMessage);
-                console.log(filteredRooms)
                 const sortedRooms = filteredRooms.sort((a: Room, b: Room) => {
                     return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
                 });

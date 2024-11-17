@@ -31,10 +31,8 @@ app.use(errorHandler)
 const userService = new UserService(); 
 
 cron.schedule('0 0 * * *', async () => {
-    console.log('Running cron job to expire subscriptions');
     try {
         const expiredCount = await userService.handleSubscriptionExpiry();
-        console.log(`${expiredCount} subscriptions expired.`);
     } catch (error) {
         console.error('Error running subscription expiry job:', error);
     }

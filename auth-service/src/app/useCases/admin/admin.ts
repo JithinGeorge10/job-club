@@ -4,7 +4,6 @@ export class AdminService {
 
     async adminVerify(email: string, password: string) {
         try {
-            console.log(email, password);
             if(email==ADMIN_MAIL && password==ADMIN_PASSWORD){
                 return true
             }

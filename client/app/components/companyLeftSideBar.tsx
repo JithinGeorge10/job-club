@@ -13,7 +13,6 @@ function CompanyLeftSideBar() {
             setCompanyId(companyDetails._id);
         }
     }, []);
-    console.log(companyId)
 
     const router = useRouter();
 

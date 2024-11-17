@@ -35,7 +35,6 @@ function Page() {
 
   const handleSave =async () => {
 
-    console.log(skills)
     const response = await axios.post(`${USER_SERVICE_URL}/add-skills`, { skills,userId }, {
       headers: {
         'Content-Type': 'application/json'

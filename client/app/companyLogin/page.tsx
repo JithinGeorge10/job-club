@@ -22,7 +22,6 @@ function page() {
       });
   
       const company = response.data.company;
-      console.log(response)
       if (response.data.success) {
         localStorage.setItem('company', JSON.stringify(company));
         toast.success('Welcome');

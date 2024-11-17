@@ -21,7 +21,6 @@ function Page() {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true,
                 });
-                console.log(response)
                 setUserDetails(response.data.userDetails);
             } catch (error) {
                 console.error("Error fetching user details:", error);

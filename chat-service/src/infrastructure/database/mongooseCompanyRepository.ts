@@ -4,7 +4,6 @@ class CompanyRepository {
     async addCompany(companyDetails: Company) {
         try {
             const newCompany = new companyModel(companyDetails);
-            console.log(newCompany);
             await newCompany.save()
         } catch (error) {
             console.log(error);

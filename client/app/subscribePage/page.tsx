@@ -16,7 +16,6 @@ const PaymentPage = () => {
   const userId = searchParams.get('userId');
 
 
-  console.log(userId);
 
 
   const [hash, setHash] = useState('');

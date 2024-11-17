@@ -36,21 +36,17 @@ app.use("/api/chat-service", chatRoute);
 
 
 io.on("connection", (socket) => {
-    console.log("A user connected:", socket.id);
 
     socket.on("joinRoom", (roomId) => {
         socket.join(roomId);
-        console.log(`User ${socket.id} joined room: ${roomId}`);
     });
 
     socket.on("sendMessage", (messageData) => {
-        console.log(messageData);
         const { roomId, message, sender } = messageData;
         io.to(roomId).emit("receiveMessage", { message, sender,roomId });
     });
 
     socket.on("disconnect", () => {
-        console.log("A user disconnected:", socket.id);
     });
 });
 
