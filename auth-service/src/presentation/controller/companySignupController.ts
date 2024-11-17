@@ -60,15 +60,15 @@ export class CompanyController {
           const { email, password } = req.body;
           const company = await this.companyService.companyLogin(email, password);
       
-          if (company && '_id' in company) { // Valid company user
+          if (company && '_id' in company) { 
             const companyJwtToken = await this.JwtService.createJwt(company._id, 'company');
       
             res.status(200).cookie('companyToken', companyJwtToken, {
-              maxAge: 60 * 60 * 24 * 1000, // 1 day
+              maxAge: 60 * 60 * 24 * 1000,
             }).send({ company, success: true, token: companyJwtToken });
-          } else if (company && 'isBlocked' in company && company.isBlocked) { // Blocked user
-            res.status(403).send({ success: false, message: 'User is blocked' });
-          } else { // Invalid credentials
+          } else if (company && 'isBlocked' in company && company.isBlocked) { 
+            res.status(403).send({ success: false, message: 'Company is blocked' });
+          } else { 
             res.status(401).send({ success: false, message: 'Invalid credentials' });
           }
         } catch (error) {

@@ -12,10 +12,10 @@ function AdminLeftSideBar() {
   };
 
   const handleCompany = () => {
-    router.push(`companyManagement`);
+    router.replace(`companyManagement`);
   };
   const handleUsers = () => {
-    router.push(`userManagement`);
+    router.replace(`userManagement`);
   };
   
   return (

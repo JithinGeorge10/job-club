@@ -65,7 +65,6 @@ export class UserController {
             
             if (user) {
                 const userJwtToken = await this.JwtService.createJwt(user._id, 'user')
-
                 res.status(200).cookie('userToken', userJwtToken, {
                     maxAge: 60 * 60 * 24 * 1000
                 }).send({ user, success: true, token: userJwtToken });

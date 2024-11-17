@@ -1,5 +1,5 @@
-// admin-login
 import{AdminController} from '../controller/adminController'
+import {authenticateToken} from '../middleware/authenticateToken'
 import { Router } from "express";
 const adminController=new AdminController()
 const companyRoute = Router()

@@ -18,25 +18,24 @@ export class UserController {
             const { id } = req.query;
             const userIdFromToken = req.user?.user;
             if (!id || typeof id !== 'string') {
-                res.status(200).send({ success:false,message: 'Invalid or missing user ID in request' });
+                res.status(200).send({ success: false, message: 'Invalid or missing user ID in request' });
             }
             if (id !== userIdFromToken) {
-                res.status(200).send({ success:false,message: 'Unauthorized: User ID does not match' });
+                res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
             }
             const userDetails = await this.userService.getUserDetails(id);
-            res.status(200).send({success:true, userDetails });
+            res.status(200).send({ success: true, userDetails });
         } catch (error) {
             next(error);
         }
     }
-    
+
     async addEmploymentController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
-            console.log(req.body);
             const { userId } = req.body;
             const userIdFromToken = req.user?.user;
             if (userId !== userIdFromToken) {
-                res.status(200).send({ success:false,message: 'Unauthorized: User ID does not match' });
+                res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
             }
 
             const userDetails = await this.userService.addEmployment(req.body)
@@ -45,24 +44,39 @@ export class UserController {
             next(error)
         }
     }
-    async addEducationController(req: Request, res: Response, next: NextFunction): Promise<any> {
+    async addEducationController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
+            const { userId } = req.body;
+            const userIdFromToken = req.user?.user;
+            if (userId !== userIdFromToken) {
+                res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
+            }
             const userDetails = await this.userService.addEducation(req.body)
             res.status(200).send({ userDetails })
         } catch (error) {
             next(error)
         }
     }
-    async addSkillsController(req: Request, res: Response, next: NextFunction): Promise<any> {
+    async addSkillsController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
+            const { userId } = req.body;
+            const userIdFromToken = req.user?.user;
+            if (userId !== userIdFromToken) {
+                res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
+            }
             const userDetails = await this.userService.addSkills(req.body)
             res.status(200).send({ userDetails })
         } catch (error) {
             next(error)
         }
     }
-    async addResumeController(req: Request, res: Response, next: NextFunction): Promise<any> {
+    async addResumeController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
+            const { userId } = req.body;
+            const userIdFromToken = req.user?.user;
+            if (userId !== userIdFromToken) {
+                res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
+            }
             const userDetails = await this.userService.addResume(req.body)
             res.status(200).send({ userDetails })
         } catch (error) {
@@ -71,18 +85,26 @@ export class UserController {
     }
 
 
-    async addProfileImageController(req: Request, res: Response, next: NextFunction): Promise<any> {
+    async addProfileImageController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
-           
+            const { userId } = req.body;
+            const userIdFromToken = req.user?.user;
+            if (userId !== userIdFromToken) {
+                res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
+            }
             const addProfileImage = await this.userService.addProfileImage(req.body)
             res.status(200).send({ addProfileImage })
         } catch (error) {
             next(error)
         }
     }
-    async addDeleteResumeController(req: Request, res: Response, next: NextFunction): Promise<any> {
+    async addDeleteResumeController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
-           
+            const { userId } = req.body;
+            const userIdFromToken = req.user?.user;
+            if (userId !== userIdFromToken) {
+                res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
+            }
             const deleteResume = await this.userService.deleteResume(req.body)
             res.status(200).send({ deleteResume })
         } catch (error) {
@@ -105,32 +127,44 @@ export class UserController {
             next(error)
         }
     }
-    async saveJobController(req: Request, res: Response, next: NextFunction): Promise<any> {
+    async saveJobController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
-            const {userId,jobId}=req.body
-          const savedJob = await this.userService.saveJob(userId,jobId)
-          res.status(200).send({ savedJob })
+            const { userId, jobId } = req.body
+            const userIdFromToken = req.user?.user;
+            if (userId !== userIdFromToken) {
+                res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
+            }
+            const savedJob = await this.userService.saveJob(userId, jobId)
+            res.status(200).send({ savedJob })
         } catch (error) {
             next(error)
         }
     }
-    async applyJobController(req: Request, res: Response, next: NextFunction): Promise<any> {
+    async applyJobController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
-            const {userId,jobId}=req.body
-            const applyJob = await this.userService.applyJob(userId,jobId)
+            const { userId, jobId } = req.body
+            const userIdFromToken = req.user?.user;
+            if (userId !== userIdFromToken) {
+                res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
+            }
+            const applyJob = await this.userService.applyJob(userId, jobId)
             res.status(200).send({ applyJob })
         } catch (error) {
             next(error)
         }
     }
-    async unsaveJobController(req: Request, res: Response, next: NextFunction): Promise<any> {
+    async unsaveJobController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
-            const {userId,jobId}=req.body
-            const unsaveJob = await this.userService.unsaveJob(userId,jobId)
+            const { userId, jobId } = req.body
+            const userIdFromToken = req.user?.user;
+            if (userId !== userIdFromToken) {
+                res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
+            }
+            const unsaveJob = await this.userService.unsaveJob(userId, jobId)
             res.status(200).send({ unsaveJob })
         } catch (error) {
             next(error)
         }
     }
-    
+
 }
