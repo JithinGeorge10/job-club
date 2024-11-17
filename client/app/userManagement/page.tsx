@@ -16,8 +16,10 @@ function Page() {
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true); 
             try {
                 const response = await axios.get(`${AUTH_SERVICE_URL}/get-userDetails`, {
+                    params: { adminEmail: "admin@gmail.com" }, 
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true,
                 });
@@ -30,6 +32,7 @@ function Page() {
         };
         fetchData();
     }, []);
+    
 
     const indexOfLastUser = currentPage * usersPerPage;
     const indexOfFirstUser = indexOfLastUser - usersPerPage;

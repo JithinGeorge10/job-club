@@ -3,10 +3,9 @@ import { PORT, CLIENT_PORT } from './utils/config'
 import cors from 'cors'
 import morgan from "morgan";
 import cookieParser from 'cookie-parser'
-import {connectDB} from "./infrastructure/config/databaseConfig"
- import companyRoute from './presentation/routes/companyRoute'
-// import {errorHandler} from './presentation/middleware/errorHandler'
- import consume from './infrastructure/service/consume'
+import { connectDB } from "./infrastructure/config/databaseConfig"
+import companyRoute from './presentation/routes/companyRoute'
+import consume from './infrastructure/service/consume'
 const app = express()
 app.use(express.json());
 connectDB()
@@ -18,11 +17,10 @@ app.use(cors({
 }));
 app.use(morgan("dev"));
 app.use(cookieParser());
- consume()
+consume()
 
- app.use("/api/company-service", companyRoute);
+app.use("/api/company-service", companyRoute);
 
-//  app.use(errorHandler)
 app.listen(PORT, () => {
     console.log('app started')
-})
+}) 

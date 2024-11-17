@@ -16,7 +16,6 @@ interface Company {
 }
 
 function Page() {
-    const router = useRouter();
     const [companyDetails, setCompanyDetails] = useState<Company[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -28,6 +27,7 @@ function Page() {
             setLoading(true);
             try {
                 const response = await axios.get(`${AUTH_SERVICE_URL}/get-companyDetails`, {
+                    params: { adminEmail: "admin@gmail.com" }, 
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true,
                 });
@@ -40,6 +40,7 @@ function Page() {
         };
         fetchData();
     }, []);
+    
 
     const filteredCompanies = companyDetails.filter(company =>
         company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||

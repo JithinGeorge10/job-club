@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { UserController} from "../controller/userSignupController";
+import {authenticateToken} from '../middleware/authenticateToken'
 
 const userRoute = Router()
 const userController = new UserController();
@@ -9,7 +10,7 @@ userRoute.post('/resend-otp', userController.resendOtpController.bind(userContro
 userRoute.post('/verify-otp', userController.verifyOtpController.bind(userController));
 userRoute.post('/user-login', userController.userLoginController.bind(userController));
 userRoute.post('/changePassword', userController.changePasswordController.bind(userController));
-userRoute.get('/get-userDetails', userController.getUserController.bind(userController));
+userRoute.get('/get-userDetails', authenticateToken,userController.getUserController.bind(userController));
 userRoute.post('/block-user', userController.blockUserController.bind(userController));
 userRoute.post('/unBlock-user', userController.unBlockUserController.bind(userController));
 

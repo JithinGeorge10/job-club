@@ -4,7 +4,14 @@ import { UserService } from "../../app/useCases/user/user";
 import { JwtService } from '../../infrastructure/service/jwtService'
 import { User } from "../../domain/entities/user";
 
-
+interface AuthenticatedRequest extends Request {
+    admin?: {
+        user: string;
+        role: string;
+        iat: number;
+        exp: number;
+    };
+}
 export class UserController {
     private userService: UserService;
     private JwtService: JwtService;
@@ -16,7 +23,7 @@ export class UserController {
     async userSignupController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const user: User | undefined = await this.userService.createUser(req.body);
-           
+
             if (user) {
                 res.status(200).send({ user, success: true });
             }
@@ -41,7 +48,7 @@ export class UserController {
     async verifyOtpController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { email } = req.body
-            
+
             const otp = req.body.otp
             const userOtp = Number(otp.join(''))
             const verifiedUser = await this.userService.verifyOtp(userOtp, email)
@@ -62,7 +69,7 @@ export class UserController {
         try {
             const { email, password } = req.body
             const user = await this.userService.userLogin(email, password)
-            
+
             if (user) {
                 const userJwtToken = await this.JwtService.createJwt(user._id, 'user')
                 res.status(200).cookie('userToken', userJwtToken, {
@@ -74,7 +81,7 @@ export class UserController {
         }
     }
 
-    
+
     async changePasswordController(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
             const changedPassword = await this.userService.changePassword(req.body)
@@ -83,8 +90,13 @@ export class UserController {
             next(error)
         }
     }
-    async getUserController(req: Request, res: Response, next: NextFunction): Promise<any> {
+    async getUserController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
+            const adminIdFromToken = req.admin?.user;
+            const adminEmail = req.query.adminEmail;
+            if (adminEmail !== adminIdFromToken) {
+                res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
+            }
             const userDetails = await this.userService.userDetails()
             res.status(200).send({ userDetails })
         } catch (error) {
@@ -92,22 +104,22 @@ export class UserController {
         }
     }
 
-    
+
     async blockUserController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-           const blockUser = await this.userService.blockUser(req.body)
-           res.send({ blockUser, success: true })
+            const blockUser = await this.userService.blockUser(req.body)
+            res.send({ blockUser, success: true })
         } catch (error) {
             next(error)
         }
     }
     async unBlockUserController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-           const unblockUser = await this.userService.unblockUser(req.body)
-           res.send({ unblockUser, success: true })
+            const unblockUser = await this.userService.unblockUser(req.body)
+            res.send({ unblockUser, success: true })
         } catch (error) {
             next(error)
         }
     }
-    
+
 }

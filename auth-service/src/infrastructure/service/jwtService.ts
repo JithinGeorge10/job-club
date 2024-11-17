@@ -20,5 +20,4 @@ export class JwtService {
             throw error
         }
     }
-    
 }

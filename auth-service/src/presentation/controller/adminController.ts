@@ -12,6 +12,7 @@ export class AdminController {
     }
     async adminLoginController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
+
             const { email, password } = req.body
             const admin = await this.adminService.adminVerify(email, password)
             if (admin) {

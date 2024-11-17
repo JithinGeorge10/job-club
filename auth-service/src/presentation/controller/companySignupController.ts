@@ -2,6 +2,14 @@ import { Request, Response, NextFunction } from "express";
 import { CompanyService } from "../../app/useCases/company/company";
 import { Company } from "../../domain/entities/company";
 import { JwtService } from '../../infrastructure/service/jwtService'
+interface AuthenticatedRequest extends Request {
+    admin?: {
+        user: string;
+        role: string;
+        iat: number;
+        exp: number;
+    };
+}
 export class CompanyController {
     private companyService: CompanyService;
     private JwtService: JwtService;
@@ -57,49 +65,58 @@ export class CompanyController {
 
     async companyLoginController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-          const { email, password } = req.body;
-          const company = await this.companyService.companyLogin(email, password);
-      
-          if (company && '_id' in company) { 
-            const companyJwtToken = await this.JwtService.createJwt(company._id, 'company');
-      
-            res.status(200).cookie('companyToken', companyJwtToken, {
-              maxAge: 60 * 60 * 24 * 1000,
-            }).send({ company, success: true, token: companyJwtToken });
-          } else if (company && 'isBlocked' in company && company.isBlocked) { 
-            res.status(403).send({ success: false, message: 'Company is blocked' });
-          } else { 
-            res.status(401).send({ success: false, message: 'Invalid credentials' });
-          }
+            const { email, password } = req.body;
+            const company = await this.companyService.companyLogin(email, password);
+
+            if (company && '_id' in company) {
+                const companyJwtToken = await this.JwtService.createJwt(company._id, 'company');
+
+                res.status(200).cookie('companyToken', companyJwtToken, {
+                    maxAge: 60 * 60 * 24 * 1000,
+                }).send({ company, success: true, token: companyJwtToken });
+            } else if (company && 'isBlocked' in company && company.isBlocked) {
+                res.status(403).send({ success: false, message: 'Company is blocked' });
+            } else {
+                res.status(401).send({ success: false, message: 'Invalid credentials' });
+            }
         } catch (error) {
-          next(error);
+            next(error);
         }
-      }
-      
-    async companyDetailsController(req: Request, res: Response, next: NextFunction): Promise<void> {
+    }
+
+
+
+
+    async companyDetailsController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
+            const adminIdFromToken = req.admin?.user;
+            const adminEmail = req.query.adminEmail;
+            if (adminEmail !== adminIdFromToken) {
+                res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
+            }
             const companyDetails = await this.companyService.getCompanyDetails()
-                res.send({ companyDetails, success: true })
+
+            res.send({ companyDetails, success: true })
         } catch (error) {
-            next(error)
+            next(error) 
         }
     }
     async blockCompanyController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-           const blockCompany = await this.companyService.blockCompany(req.body)
-           res.send({ blockCompany, success: true })
+            const blockCompany = await this.companyService.blockCompany(req.body)
+            res.send({ blockCompany, success: true })
         } catch (error) {
             next(error)
         }
     }
     async unBlockCompanyController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-           const unBlockCompany = await this.companyService.unBlockCompany(req.body)
-           res.send({ unBlockCompany, success: true })
+            const unBlockCompany = await this.companyService.unBlockCompany(req.body)
+            res.send({ unBlockCompany, success: true })
         } catch (error) {
             next(error)
         }
     }
-    
-    
+
+
 }
