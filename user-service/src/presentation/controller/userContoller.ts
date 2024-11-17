@@ -1,24 +1,35 @@
 import { Request, Response, NextFunction } from "express";
-// import { UserService } from '../../app/useCases/User/addUser'
 import { UserService } from '../../app/useCases/User/getUser'
+interface AuthenticatedRequest extends Request {
+    user?: {
+        user: string;
+        role: string;
+        iat: number;
+        exp: number;
+    };
+}
 export class UserController {
     private userService: UserService;
     constructor() {
         this.userService = new UserService();
     }
-    async getUserController(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getUserController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
-
-            console.log(req.query.id);
-            const { id } = req.query
-            const userDetails = await this.userService.getUserDetails(id)
-            console.log(userDetails);
-
-            res.status(200).send({ userDetails })
+            const { id } = req.query;
+            const userIdFromToken = req.user?.user;
+            if (!id || typeof id !== 'string') {
+                res.status(200).send({ success:false,message: 'Invalid or missing user ID in request' });
+            }
+            if (id !== userIdFromToken) {
+                res.status(200).send({ success:false,message: 'Unauthorized: User ID does not match' });
+            }
+            const userDetails = await this.userService.getUserDetails(id);
+            res.status(200).send({success:true, userDetails });
         } catch (error) {
-            next(error)
+            next(error);
         }
     }
+    
     async addEmploymentController(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
             console.log(req.body);

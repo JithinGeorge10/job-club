@@ -1,23 +1,34 @@
 import jwt from 'jsonwebtoken';
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express';
 import { JWT_KEY } from '../../utils/config';
+interface AuthenticatedRequest extends Request {
+    user?: {
+        user: string;
+        role: string;
+        iat: number;
+        exp: number;
+    };
+}
 
-export const authenticateToken = ( req: Request, res: Response, next: NextFunction):any=> {
+export const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction): any => {
     console.log('reached auth');
-    
+
     const token = req.cookies['userToken'];
-    
-    console.log(token)
+
+    console.log(token);
     if (!token) {
-        return res.send({failToken:true})
+        return res.send({ failToken: true });
     }
     try {
-
-        const verified = jwt.verify(token, JWT_KEY as string);
-        console.log(verified);
-        
-        next(); 
+        const verified = jwt.verify(token, JWT_KEY as string) as {
+            user: string;
+            role: string;
+            iat: number;
+            exp: number;
+        };
+        req.user = verified; 
+        next();
     } catch (err) {
         res.status(400).json({ message: 'Invalid token' });
     }
-}
+};

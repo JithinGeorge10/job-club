@@ -89,5 +89,16 @@ export class CompanyController {
             next(error)
         }
     }
+
+    async applicants(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+          const applicants=await this.companyService.applicants()
+          res.status(200).send({ applicants })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    
     
 }

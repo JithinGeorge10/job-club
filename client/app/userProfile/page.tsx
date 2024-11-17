@@ -37,21 +37,40 @@ const Profile = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   useEffect(() => {
-    const res = async function () {
-      let response = await axios.get(`${USER_SERVICE_URL}/get-userDetails?id=${userId}`, {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        withCredentials: true
-      })
-      console.log(response.data);
-      if (response.data.failToken) {
-        router.push(`login`)
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${USER_SERVICE_URL}/get-userDetails?id=${userId}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+          }
+        );
+        console.log(response.data);
+        if (response.data.failToken) {
+          router.push('login');
+        }
+        if(response.data.success==false){
+          router.push('pageNotFound');
+        }
+        setUserDetails(response.data.userDetails);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error('Axios error:', error.message);
+          router.push('pageNotFound')
+        } else if (error instanceof Error) {
+          console.error('General error:', error.message);
+          router.push('pageNotFound')
+        } else {
+          console.error('Unexpected error:', error);
+        }
       }
-      setUserDetails(response.data.userDetails)
-    }
-    res()
-  }, [])
+    };
+
+    fetchData();
+  }, []);
 
 
   const formatDate = (dateString: string): string => {
@@ -180,19 +199,19 @@ const Profile = () => {
 
   const handlePayment = () => {
     const isProfileComplete = userDetails?.profile?.profileImage &&
-                              userDetails?.profile?.resume &&
-                              userDetails?.profile?.employment_details?.length > 0 &&
-                              userDetails?.profile?.education_details?.length > 0 &&
-                              userDetails?.profile?.skills?.length > 0;
-  
+      userDetails?.profile?.resume &&
+      userDetails?.profile?.employment_details?.length > 0 &&
+      userDetails?.profile?.education_details?.length > 0 &&
+      userDetails?.profile?.skills?.length > 0;
+
     if (!isProfileComplete) {
       toast.info('Please complete your profile to upgrade to Premium');
       return;
     }
-    
+
     router.push(`/subscribePage?firstName=${userDetails?.firstName}&lastName=${userDetails?.lastName}&userId=${userDetails?._id}&email=${userDetails?.email}&phone=${userDetails?.phone}`);
   };
-     
+
   return (
     <>
       <Navbar></Navbar>
@@ -201,17 +220,17 @@ const Profile = () => {
           <h1 className="text-4xl font-bold">My profile</h1>
           <br />
           {userDetails?.profile?.subscriber ? (
-                <span className="text-green-500 font-semibold text-lg">
-                    ✅ You are already a Premium Member!
-                </span>
-            ) : (
-                <button
-                    onClick={handlePayment}
-                    className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2"
-                >
-                    💎 Upgrade to Premium Account
-                </button>
-            )}
+            <span className="text-green-500 font-semibold text-lg">
+              ✅ You are already a Premium Member!
+            </span>
+          ) : (
+            <button
+              onClick={handlePayment}
+              className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2"
+            >
+              💎 Upgrade to Premium Account
+            </button>
+          )}
           <h1 className="text-4xl font-bold"></h1>
           <div className="bg-gray-800 rounded-lg p-6 mt-6 flex items-center justify-between">
             <div className="flex items-center space-x-4">

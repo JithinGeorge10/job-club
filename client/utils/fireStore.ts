@@ -1,8 +1,8 @@
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { app } from "../app/firebase/config";
 import { getFirestore } from '@firebase/firestore'
-import { USER_SERVICE_URL } from "./constants";
-import axios from "axios";
+
+
 // import { apiClient } from "../lib/api-client";
 // import { UPLOAD_URL } from "./Constants";
 const db = getFirestore(app);

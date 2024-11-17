@@ -42,13 +42,13 @@ function ProfilePage() {
     };
 
     const handleSubmit = async () => {
-        // let applyResponse = await axios.post(`${USER_SERVICE_URL}/applyJob`, { jobId, userId }, {
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     withCredentials: true
-        // });
-        // console.log(applyResponse);
+        let applyResponse = await axios.post(`${USER_SERVICE_URL}/applyJob`, { jobId, userId }, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        });
+        console.log(applyResponse);
         const response = await axios.post(`${COMPANY_SERVICE_URL}/submitApplication`, { userDetails, jobId }, {
             headers: { 'Content-Type': 'application/json' },
             withCredentials: true,

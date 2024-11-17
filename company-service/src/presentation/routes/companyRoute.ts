@@ -12,6 +12,7 @@ companyRoute.post('/changeStatus-jobDetails', companyController.changeStatus.bin
 companyRoute.post('/get-filteredJobs', companyController.getfilteredJobs.bind(companyController));
 companyRoute.put('/update-jobDetails', companyController.updateJobs.bind(companyController));
 companyRoute.delete('/delete-jobDetails', companyController.deleteJobs.bind(companyController));
+companyRoute.get('/applicants', companyController.applicants.bind(companyController));
 
 
 

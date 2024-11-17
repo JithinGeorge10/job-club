@@ -74,5 +74,13 @@ return company
             throw error
         }
     }
+    async applicants() {
+        try {
+            const deleteJob = await jobRepository.applicants()
+            return deleteJob
+        } catch (error) {
+            throw error
+        }
+    }
     
 }
