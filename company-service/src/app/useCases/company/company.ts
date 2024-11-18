@@ -79,5 +79,14 @@ export class CompanyService {
             throw error
         }
     }
+    async changeStatusApplicants(applicantId:any,status:any) {
+        try {
+            const applicants = await jobRepository.changeStatusApplicants(applicantId,status)
+            return applicants
+        } catch (error) {
+            throw error
+        }
+    }
+    
 
 }

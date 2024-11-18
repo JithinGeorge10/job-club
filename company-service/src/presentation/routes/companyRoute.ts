@@ -13,7 +13,7 @@ companyRoute.post('/get-filteredJobs', companyController.getfilteredJobs.bind(co
 companyRoute.put('/update-jobDetails', companyController.updateJobs.bind(companyController));
 companyRoute.delete('/delete-jobDetails', companyController.deleteJobs.bind(companyController));
 companyRoute.get('/applicants', companyController.applicants.bind(companyController));
-
+companyRoute.patch('/changeStatus-Applicant', companyController.changeStatusApplicant.bind(companyController));
 
 
 export default companyRoute

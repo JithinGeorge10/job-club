@@ -185,7 +185,7 @@ class CompanyRepository {
     async applicants(companyId: any) {
         try {
             console.log(companyId)
-            const applicants = await applicantionModel.find({companyId}).lean();
+            const applicants = await applicantionModel.find({ companyId }).lean();
             console.log(applicants)
             const result = await Promise.all(
                 applicants.map(async (applicant) => {
@@ -204,7 +204,19 @@ class CompanyRepository {
     };
 
 
-
+    async changeStatusApplicants(applicantId: any, Status: any) {
+        try {
+            const result = await applicantionModel.updateOne(
+                { _id: applicantId },
+                { $set: { Status } }  
+            );
+            return result;
+        } catch (error) {
+            console.error('Error updating applicant status:', error);
+            return { success: false, message: "Error updating applicant status" };
+        }
+    }
+    
 }
 
 const jobRepository = new CompanyRepository();

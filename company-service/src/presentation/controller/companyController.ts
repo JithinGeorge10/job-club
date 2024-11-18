@@ -92,6 +92,15 @@ export class CompanyController {
         }
     }   
 
-
+    async changeStatusApplicant(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const{applicantId,status}=req.body
+            const applicants = await this.companyService.changeStatusApplicants(applicantId,status)
+            res.status(200).send({ applicants })
+        } catch (error) {
+            next(error)
+        }
+    }   
+    
 
 }
