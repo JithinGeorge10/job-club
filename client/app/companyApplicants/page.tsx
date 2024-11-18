@@ -63,7 +63,7 @@ function Page() {
                 if (response.status === 200) {
                     Swal.fire('Updated!', 'Applicant status has been updated.', 'success');
     
-          
+                    // Re-fetch the applicants' data
                     const updatedApplicants = await axios.get(`${COMPANY_SERVICE_URL}/applicants`, {
                         headers: { 'Content-Type': 'application/json' },
                         params: { companyId },
@@ -78,7 +78,7 @@ function Page() {
                 Swal.fire('Error', 'An error occurred while updating the status.', 'error');
             }
         } else {
-            e.target.value = ''; 
+            e.target.value = ''; // Reset the select input if the action is canceled
         }
     };
     
