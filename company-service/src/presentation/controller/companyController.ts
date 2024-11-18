@@ -75,8 +75,8 @@ export class CompanyController {
     async deleteJobs(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
 
-          const {jobId}=req.body
-          const deleteJob = await this.companyService.deleteJob(jobId)
+            const { jobId } = req.body
+            const deleteJob = await this.companyService.deleteJob(jobId)
         } catch (error) {
             next(error)
         }
@@ -84,13 +84,14 @@ export class CompanyController {
 
     async applicants(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-          const applicants=await this.companyService.applicants()
-          res.status(200).send({ applicants })
+            const {companyId}=req.query
+            const applicants = await this.companyService.applicants(companyId)
+            res.status(200).send({ applicants })
         } catch (error) {
             next(error)
         }
-    }
+    }   
 
-    
-    
+
+
 }

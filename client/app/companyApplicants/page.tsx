@@ -4,6 +4,7 @@ import CompanyNavbar from '../components/companyNavbar';
 import CompanyLeftSideBar from '../components/companyLeftSideBar';
 import axios from 'axios';
 import { COMPANY_SERVICE_URL } from '@/utils/constants';
+import ChangePassword from '../changePassword/page';
 
 function Page() {
     const [companyId, setCompanyId] = useState<string | null>(null);
@@ -18,29 +19,24 @@ function Page() {
         }
     }, []);
 
-    // Fetch applicants and filter them based on the company ID
     useEffect(() => {
         (async () => {
             try {
                 const response = await axios.get(`${COMPANY_SERVICE_URL}/applicants`, {
                     headers: { 'Content-Type': 'application/json' },
+                    params: { companyId },
                     withCredentials: true,
                 });
-                const allApplicants = response.data.applicants;
-
-                if (companyId) {
-                    const filteredApplicants = allApplicants.filter(
-                        (applicant: any) => applicant.companyId === companyId
-                    );
-                    setApplicants(filteredApplicants);
-                }
+                // Since applicants are already filtered in the backend, no need to filter them here.
+                setApplicants(response.data.applicants);
             } catch (error) {
                 console.error('Error fetching applicants:', error);
             }
         })();
     }, [companyId]);
+    const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>, _id: any) => {
 
-
+    }
     return (
         <>
             <CompanyNavbar />
@@ -68,13 +64,32 @@ function Page() {
                                         <td className="border border-gray-600 px-4 py-2">
                                             {applicant.jobDetails?.jobTitle || 'N/A'}
                                         </td>
-                                        <td className="border border-gray-600 px-4 py-2">Interview</td>
-                                        <td className="border border-gray-600 px-4 py-2">June 16, 2024</td>
+                                        <td className="border border-gray-600 px-4 py-2"> {applicant.Status || 'N/A'}</td>
                                         <td className="border border-gray-600 px-4 py-2">
-                                            <button className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded">
-                                                Live
-                                            </button>
+                                            {applicant.createdAt ? new Date(applicant.createdAt).toLocaleDateString('en-GB', {
+                                                day: '2-digit',
+                                                month: 'short',
+                                                year: 'numeric',
+                                            }) : 'N/A'}
                                         </td>
+                                        <td className="border border-gray-600 px-4 py-2">
+                                            <select
+                                                className="bg-green-500 text-white py-1 px-4 rounded focus:outline-none focus:ring-2 focus:ring-green-600"
+                                                value=""
+                                                onChange={(e) => handleStatusChange(e, applicant._id)}
+                                            >
+                                                <option value="" disabled>Change Status</option>
+                                                <option value="Hired">Hired</option>
+                                                <option value="Rejected">Rejected</option>
+                                                <option value="In review">In review</option>
+                                                <option value="Interview">Interview</option>
+                                            </select>
+
+                                        </td>
+
+
+
+
                                         <td className="border border-gray-600 px-4 py-2">
                                             <button
                                                 onClick={() => window.open(applicant.resume, '_blank')}

@@ -4,7 +4,7 @@ import applicantionModel from "./model/applicationModel";
 class CompanyRepository {
     async addJob(JobData: any) {
         try {
-          
+
             const { data, companyId } = JobData;
 
 
@@ -31,7 +31,7 @@ class CompanyRepository {
 
 
             const savedJob = await newJob.save();
-          
+
 
             return savedJob;
 
@@ -91,7 +91,7 @@ class CompanyRepository {
             const newApplicant = new applicantionModel(applicantData);
             const savedApplicant = await newApplicant.save();
 
-           
+
             return savedApplicant;
 
         } catch (error) {
@@ -169,6 +169,7 @@ class CompanyRepository {
 
     async deleteJob(jobId: any) {
         try {
+
             const result = await jobModel.findByIdAndDelete(jobId);
             if (result) {
                 return { success: true, message: "Job deleted successfully" };
@@ -181,31 +182,28 @@ class CompanyRepository {
         }
     };
 
-    async applicants() {
+    async applicants(companyId: any) {
         try {
-           
-            const applicants = await applicantionModel.find().lean();
-    
-           
+            console.log(companyId)
+            const applicants = await applicantionModel.find({companyId}).lean();
+            console.log(applicants)
             const result = await Promise.all(
                 applicants.map(async (applicant) => {
                     const jobDetails = await jobModel.findById(applicant.jobId).lean();
                     return {
                         ...applicant,
-                        jobDetails: jobDetails || null, 
+                        jobDetails: jobDetails || null,
                     };
                 })
             );
-    
-            console.log(result);
             return result;
         } catch (error) {
             console.error(error);
             return { success: false, message: "Error fetching applicants" };
         }
     };
-    
-    
+
+
 
 }
 

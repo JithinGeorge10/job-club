@@ -71,10 +71,10 @@ export class CompanyService {
             throw error
         }
     }
-    async applicants() {
+    async applicants(companyId:any) {
         try {
-            const deleteJob = await jobRepository.applicants()
-            return deleteJob
+            const applicants = await jobRepository.applicants(companyId)
+            return applicants
         } catch (error) {
             throw error
         }

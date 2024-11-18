@@ -51,14 +51,14 @@ function Navbar() {
 
   const handleNotifications = async () => {
     router.push(`/userNotifiations?id=${userId}`);
-    
+
     if (notificationCount > 0) {
       try {
         await axios.post(`${CHAT_SERVICE_URL}/sendNotifications`, {
           userId,
           messages: recentMessages
         });
-        setNotificationCount(0); 
+        setNotificationCount(0);
         setRecentMessages([]);
       } catch (error) {
         console.error("Error sending notifications:", error);
