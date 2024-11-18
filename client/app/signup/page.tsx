@@ -51,7 +51,7 @@ function page() {
         <>
             <Navbar />
             <div className="flex justify-center items-center min-h-screen bg-cover bg-center"
-                style={{ backgroundImage: `url('images/signup.jpeg')` }}>                <form
+                style={{ backgroundImage: `url('images/homepage1.jpg')` }}>                <form
                     onSubmit={handleSubmit(onSubmit)}
 
                     className="w-full max-w-lg bg-black p-8 rounded-lg shadow-lg"
