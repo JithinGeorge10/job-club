@@ -13,7 +13,7 @@ interface AuthenticatedRequest extends Request {
 export const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction): any => {
 
     const token = req.cookies['userToken'];
-
+    console.log(token)
     if (!token) {
         return res.send({ failToken: true });
     }
@@ -29,4 +29,4 @@ export const authenticateToken = (req: AuthenticatedRequest, res: Response, next
     } catch (err) {
         res.status(400).json({ message: 'Invalid token' });
     }
-};
+}

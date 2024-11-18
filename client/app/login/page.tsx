@@ -9,8 +9,11 @@ import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation';
 
 function page() {
-
   const router = useRouter()
+  const handleSignup = () => {
+    router.push(`signup`)
+  }
+
   type login = {
     email: string,
     password: string
@@ -62,7 +65,7 @@ function page() {
 
   return (
     <>
-      <Navbar />
+
       <div className="flex justify-center items-center min-h-screen bg-cover bg-center"
         style={{ backgroundImage: `url('images/homepage1.jpg')` }}>
         <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg bg-black p-8 rounded-lg shadow-lg">
@@ -101,11 +104,22 @@ function page() {
             />
             <p className="text-red-600">{errors.password?.message as string}</p>
           </div>
+          <div className="space-y-2">
+            <button
+              type="submit"
+              className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
+            >
+              Login
+            </button>
+
+
+          </div>
+          <br />
           <button
-            type="submit"
+            onClick={handleSignup}
             className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
           >
-            Sign Up
+            Already having an account? Sign up
           </button>
 
         </form>

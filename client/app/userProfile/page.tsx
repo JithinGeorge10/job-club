@@ -6,7 +6,7 @@ import { USER_SERVICE_URL } from '@/utils/constants';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { uploadImagesToFireStore } from '../../utils/fireStore'
 import { toast } from 'react-toastify';
-
+import Cookies from 'js-cookie';
 const Profile = () => {
 
   const router = useRouter()
@@ -52,13 +52,13 @@ const Profile = () => {
           router.push('login');
         }
         if(response.data.success==false){
-          router.push('pageNotFound');
+          router.push('login');
         }
         setUserDetails(response.data.userDetails);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error('Axios error:', error.message);
-          router.push('pageNotFound')
+          router.push('login')
         } else if (error instanceof Error) {
           console.error('General error:', error.message);
           router.push('pageNotFound')

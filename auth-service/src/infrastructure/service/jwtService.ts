@@ -6,8 +6,9 @@ export class JwtService {
         try {
             if (role == 'user') {
                 const syncToken = jwt.sign({ user, role: 'user' }, String(JWT_SECRET), { expiresIn: "1h" });
-                return syncToken
+                return syncToken;
             }
+            
             if(role=='company'){
                 const syncToken = jwt.sign({ user, role: 'company' },  String(JWT_SECRET), { expiresIn: "1h" });
                 return syncToken
