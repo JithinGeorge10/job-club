@@ -41,7 +41,7 @@ function Page() {
 
     const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>, _id: any) => {
         const newStatus = e.target.value;
-
+console.log(newStatus)
         const result = await Swal.fire({
             title: 'Are you sure?',
             text: `Change status to "${newStatus}"?`,
@@ -128,7 +128,7 @@ function Page() {
                                                 <option value="" disabled>Change Status</option>
                                                 <option value="Hired">Hired</option>
                                                 <option value="Rejected">Rejected</option>
-                                                <option value="In review">In review</option>
+                                                <option value="Inreview">In review</option>
                                                 <option value="Interview">Interview</option>
                                             </select>
                                         </td>

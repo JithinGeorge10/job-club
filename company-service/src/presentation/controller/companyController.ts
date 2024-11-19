@@ -111,8 +111,36 @@ export class CompanyController {
             next(error)
         }
     }
+    async rejectedCompanies(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { id } = req.query;
+            const rejectedCompanies = await this.companyService.rejectedCompanies(id)
+            res.status(200).send({ rejectedCompanies })
+        } catch (error) {
+            next(error)
+        }
+    }
+    async inreviewCompanies(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { id } = req.query;
+            const inreviewCompanies = await this.companyService.inreviewCompanies(id)
+            res.status(200).send({ inreviewCompanies })
+        } catch (error) {
+            next(error)
+        }
+    }
+    async interviewCompanies(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { id } = req.query;
+            const interviewCompanies = await this.companyService.interviewCompanies(id)
+            res.status(200).send({ interviewCompanies })
+        } catch (error) {
+            next(error)
+        }
+    }
 
-
+    
+    
 
 
 }

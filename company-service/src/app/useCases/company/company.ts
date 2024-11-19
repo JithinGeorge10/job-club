@@ -95,6 +95,31 @@ export class CompanyService {
             throw error
         }
     }
+    async rejectedCompanies(userId:any) {
+        try {
+            const rejectedCompanies = await jobRepository.rejectedCompanies(userId)
+            return rejectedCompanies
+        } catch (error) {
+            throw error
+        }
+    }
+    async inreviewCompanies(userId:any) {
+        try {
+            const inreviewCompanies = await jobRepository.inreviewCompanies(userId)
+            return inreviewCompanies
+        } catch (error) {
+            throw error
+        }
+    }
+    
+    async interviewCompanies(userId:any) {
+        try {
+            const interviewCompanies = await jobRepository.interviewCompanies(userId)
+            return interviewCompanies
+        } catch (error) {
+            throw error
+        }
+    }
     
     
 }

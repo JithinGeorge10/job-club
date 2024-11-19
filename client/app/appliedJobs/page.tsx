@@ -72,6 +72,15 @@ const MyJobsPage = () => {
     const hired = async () => {
         router.push(`hiredJobs`);
     }
+    const rejected = async () => {
+        router.push(`rejectedJobs`);
+    }
+    const inreview = async () => {
+        router.push(`inReviewJobs`);
+    }
+    const interview = async () => {
+        router.push(`interviewJobs`);
+    }
 
     return (
         <div className="bg-black text-white font-sans min-h-screen">
@@ -84,6 +93,9 @@ const MyJobsPage = () => {
                     <button onClick={saved} className="text-lg font-semibold text-gray-400">Saved</button>
                     <button onClick={applied} className="text-lg font-semibold border-b-2 border-white">Applied</button>
                     <button onClick={hired} className="text-lg font-semibold text-gray-400">Hired</button>
+                    <button onClick={rejected} className="text-lg font-semibold text-gray-400">Rejected</button>
+                    <button onClick={inreview} className="text-lg font-semibold text-gray-400">In-review</button>
+                    <button onClick={interview} className="text-lg font-semibold text-gray-400">Interview</button>
                 </div>
 
                 <div className="space-y-4">

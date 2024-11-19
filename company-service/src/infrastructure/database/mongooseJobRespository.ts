@@ -259,7 +259,119 @@ class CompanyRepository {
         }
     }
     
-
+    async rejectedCompanies(userId:any) {
+        try {
+            console.log(userId);
+    
+           
+            const RejectedApplicants = await applicantionModel.find({
+                email: userId,
+                Status: 'Rejected',
+            });
+    
+            
+            if (!RejectedApplicants || RejectedApplicants.length === 0) {
+                return [];
+            }
+    
+           
+            const populatePromises = RejectedApplicants.map(async (applicant) => {
+                const [jobDetails, companyDetails] = await Promise.all([
+                    jobModel.findById(applicant.jobId, 'jobTitle'),
+                    companyModel.findById(applicant.companyId, 'companyName location'),
+                ]);
+    
+                return {
+                    ...applicant.toObject(),
+                    jobDetails,
+                    companyDetails,
+                };
+            });
+    
+  
+            const populatedApplicants = await Promise.all(populatePromises);
+    
+            console.log(populatedApplicants);
+            return populatedApplicants;
+        } catch (error) {
+            console.error('Error fetching hired applicants:', error);
+            return { success: false, message: "Error fetching hired applicants" };
+        }
+    }
+    async inreviewCompanies(userId:any) {
+        try {
+            const Inreview = await applicantionModel.find({
+                email: userId,
+                Status: 'Inreview',
+            });
+            if (!Inreview || Inreview.length === 0) {
+                return [];
+            }       
+            const populatePromises = Inreview.map(async (applicant) => {
+                const [jobDetails, companyDetails] = await Promise.all([
+                    jobModel.findById(applicant.jobId, 'jobTitle'),
+                    companyModel.findById(applicant.companyId, 'companyName location'),
+                ]);
+    
+                return {
+                    ...applicant.toObject(),
+                    jobDetails,
+                    companyDetails,
+                };
+            });
+    
+  
+            const populatedApplicants = await Promise.all(populatePromises);
+    
+            console.log(populatedApplicants);
+            return populatedApplicants;
+        } catch (error) {
+            console.error('Error fetching hired applicants:', error);
+            return { success: false, message: "Error fetching hired applicants" };
+        }
+    }
+    
+    
+    async interviewCompanies(userId:any) {
+        try {
+            console.log(userId);
+    
+           
+            const interview = await applicantionModel.find({
+                email: userId,
+                Status: 'Interview',
+            });
+    
+            
+            if (!interview || interview.length === 0) {
+                return [];
+            }
+    
+           
+            const populatePromises = interview.map(async (applicant) => {
+                const [jobDetails, companyDetails] = await Promise.all([
+                    jobModel.findById(applicant.jobId, 'jobTitle'),
+                    companyModel.findById(applicant.companyId, 'companyName location'),
+                ]);
+    
+                return {
+                    ...applicant.toObject(),
+                    jobDetails,
+                    companyDetails,
+                };
+            });
+    
+  
+            const populatedApplicants = await Promise.all(populatePromises);
+    
+            console.log(populatedApplicants);
+            return populatedApplicants;
+        } catch (error) {
+            console.error('Error fetching hired applicants:', error);
+            return { success: false, message: "Error fetching hired applicants" };
+        }
+    }
+    
 
 }
 
