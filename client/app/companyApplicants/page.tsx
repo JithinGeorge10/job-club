@@ -21,7 +21,6 @@ function Page() {
         }
     }, []);
 
-    // Fetch applicants only when companyId is available
     useEffect(() => {
         if (companyId) {
             (async () => {
@@ -41,7 +40,7 @@ function Page() {
 
     const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>, _id: any) => {
         const newStatus = e.target.value;
-console.log(newStatus)
+        console.log(newStatus)
         const result = await Swal.fire({
             title: 'Are you sure?',
             text: `Change status to "${newStatus}"?`,
@@ -80,7 +79,7 @@ console.log(newStatus)
                 Swal.fire('Error', 'An error occurred while updating the status.', 'error');
             }
         } else {
-            e.target.value = ''; // Reset the select input if the action is canceled
+            e.target.value = ''; 
         }
     };
 

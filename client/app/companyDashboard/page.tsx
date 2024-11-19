@@ -1,14 +1,64 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CompanyNavbar from '../components/companyNavbar';
 import CompanyLeftSideBar from '../components/companyLeftSideBar';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import axios from 'axios';
+import { COMPANY_SERVICE_URL } from '@/utils/constants';
 
 function Page() {
+    interface Applicant {
+        id: string; 
+        Status: string; 
+    }
     const searchParams = useSearchParams();
     const companyId = searchParams.get('id');
+    const [jobDetails, setJobDetails] = useState<any[]>([]);
+    const [filteredJobDetails, setFilteredJobDetails] = useState<any[]>([]);
+    const [applicants, setApplicants] = useState<Applicant[]>([]);
+  
+    
 
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`${COMPANY_SERVICE_URL}/get-jobDetails`, {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true,
+                });
+                setJobDetails(response.data.jobDetails);
+            } catch (error) {
+                console.error('Failed to fetch job details:', error);
+            }
+        };
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        if (companyId) {
+            const filteredJobs = jobDetails.filter((job) => job.companyId._id === companyId);
+            setFilteredJobDetails(filteredJobs);
+        }
+    }, [companyId, jobDetails]);
+
+    useEffect(() => {
+        if (companyId) {
+            (async () => {
+                try {
+                    const response = await axios.get(`${COMPANY_SERVICE_URL}/applicants`, {
+                        headers: { 'Content-Type': 'application/json' },
+                        params: { companyId },
+                        withCredentials: true,
+                    });
+                    setApplicants(response.data.applicants);
+                } catch (error) {
+                    console.error('Error fetching applicants:', error);
+                }
+            })();
+        }
+    }, [companyId]);
     return (
         <>
             <CompanyNavbar />
@@ -30,16 +80,19 @@ function Page() {
                         <div className="grid grid-cols-3 gap-6 mt-6">
                             <div className="bg-gray-800 p-6 rounded-lg shadow-md text-center">
                                 <h3 className="text-lg text-gray-300">Job Posts</h3>
-                                <p className="font-bold text-3xl text-green-400">2,456</p>
+                                <p className="font-bold text-3xl text-green-400">{filteredJobDetails.length}</p>
                             </div>
                             <div className="bg-gray-800 p-6 rounded-lg shadow-md text-center">
                                 <h3 className="text-lg text-gray-300">Total Applications</h3>
-                                <p className="font-bold text-3xl text-green-400">4,561</p>
+                                <p className="font-bold text-3xl text-green-400">{applicants.length}</p>
                             </div>
                             <div className="bg-gray-800 p-6 rounded-lg shadow-md text-center">
                                 <h3 className="text-lg text-gray-300">No of Hirings</h3>
-                                <p className="font-bold text-3xl text-green-400">2,456</p>
+                                <p className="font-bold text-3xl text-green-400">
+                                    {applicants.filter((applicant) => applicant.Status === 'Hired').length}
+                                </p>
                             </div>
+
                         </div>
                     </section>
                 </main>

@@ -86,8 +86,8 @@ const MyJobsPage = () => {
                         </div>
                     ))
                 ) : (
-                    <p className="text-center text-gray-400">No hired jobs found.</p>
-                )}
+                    <p className="text-center text-gray-400">No jobs found.</p>
+                )} 
             </main>
 
             <Footer />

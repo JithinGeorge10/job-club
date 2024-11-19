@@ -7,8 +7,8 @@ function Page() {
     <div className="flex min-h-screen bg-gray-100">
       <AdminLeftSideBar />
       
-      {/* Main Content */}
-      <main className="bg-white text-black w-full p-6 sm:p-8 md:p-10 ml-[200px]"> {/* Adjusted margin to match sidebar width */}
+
+      <main className="bg-white text-black w-full p-6 sm:p-8 md:p-10 ml-[200px]"> 
         <header className="flex justify-between items-center mb-8">
           <div className="flex items-center">
             <div className="ml-4">

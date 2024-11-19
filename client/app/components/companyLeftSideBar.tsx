@@ -37,13 +37,20 @@ function CompanyLeftSideBar() {
         }
     };
     
+    const handleDashboard = async () => {
+        try {
+            router.push(`/companyDashboard?id=${companyId}`);
+        } catch (error) {
+            console.error("Error fetching room details:", error);
+        }
+    };
     
     return (
         <aside className="bg-gradient-to-b from-gray-800 to-gray-900 text-white h-screen w-1/5 p-5">
             <nav className="space-y-6">
-                <a href="#" className="flex items-center  hover:text-gray-300 transition-colors duration-200">
+                <button onClick={handleDashboard} className="flex items-center  hover:text-gray-300 transition-colors duration-200">
                     <span className="material-icons mr-3">Dashboard</span>
-                </a>
+                </button>
                 <button onClick={handleMessage} className="flex items-center hover:text-gray-300 transition-colors duration-200">
                     <span className="material-icons mr-3">Messages</span>
                 </button>
