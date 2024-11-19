@@ -1,26 +1,36 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { Bar } from 'react-chartjs-2'; // Import Bar chart from react-chartjs-2
 import CompanyNavbar from '../components/companyNavbar';
 import CompanyLeftSideBar from '../components/companyLeftSideBar';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { COMPANY_SERVICE_URL } from '@/utils/constants';
+import {
+    Chart as ChartJS,
+    BarElement,
+    CategoryScale,
+    LinearScale,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+
+// Register Chart.js components
+ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 function Page() {
     interface Applicant {
-        id: string; 
-        Status: string; 
+        id: string;
+        Status: string;
     }
+
     const searchParams = useSearchParams();
     const companyId = searchParams.get('id');
     const [jobDetails, setJobDetails] = useState<any[]>([]);
     const [filteredJobDetails, setFilteredJobDetails] = useState<any[]>([]);
     const [applicants, setApplicants] = useState<Applicant[]>([]);
-  
-    
 
-    
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -59,6 +69,36 @@ function Page() {
             })();
         }
     }, [companyId]);
+
+    // Prepare data for the bar chart
+    const chartData = {
+        labels: ['Job Posts', 'Total Applications', 'Hirings'],
+        datasets: [
+            {
+                label: 'Statistics',
+                data: [
+                    filteredJobDetails.length,
+                    applicants.length,
+                    applicants.filter((applicant) => applicant.Status === 'Hired').length,
+                ],
+                backgroundColor: ['#4CAF50', '#2196F3', '#FF9800'],
+                borderWidth: 1,
+            },
+        ],
+    };
+
+    const chartOptions = {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top' as const, 
+            },
+        },
+    };
+    
+    
+
     return (
         <>
             <CompanyNavbar />
@@ -92,7 +132,13 @@ function Page() {
                                     {applicants.filter((applicant) => applicant.Status === 'Hired').length}
                                 </p>
                             </div>
+                        </div>
+                    </section>
 
+                    <section className="mt-10">
+                        <h2 className="text-xl font-bold mb-4">Statistics Graph</h2>
+                        <div className="bg-gray-800 p-6 rounded-lg shadow-md">
+                            <Bar data={chartData} options={chartOptions} />
                         </div>
                     </section>
                 </main>
