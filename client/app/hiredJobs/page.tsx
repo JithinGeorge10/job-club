@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import axios from 'axios';
 import { COMPANY_SERVICE_URL, USER_SERVICE_URL } from '@/utils/constants';
 import { useRouter } from 'next/navigation';
+
 const MyJobsPage = () => {
     const router = useRouter();
     const [userId, setUserId] = useState<string | null>(null);
@@ -45,19 +46,19 @@ const MyJobsPage = () => {
     const applied = () => {
         router.push(`appliedJobs`);
     };
-    const hired = () => {
-        router.push(`hiredJobs`);
+    const saved = () => {
+        router.push(`myJobs`);
     };
 
     return (
         <div className="bg-black text-white font-sans min-h-screen">
             <Navbar />
 
-            <main className="container mx-auto py-8 px-4">
+            <main className="container mx-auto py-8 px-4 min-h-[70vh]">
                 <h1 className="text-3xl font-bold text-center mb-8">My Jobs</h1>
 
                 <div className="flex justify-center space-x-4 mb-6">
-                    <button onClick={hired} className="text-lg font-semibold text-gray-400">Saved</button>
+                    <button onClick={saved} className="text-lg font-semibold text-gray-400">Saved</button>
                     <button onClick={applied} className="text-lg font-semibold text-gray-400">Applied</button>
                     <button className="text-lg font-semibold border-b-2 border-white">Hired</button>
                 </div>

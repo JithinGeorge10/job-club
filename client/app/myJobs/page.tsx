@@ -94,41 +94,46 @@ const MyJobsPage = () => {
         <div className="bg-black text-white font-sans min-h-screen">
             <Navbar />
 
-            <main className="container mx-auto py-8 px-4">
-                <h1 className="text-3xl font-bold text-center mb-8">My Jobs</h1>
+            <main
+    className={`container mx-auto py-8 px-4 ${
+        savedJobs.length === 0 && !loading ? 'min-h-[70vh]' : ''
+    }`}
+>
+    <h1 className="text-3xl font-bold text-center mb-8">My Jobs</h1>
 
-                <div className="flex justify-center space-x-4 mb-6">
-                    <button className="text-lg font-semibold border-b-2 border-white">Saved</button>
-                    <button onClick={applied} className="text-lg font-semibold text-gray-400">Applied</button>
-                    <button onClick={hired} className="text-lg font-semibold text-gray-400">Hired</button>
-                </div>
+    <div className="flex justify-center space-x-4 mb-6">
+        <button className="text-lg font-semibold border-b-2 border-white">Saved</button>
+        <button onClick={applied} className="text-lg font-semibold text-gray-400">Applied</button>
+        <button onClick={hired} className="text-lg font-semibold text-gray-400">Hired</button>
+    </div>
 
-                <div className="space-y-4">
-                    {loading ? (
-                        <p className="text-center text-gray-400">Loading jobs...</p>
-                    ) : savedJobs.length > 0 ? (
-                        savedJobs.map((job) => (
-                            <div key={job._id} className="bg-gray-800 p-4 rounded-lg flex justify-between items-center">
-                                <div>
-                                    <button onClick={() => handleJobClick(job._id)} className="text-xl font-semibold">{job.jobTitle}</button>
-                                    <p className="text-gray-400">{job.companyId.companyName}</p>
-                                    <span className="bg-green-500 text-white px-3 py-1 rounded-full mt-2 inline-block">
-                                        {job.companyId.location}
-                                    </span>
-                                </div>
-                                <button
-                                    onClick={() => handleUnsaveJob(job._id)}
-                                    className="text-red-500 hover:text-red-700 font-semibold"
-                                >
-                                    Unsave
-                                </button>
-                            </div>
-                        ))
-                    ) : (
-                        <p className="text-center text-gray-400">No saved jobs found.</p>
-                    )}
+    <div className="space-y-4">
+        {loading ? (
+            <p className="text-center text-gray-400">Loading jobs...</p>
+        ) : savedJobs.length > 0 ? (
+            savedJobs.map((job) => (
+                <div key={job._id} className="bg-gray-800 p-4 rounded-lg flex justify-between items-center">
+                    <div>
+                        <button onClick={() => handleJobClick(job._id)} className="text-xl font-semibold">{job.jobTitle}</button>
+                        <p className="text-gray-400">{job.companyId.companyName}</p>
+                        <span className="bg-green-500 text-white px-3 py-1 rounded-full mt-2 inline-block">
+                            {job.companyId.location}
+                        </span>
+                    </div>
+                    <button
+                        onClick={() => handleUnsaveJob(job._id)}
+                        className="text-red-500 hover:text-red-700 font-semibold"
+                    >
+                        Unsave
+                    </button>
                 </div>
-            </main>
+            ))
+        ) : (
+            <p className="text-center text-gray-400">No saved jobs found.</p>
+        )}
+    </div>
+</main>
+
 
             <Footer />
         </div>

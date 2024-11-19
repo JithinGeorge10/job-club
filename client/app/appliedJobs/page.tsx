@@ -58,6 +58,7 @@ const MyJobsPage = () => {
     const appliedJobs = jobDetails.filter((job) =>
         userDetails?.profile?.applied_jobs?.includes(job._id)
     );
+
     const handleJobClick = async (jobId: any, companyId: any) => {
         router.push(`jobView?jobId=${jobId}`);
     }
@@ -72,12 +73,11 @@ const MyJobsPage = () => {
         router.push(`hiredJobs`);
     }
 
-
     return (
         <div className="bg-black text-white font-sans min-h-screen">
             <Navbar />
 
-            <main className="container mx-auto py-8 px-4">
+            <main className="container mx-auto py-8 px-4 min-h-[70vh]">
                 <h1 className="text-3xl font-bold text-center mb-8">My Jobs</h1>
 
                 <div className="flex justify-center space-x-4 mb-6">
