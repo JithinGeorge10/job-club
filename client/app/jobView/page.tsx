@@ -26,7 +26,7 @@ function page() {
         companyName: string;
         location: string;
         industry: String;
-        _id:String
+        _id: String
     }
     const router = useRouter()
     const searchParams = useSearchParams();
@@ -75,6 +75,8 @@ function page() {
         fetchData();
     }, [jobId]);
 
+  
+
     const handleSaveJob = async (jobId: any) => {
         let response = await axios.post(`${USER_SERVICE_URL}/saveJob`, { jobId, userId }, {
             headers: {
@@ -101,18 +103,18 @@ function page() {
         router.push(`reviewProfile?jobId=${jobId}&userId=${userId}`);
     }
 
-    const handlePremiumSubmit=()=>{
+    const handlePremiumSubmit = () => {
         router.push(`userProfile?id=${userId}`);
     }
-    
-    const handlechat=async(companyId:any)=>{
-        let response = await axios.post(`${CHAT_SERVICE_URL}/createRoom`,{userId,companyId}, {
+
+    const handlechat = async (companyId: any) => {
+        let response = await axios.post(`${CHAT_SERVICE_URL}/createRoom`, { userId, companyId }, {
             headers: {
                 'Content-Type': 'application/json'
             },
             withCredentials: true
         });
-        const {chatRoom}=response.data
+        const { chatRoom } = response.data
         router.push(`userChat?roomDetails=${encodeURIComponent(JSON.stringify(chatRoom))}`);
     }
 
@@ -153,8 +155,8 @@ function page() {
                             ) : (
                                 <button onClick={handleSubmit} className="bg-green-500 text-white font-semibold px-6 py-2 rounded-lg">Apply</button>
                             )}
-                            {userDetails?.profile?.subscriber ? ( // Check if the user is a subscriber
-                                <button onClick={()=>handlechat(jobDetails?.companyId?._id)} className="bg-green-500 text-white font-semibold px-6 py-2 rounded-lg">
+                            {userDetails?.profile?.subscriber ? (
+                                <button onClick={() => handlechat(jobDetails?.companyId?._id)} className="bg-green-500 text-white font-semibold px-6 py-2 rounded-lg">
                                     Chat
                                 </button>
                             ) : (

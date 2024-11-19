@@ -1,6 +1,7 @@
 
 import jobModel from "./model/jobModel";
 import applicantionModel from "./model/applicationModel";
+import companyModel from "./model/companyModel";
 class CompanyRepository {
     async addJob(JobData: any) {
         try {
@@ -208,7 +209,7 @@ class CompanyRepository {
         try {
             const result = await applicantionModel.updateOne(
                 { _id: applicantId },
-                { $set: { Status } }  
+                { $set: { Status } }
             );
             return result;
         } catch (error) {
@@ -216,7 +217,50 @@ class CompanyRepository {
             return { success: false, message: "Error updating applicant status" };
         }
     }
+
+
+    async hiredCompanies(userId:any) {
+        try {
+            console.log(userId);
     
+            // Fetch hired applicants first
+            const hiredApplicants = await applicantionModel.find({
+                email: userId,
+                Status: 'Hired',
+            });
+    
+            // If no hired applicants found, return an empty array
+            if (!hiredApplicants || hiredApplicants.length === 0) {
+                return [];
+            }
+    
+           
+            const populatePromises = hiredApplicants.map(async (applicant) => {
+                const [jobDetails, companyDetails] = await Promise.all([
+                    jobModel.findById(applicant.jobId, 'jobTitle'),
+                    companyModel.findById(applicant.companyId, 'companyName location'),
+                ]);
+    
+                return {
+                    ...applicant.toObject(),
+                    jobDetails,
+                    companyDetails,
+                };
+            });
+    
+  
+            const populatedApplicants = await Promise.all(populatePromises);
+    
+            console.log(populatedApplicants);
+            return populatedApplicants;
+        } catch (error) {
+            console.error('Error fetching hired applicants:', error);
+            return { success: false, message: "Error fetching hired applicants" };
+        }
+    }
+    
+
+
 }
 
 const jobRepository = new CompanyRepository();

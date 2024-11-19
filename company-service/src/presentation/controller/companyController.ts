@@ -84,23 +84,35 @@ export class CompanyController {
 
     async applicants(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const {companyId}=req.query
+            const { companyId } = req.query
             const applicants = await this.companyService.applicants(companyId)
             res.status(200).send({ applicants })
         } catch (error) {
             next(error)
         }
-    }   
+    }
 
     async changeStatusApplicant(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const{applicantId,status}=req.body
-            const applicants = await this.companyService.changeStatusApplicants(applicantId,status)
+            const { applicantId, status } = req.body
+            const applicants = await this.companyService.changeStatusApplicants(applicantId, status)
             res.status(200).send({ applicants })
         } catch (error) {
             next(error)
         }
-    }   
-    
+    }
+
+    async hiredCompanies(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { id } = req.query;
+            const hiredCompanies = await this.companyService.hiredCompanies(id)
+            res.status(200).send({ hiredCompanies })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+
 
 }

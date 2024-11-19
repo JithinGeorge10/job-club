@@ -87,6 +87,14 @@ export class CompanyService {
             throw error
         }
     }
+    async hiredCompanies(userId:any) {
+        try {
+            const hiredCompanies = await jobRepository.hiredCompanies(userId)
+            return hiredCompanies
+        } catch (error) {
+            throw error
+        }
+    }
     
-
+    
 }

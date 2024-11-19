@@ -46,7 +46,7 @@ function Navbar() {
   };
 
   const handleMyJobs = () => {
-    router.push(`/myJobs?id=${userId}`);
+    router.push(`/myJobs`);
   };
 
   const handleNotifications = async () => {

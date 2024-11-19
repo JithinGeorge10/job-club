@@ -55,7 +55,6 @@ const MyJobsPage = () => {
         fetchJobDetails();
     }, []);
 
-    // Filter jobs that the user has applied for
     const appliedJobs = jobDetails.filter((job) =>
         userDetails?.profile?.applied_jobs?.includes(job._id)
     );
@@ -64,12 +63,15 @@ const MyJobsPage = () => {
     }
 
     const applied = async () => {
-        router.push(`appliedJobs?userId=${userId}`);
+        router.push(`appliedJobs`);
+    }
+    const saved = async () => {
+        router.push(`myJobs`);
+    }
+    const hired = async () => {
+        router.push(`hiredJobs`);
     }
 
-    const saved = async () => {
-        router.push(`myJobs?userId=${userId}`);
-    }
 
     return (
         <div className="bg-black text-white font-sans min-h-screen">
@@ -81,6 +83,7 @@ const MyJobsPage = () => {
                 <div className="flex justify-center space-x-4 mb-6">
                     <button onClick={saved} className="text-lg font-semibold text-gray-400">Saved</button>
                     <button onClick={applied} className="text-lg font-semibold border-b-2 border-white">Applied</button>
+                    <button onClick={hired} className="text-lg font-semibold text-gray-400">Hired</button>
                 </div>
 
                 <div className="space-y-4">

@@ -9,7 +9,7 @@ const applicationSchema = new mongoose.Schema({
     profileImage: { type: String, required: false },
     skills: { type: [String], required: false },
     resume: { type: String, required: false },
-    jobId: { type: mongoose.Schema.Types.ObjectId, ref: 'Job', required: true },
+    jobId: { type: mongoose.Schema.Types.ObjectId, ref: 'Jobs', required: true },
     companyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true },
     Status: { type: String, required: true, default: 'applied' },
     createdAt: { type: Date, default: Date.now }

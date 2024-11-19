@@ -84,8 +84,11 @@ const MyJobsPage = () => {
     };
 
     const applied = async () => {
-        router.push(`appliedJobs?userId=${userId}`);
+        router.push(`appliedJobs`);
     };
+    const hired = async () => {
+        router.push(`hiredJobs`);
+    }
 
     return (
         <div className="bg-black text-white font-sans min-h-screen">
@@ -97,6 +100,7 @@ const MyJobsPage = () => {
                 <div className="flex justify-center space-x-4 mb-6">
                     <button className="text-lg font-semibold border-b-2 border-white">Saved</button>
                     <button onClick={applied} className="text-lg font-semibold text-gray-400">Applied</button>
+                    <button onClick={hired} className="text-lg font-semibold text-gray-400">Hired</button>
                 </div>
 
                 <div className="space-y-4">

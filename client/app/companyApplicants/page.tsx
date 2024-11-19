@@ -7,13 +7,12 @@ import Swal from 'sweetalert2';
 import { COMPANY_SERVICE_URL } from '@/utils/constants';
 import { useRouter } from 'next/navigation';
 
-
 function Page() {
-   const router=useRouter()
+    const router = useRouter();
     const [companyId, setCompanyId] = useState<string | null>(null);
     const [applicants, setApplicants] = useState([]);
 
-
+    // Load companyId from localStorage
     useEffect(() => {
         const company = localStorage.getItem('company');
         if (company && company !== 'undefined') {
@@ -22,23 +21,27 @@ function Page() {
         }
     }, []);
 
+    // Fetch applicants only when companyId is available
     useEffect(() => {
-        (async () => {
-            try {
-                const response = await axios.get(`${COMPANY_SERVICE_URL}/applicants`, {
-                    headers: { 'Content-Type': 'application/json' },
-                    params: { companyId },
-                    withCredentials: true,
-                });
-                setApplicants(response.data.applicants);
-            } catch (error) {
-                console.error('Error fetching applicants:', error);
-            }
-        })();
+        if (companyId) {
+            (async () => {
+                try {
+                    const response = await axios.get(`${COMPANY_SERVICE_URL}/applicants`, {
+                        headers: { 'Content-Type': 'application/json' },
+                        params: { companyId },
+                        withCredentials: true,
+                    });
+                    setApplicants(response.data.applicants);
+                } catch (error) {
+                    console.error('Error fetching applicants:', error);
+                }
+            })();
+        }
     }, [companyId]);
+
     const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>, _id: any) => {
         const newStatus = e.target.value;
-    
+
         const result = await Swal.fire({
             title: 'Are you sure?',
             text: `Change status to "${newStatus}"?`,
@@ -48,7 +51,7 @@ function Page() {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, change it!',
         });
-    
+
         if (result.isConfirmed) {
             try {
                 const response = await axios.patch(
@@ -59,11 +62,10 @@ function Page() {
                         withCredentials: true,
                     }
                 );
-    
+
                 if (response.status === 200) {
                     Swal.fire('Updated!', 'Applicant status has been updated.', 'success');
-    
-                    // Re-fetch the applicants' data
+
                     const updatedApplicants = await axios.get(`${COMPANY_SERVICE_URL}/applicants`, {
                         headers: { 'Content-Type': 'application/json' },
                         params: { companyId },
@@ -81,7 +83,7 @@ function Page() {
             e.target.value = ''; // Reset the select input if the action is canceled
         }
     };
-    
+
     return (
         <>
             <CompanyNavbar />
@@ -129,12 +131,7 @@ function Page() {
                                                 <option value="In review">In review</option>
                                                 <option value="Interview">Interview</option>
                                             </select>
-
                                         </td>
-
-
-
-
                                         <td className="border border-gray-600 px-4 py-2">
                                             <button
                                                 onClick={() => window.open(applicant.resume, '_blank')}

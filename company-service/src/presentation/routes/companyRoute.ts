@@ -14,6 +14,8 @@ companyRoute.put('/update-jobDetails', companyController.updateJobs.bind(company
 companyRoute.delete('/delete-jobDetails', companyController.deleteJobs.bind(companyController));
 companyRoute.get('/applicants', companyController.applicants.bind(companyController));
 companyRoute.patch('/changeStatus-Applicant', companyController.changeStatusApplicant.bind(companyController));
+companyRoute.get('/hiredCompanies', companyController.hiredCompanies.bind(companyController));
+
 
 
 export default companyRoute
