@@ -81,11 +81,6 @@ function Page() {
                         <div className="flex items-center gap-6">
 
 
-
-
-
-
-
                                 <div className="flex items-center space-x-4">
                                     <img
                                         src={selectedImage ? URL.createObjectURL(selectedImage) : companyDetails?.profileImage || 'images/userProfile.jpg'}
@@ -107,23 +102,6 @@ function Page() {
                                         </div>
                                     </div>
                                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                  
                             <div>

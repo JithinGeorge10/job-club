@@ -33,7 +33,7 @@ function Page() {
     { label: 'Contract', value: 'Contract' },
   ];
 
-  
+
   useEffect(() => {
     const fetchData = async () => {
       let response = await axios.get(`${COMPANY_SERVICE_URL}/get-jobDetails`, {
@@ -75,7 +75,7 @@ function Page() {
   }, [searchTerm, debouncedSearch]);
 
   const applyFilters = async () => {
-   
+
 
     try {
       const response = await axios.post(`${COMPANY_SERVICE_URL}/get-filteredJobs`, {
@@ -200,23 +200,47 @@ function Page() {
           <div className="w-3/4">
             {currentJobs.length > 0 ? (
               currentJobs.map((job: any, index: number) => (
-                <div key={index} className="bg-gray-800 p-6 rounded-lg flex items-center justify-between mb-4 border border-gray-600">
-                  <div>
-                    <button onClick={() => handleJobClick(job._id, job.companyId._id)} className="text-2xl font-bold text-white">{job.jobTitle}</button>
-                    <h2 className="text-xl font-semibold text-gray-300">{job.companyId.companyName}</h2>
-                    <div className="mt-2 space-x-4">
-                      <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full">{job.employmentType[0]}</span>
-                      <span className="inline-block bg-gray-700 text-white px-3 py-1 rounded-full">{job.category}</span>
-                      <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full">
-                        Salary upto &#8377;{job.maxSalary ? job.maxSalary : 'N/A'}
-                      </span>
-                    </div>
+                <div
+                key={index}
+                className="bg-gray-800 p-6 rounded-lg flex items-center justify-between mb-4 border border-gray-600"
+              >
+                <div>
+                  <button
+                    onClick={() => handleJobClick(job._id, job.companyId._id)}
+                    className="text-2xl font-bold text-white"
+                  >
+                    {job.jobTitle}
+                  </button>
+                  <h2 className="text-xl font-semibold text-gray-300">
+                    {job.companyId.companyName}
+                  </h2>
+                  <div className="mt-2 space-x-4">
+                    <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full">
+                      {job.employmentType[0]}
+                    </span>
+                    <span className="inline-block bg-gray-700 text-white px-3 py-1 rounded-full">
+                      {job.category}
+                    </span>
+                    <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full">
+                      Salary upto &#8377;{job.maxSalary ? job.maxSalary : 'N/A'}
+                    </span>
                   </div>
                 </div>
+              
+                {job.companyId.profileImage && (
+                  <img
+                    src={job.companyId.profileImage}
+                    alt="Company Logo"
+                    className="w-16 h-16 object-cover rounded-lg"
+                  />
+                )}
+              </div>
+              
               ))
             ) : (
               <div className="text-white text-center text-lg">No jobs found.</div>
             )}
+
             <div className="flex justify-center mt-6">
               {Array.from({ length: totalPages }, (_, i) => (
                 <button

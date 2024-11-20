@@ -13,6 +13,7 @@ userRoute.post('/changePassword', userController.changePasswordController.bind(u
 userRoute.get('/get-userDetails', authenticateToken,userController.getUserController.bind(userController));
 userRoute.post('/block-user', userController.blockUserController.bind(userController));
 userRoute.post('/unBlock-user', userController.unBlockUserController.bind(userController));
+userRoute.post('/google-login', userController.googleLogin.bind(userController));
 
 
 

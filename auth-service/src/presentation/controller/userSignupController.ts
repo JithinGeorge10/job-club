@@ -122,4 +122,17 @@ export class UserController {
         }
     }
 
+    async googleLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+
+            console.log(req.body);
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+
+
 }

@@ -2,7 +2,6 @@
 
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import Navbar from '../components/Navbar'
 import axios from 'axios'
 import { AUTH_SERVICE_URL } from '@/utils/constants'
 import { toast } from 'react-toastify'
@@ -59,7 +58,10 @@ function page() {
 
   };
 
-
+  const handleGoogleLogin = () => {
+    window.location.href = '/api/auth/google';
+  };
+  
 
 
 
@@ -121,8 +123,16 @@ function page() {
           >
             Already having an account? Sign up
           </button>
+          <br />
+          <button
+            onClick={handleGoogleLogin}
 
+            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
+          >
+            Google
+          </button>
         </form>
+
       </div>
     </>
   );
