@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Bar } from 'react-chartjs-2'; // Import Bar chart from react-chartjs-2
+import { Bar } from 'react-chartjs-2';
 import CompanyNavbar from '../components/companyNavbar';
 import CompanyLeftSideBar from '../components/companyLeftSideBar';
 import Link from 'next/link';
@@ -70,7 +70,6 @@ function Page() {
         }
     }, [companyId]);
 
-    // Prepare data for the bar chart
     const chartData = {
         labels: ['Job Posts', 'Total Applications', 'Hirings'],
         datasets: [

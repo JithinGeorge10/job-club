@@ -103,6 +103,10 @@ export class UserService {
     async handleSubscriptionExpiry() {
         return await UserRepository.expireSubscriptions();
     }
+    async subscriberList() {
+        return await UserRepository.subscriberList();
+    }
+    
 
 }
 

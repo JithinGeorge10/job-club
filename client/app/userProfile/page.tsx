@@ -134,10 +134,7 @@ const Profile = () => {
         })
       }
       toast.success('resume uploaded successfully')
-
-
     } catch (error) {
-
       console.error('Error uploading the file:', error);
       toast.error('Error uploading the resume')
     }
@@ -158,7 +155,6 @@ const Profile = () => {
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
-
       setSelectedImage(file);
     } else {
       toast.info('Please select a valid image file (JPEG or PNG)');
@@ -346,12 +342,7 @@ const Profile = () => {
               )}
             </div>
           </div>
-
-
-
         </div>
-
-
       </div >
     </>
   );

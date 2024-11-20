@@ -16,6 +16,7 @@ userRoute.post('/paymentSuccess', userController.successPaymentController.bind(u
 userRoute.post('/saveJob',authenticateToken, userController.saveJobController.bind(userController));
 userRoute.post('/applyJob',authenticateToken, userController.applyJobController.bind(userController));
 userRoute.put('/unsave-job',authenticateToken, userController.unsaveJobController.bind(userController));
+userRoute.get('/subscriberList', userController.subscriberList.bind(userController));
 
 
 

@@ -110,10 +110,10 @@ function Page() {
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="flex min-h-screen bg-black">
             <AdminLeftSideBar />
 
-            <div className="flex-grow bg-black p-4 md:p-8 ml-[20%] sm:ml-[25%] md:ml-[20%] lg:ml-[16.67%]">
+            <div className="flex-grow bg-white p-4 md:p-8 ml-[20%] sm:ml-[25%] md:ml-[20%] lg:ml-[16.67%]">
                 <h2 className="text-green-600 text-2xl md:text-3xl font-bold mb-6">User Information</h2>
 
                 <div className="mb-4">

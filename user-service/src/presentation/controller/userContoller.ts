@@ -166,5 +166,14 @@ export class UserController {
             next(error)
         }
     }
-
+    async subscriberList(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
+        try {
+           
+            const subscriberList = await this.userService.subscriberList()
+            res.status(200).send({ subscriberList })
+        } catch (error) {
+            next(error)
+        }
+    }
+    
 }

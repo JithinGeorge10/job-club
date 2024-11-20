@@ -258,7 +258,42 @@ class UserRepository {
             console.log(error);
         }
     }
-
+    
+    async subscriberList() {
+        try {
+            const result = await UserProfileModel.aggregate([
+                {
+                    $match: { subscriber: true }
+                },
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "userId", 
+                        foreignField: "_id", 
+                        as: "userDetails"
+                    }
+                },
+                {
+                    $project: {
+                        userId: 1, 
+                        subscriber: 1, 
+                        userDetails: {
+                            _id: 1, 
+                            firstName: 1,
+                            lastName:1,
+                            phone:1,
+                            email: 1
+                        }
+                    }
+                }
+            ]);
+            return result;
+        } catch (error) {
+            console.error("Error fetching subscriber list:", error);
+            throw error;
+        }
+    }
+    
 }
 const getUserRepository = new UserRepository();
 

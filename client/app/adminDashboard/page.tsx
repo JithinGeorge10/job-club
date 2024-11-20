@@ -1,14 +1,88 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AdminLeftSideBar from '../components/adminLeftSideBar';
+import { AUTH_SERVICE_URL } from '@/utils/constants';
+import axios from 'axios';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+
+// Register Chart.js components
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function Page() {
+  const [userDetails, setUserDetails] = useState<any[]>([]);
+  const [companyDetails, setCompanyDetails] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch user details
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`${AUTH_SERVICE_URL}/get-userDetails`, {
+          params: { adminEmail: "admin@gmail.com" },
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        });
+        setUserDetails(response.data.userDetails);
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUserDetails();
+  }, []);
+
+  // Fetch company details
+  useEffect(() => {
+    const fetchCompanyDetails = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`${AUTH_SERVICE_URL}/get-companyDetails`, {
+          params: { adminEmail: "admin@gmail.com" },
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        });
+        setCompanyDetails(response.data.companyDetails);
+      } catch (error) {
+        console.error("Error fetching company details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCompanyDetails();
+  }, []);
+
+  const chartData = {
+    labels: ['Users', 'Companies'],
+    datasets: [
+      {
+        label: 'Counts',
+        data: [userDetails.length, companyDetails.length], 
+        backgroundColor: ['#4CAF50', '#FF9800'],
+        borderColor: ['#388E3C', '#F57C00'], 
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+        legend: {
+            display: true,
+            position: 'top' as const, 
+        },
+    },
+};
+
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <AdminLeftSideBar />
-      
 
-      <main className="bg-white text-black w-full p-6 sm:p-8 md:p-10 ml-[200px]"> 
+      <main className="bg-white text-black w-full p-6 sm:p-8 md:p-10 ml-[200px]">
         <header className="flex justify-between items-center mb-8">
           <div className="flex items-center">
             <div className="ml-4">
@@ -22,50 +96,36 @@ function Page() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="bg-gray-100 p-6 rounded-lg shadow-md flex flex-col items-center">
-              <h3 className="text-lg font-semibold">Job Posts</h3>
-              <p className="font-bold text-3xl mt-2">2,456</p>
+              <h3 className="text-lg font-semibold">Total Users</h3>
+              <p className="font-bold text-3xl mt-2">
+                {loading ? "Loading..." : userDetails.length}
+              </p>
             </div>
             <div className="bg-gray-100 p-6 rounded-lg shadow-md flex flex-col items-center">
-              <h3 className="text-lg font-semibold">Total Applications</h3>
-              <p className="font-bold text-3xl mt-2">4,561</p>
-            </div>
-            <div className="bg-gray-100 p-6 rounded-lg shadow-md flex flex-col items-center">
-              <h3 className="text-lg font-semibold">No of Hirings</h3>
-              <p className="font-bold text-3xl mt-2">2,456</p>
+              <h3 className="text-lg font-semibold">Total Companies</h3>
+              <p className="font-bold text-3xl mt-2">
+                {loading ? "Loading..." : companyDetails.length}
+              </p>
             </div>
           </div>
         </section>
 
         <section className="mt-10 bg-gray-100 p-6 rounded-lg shadow-md">
-          <header className="flex justify-between items-center mb-6">
-            <h3 className="font-bold text-lg">Application Response</h3>
-            <a href="#" className="text-orange-500 font-semibold">Download Report</a>
-          </header>
-          <div className="mt-6">
-            <img
-              src="https://via.placeholder.com/300"
-              alt="Application Response Chart"
-              className="mx-auto rounded-md"
-            />
-            <div className="flex justify-around mt-6">
-              <div className="text-center">
-                <p className="font-bold text-xl">+2.5%</p>
-                <p className="text-sm">Shortlisted</p>
-              </div>
-              <div className="text-center">
-                <p className="font-bold text-xl">+0.4%</p>
-                <p className="text-sm">Hired</p>
-              </div>
-              <div className="text-center">
-                <p className="font-bold text-xl">-0.5%</p>
-                <p className="text-sm">Rejected</p>
-              </div>
-            </div>
-          </div>
-        </section>
+  <header className="flex justify-between items-center mb-6">
+    <h3 className="font-bold text-lg">Application Response</h3>
+  </header>
+  <div className="mt-6">
+    {!loading && (
+      <div style={{ width: '400px', height: '300px', margin: '0 auto' }}>
+        <Bar data={chartData} options={chartOptions} />
+      </div>
+    )}
+  </div>
+</section>
+
       </main>
     </div>
-  )
+  );
 }
 
 export default Page;
