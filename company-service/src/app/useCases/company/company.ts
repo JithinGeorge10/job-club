@@ -1,5 +1,6 @@
 
 import jobRepository from '../../../infrastructure/database/mongooseJobRespository'
+import companyRepository from '../../../infrastructure/database/mongooseCompanyRepository'
 export class CompanyService {
     async addJob(jobData: any) {
         try {
@@ -124,6 +125,15 @@ export class CompanyService {
         try {
             const companyDetails = await jobRepository.companyDetails(companyId)
             return companyDetails
+        } catch (error) {
+            throw error
+        }
+    }
+    
+    async addProfileImage(companyDetails: any) {
+        try {
+            const profileImage = await companyRepository.addProfileImage(companyDetails)
+            return profileImage
         } catch (error) {
             throw error
         }

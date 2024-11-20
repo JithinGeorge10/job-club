@@ -19,6 +19,7 @@ companyRoute.get('/rejectedCompanies', companyController.rejectedCompanies.bind(
 companyRoute.get('/inreviewCompanies', companyController.inreviewCompanies.bind(companyController));
 companyRoute.get('/interviewCompanies', companyController.interviewCompanies.bind(companyController));
 companyRoute.get('/companyDetails', companyController.companyDetails.bind(companyController));
+companyRoute.post('/companyLogo', companyController.companyLogo.bind(companyController));
 
 
 

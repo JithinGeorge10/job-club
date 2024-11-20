@@ -10,6 +10,25 @@ class CompanyRepository {
             throw error;
         }
     }
+    async addProfileImage(companyDetails: any) {
+        try {
+           
+
+            const { uploadImageUrl, companyId } = companyDetails;
+            const addResume = await companyModel.updateOne(
+                { _id: companyId},
+                { $set: { profileImage: uploadImageUrl } },
+                { upsert: true }
+            );
+
+
+            return addResume;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+    
 }
 const getCompanyRepository = new CompanyRepository();
 

@@ -126,7 +126,7 @@ const Profile = () => {
 
       let uploadImageUrl = await uploadImagesToFireStore(selectedFile)
       if (uploadImageUrl) {
-        let response = await axios.post(`${USER_SERVICE_URL}/add-resume`, { uploadImageUrl, userId }, {
+        const response = await axios.post(`${USER_SERVICE_URL}/add-resume`, { uploadImageUrl, userId }, {
           headers: {
             'Content-Type': 'application/json'
           },

@@ -150,4 +150,20 @@ export class CompanyController {
     }
 
 
+    
+    async companyLogo(req: Request, res: Response, next: NextFunction): Promise<any> {
+        try {
+            console.log(req.body)
+        //    const { userId } = req.body;
+        //    const userIdFromToken = req.user?.user;
+        //     if (userId !== userIdFromToken) {
+        //         res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
+        //     }
+            const addProfileImage = await this.companyService.addProfileImage(req.body)
+            res.status(200).send({ addProfileImage })
+        } catch (error) {
+            next(error)
+        }
+    }
+
 }

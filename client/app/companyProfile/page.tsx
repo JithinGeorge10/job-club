@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react'
 import CompanyNavbar from '../components/companyNavbar';
 import CompanyLeftSideBar from '../components/companyLeftSideBar';
 import axios from 'axios';
-import { COMPANY_SERVICE_URL } from '@/utils/constants';
-
+import { COMPANY_SERVICE_URL, USER_SERVICE_URL } from '@/utils/constants';
+import { toast } from 'react-toastify';
+import { uploadImagesToFireStore } from '../../utils/fireStore'
 function Page() {
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [companyId, setCompanyId] = useState<string | null>(null);
     const [companyDetails, setCompanyDetails] = useState<any | null>(null);
 
@@ -22,7 +24,7 @@ function Page() {
             (async () => {
                 try {
                     const response = await axios.get(`${COMPANY_SERVICE_URL}/companyDetails`, {
-                        params: { id: companyId }, 
+                        params: { id: companyId },
                         headers: {
                             'Content-Type': 'application/json',
                         },
@@ -36,7 +38,38 @@ function Page() {
             })();
         }
     }, [companyId]);
-
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+          setSelectedImage(file);
+        } else {
+          toast.info('Please select a valid image file (JPEG or PNG)');
+        }
+      };
+      const handleImageUpload = async () => {
+        if (!selectedImage) {
+          toast.info('Please select an image file to upload');
+          return;
+        }
+        try {
+          const uploadImageUrl = await uploadImagesToFireStore(selectedImage);
+    
+          if (uploadImageUrl) {
+            const response = await axios.post(`${COMPANY_SERVICE_URL}/companyLogo`, { uploadImageUrl, companyId }, {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              withCredentials: true,
+            });
+            toast.success('Profile image uploaded successfully');
+          }
+    
+        } catch (error) {
+          console.error('Error uploading the image:', error);
+          toast.error('Error uploading the profile image');
+        }
+      };
+      console.log(companyDetails)
     return (
         <>
             <CompanyNavbar />
@@ -46,9 +79,53 @@ function Page() {
 
                     <section className="bg-gray-900 p-6 rounded-xl">
                         <div className="flex items-center gap-6">
-                            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center">
-                                {/* Add company logo or icon here */}
-                            </div>
+
+
+
+
+
+
+
+                                <div className="flex items-center space-x-4">
+                                    <img
+                                        src={selectedImage ? URL.createObjectURL(selectedImage) : companyDetails?.profileImage || 'images/userProfile.jpg'}
+                                        alt={`${companyDetails?.firstName}'s Profile Picture`}
+                                        className="w-16 h-16 rounded-full object-cover"
+                                    />
+                                    <div>
+                                        <h2 className="text-2xl font-semibold">{companyDetails?.firstName}</h2>
+                                        <div className="mt-2">
+                                            <input
+                                                type="file"
+                                                accept="image/jpeg, image/png"
+                                                onChange={handleImageChange}
+                                                className="mb-4"
+                                            />
+                                            <button onClick={handleImageUpload} className="bg-green-500 text-black px-4 py-2 rounded mt-4">
+                                                Upload Image
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                 
                             <div>
                                 <h2 className="text-3xl font-bold">{companyDetails?.companyName || 'Company Name'}</h2>
                                 <a href={`https://${companyDetails?.website}`} className="text-green-400 hover:underline">
