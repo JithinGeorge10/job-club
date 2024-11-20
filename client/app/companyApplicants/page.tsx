@@ -12,7 +12,6 @@ function Page() {
     const [companyId, setCompanyId] = useState<string | null>(null);
     const [applicants, setApplicants] = useState([]);
 
-    // Load companyId from localStorage
     useEffect(() => {
         const company = localStorage.getItem('company');
         if (company && company !== 'undefined') {

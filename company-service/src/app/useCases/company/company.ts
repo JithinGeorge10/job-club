@@ -120,6 +120,14 @@ export class CompanyService {
             throw error
         }
     }
+    async companyDetails(companyId:any) {
+        try {
+            const companyDetails = await jobRepository.companyDetails(companyId)
+            return companyDetails
+        } catch (error) {
+            throw error
+        }
+    }
     
     
 }

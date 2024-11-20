@@ -44,9 +44,17 @@ function CompanyLeftSideBar() {
             console.error("Error fetching room details:", error);
         }
     };
+    const handleCompanyProfile = async () => {
+        try {
+            router.push(`/companyProfile`);
+        } catch (error) {
+            console.error("Error fetching room details:", error);
+        }
+    };
+    
     
     return (
-        <aside className="bg-gradient-to-b from-gray-800 to-gray-900 text-white h-screen w-1/5 p-5">
+        <aside className="bg-gradient-to-b  text-white h-screen w-1/5 p-5">
             <nav className="space-y-6">
                 <button onClick={handleDashboard} className="flex items-center  hover:text-gray-300 transition-colors duration-200">
                     <span className="material-icons mr-3">Dashboard</span>
@@ -54,7 +62,7 @@ function CompanyLeftSideBar() {
                 <button onClick={handleMessage} className="flex items-center hover:text-gray-300 transition-colors duration-200">
                     <span className="material-icons mr-3">Messages</span>
                 </button>
-                <button className="flex items-center hover:text-gray-300 transition-colors duration-200">
+                <button onClick={handleCompanyProfile} className="flex items-center hover:text-gray-300 transition-colors duration-200">
                     <span className="material-icons mr-3">Company Profile</span>
                 </button>
                 <button onClick={handleApplicants} className="flex items-center hover:text-gray-300 transition-colors duration-200">
@@ -63,7 +71,8 @@ function CompanyLeftSideBar() {
                 <button onClick={handleJobListing} className="flex items-center hover:text-gray-300 transition-colors duration-200">
                     <span className="material-icons mr-3">Job Listing</span>
                 </button>
-               
+              
+                
             </nav>
         </aside>
     );

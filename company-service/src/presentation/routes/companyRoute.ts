@@ -18,6 +18,7 @@ companyRoute.get('/hiredCompanies', companyController.hiredCompanies.bind(compan
 companyRoute.get('/rejectedCompanies', companyController.rejectedCompanies.bind(companyController));
 companyRoute.get('/inreviewCompanies', companyController.inreviewCompanies.bind(companyController));
 companyRoute.get('/interviewCompanies', companyController.interviewCompanies.bind(companyController));
+companyRoute.get('/companyDetails', companyController.companyDetails.bind(companyController));
 
 
 

@@ -138,9 +138,16 @@ export class CompanyController {
             next(error)
         }
     }
-
-    
-    
+    async companyDetails(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { id } = req.query;
+            console.log(id)
+            const companyDetails = await this.companyService.companyDetails(id)
+            res.status(200).send({ companyDetails })
+        } catch (error) {
+            next(error)
+        }
+    }
 
 
 }

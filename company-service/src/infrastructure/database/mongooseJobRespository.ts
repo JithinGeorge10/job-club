@@ -372,6 +372,15 @@ class CompanyRepository {
         }
     }
     
+    async companyDetails(companyId: any) {
+        try {
+            const result = await companyModel.find({_id:companyId})
+            return result;
+        } catch (error) {
+            console.error('Error updating applicant status:', error);
+            return { success: false, message: "Error updating applicant status" };
+        }
+    }
 
 }
 
