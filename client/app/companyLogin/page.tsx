@@ -108,7 +108,6 @@ function page() {
       </button>
     </form>
 
-    {/* Register Button Below */}
     <button
       onClick={handleCompanySignup}
       className="w-full max-w-lg mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"

@@ -4,7 +4,7 @@ import AdminLeftSideBar from '../components/adminLeftSideBar';
 import axios from 'axios';
 import { USER_SERVICE_URL } from '@/utils/constants';
 
-// Define TypeScript interfaces
+
 interface UserDetails {
   _id: string;
   firstName: string;
@@ -55,7 +55,7 @@ function Page() {
             </thead>
             <tbody>
               {subscribers.map((subscriber, index) => {
-                const user = subscriber.userDetails[0]; // Assuming userDetails has at least one object
+                const user = subscriber.userDetails[0]; 
                 return (
                   <tr key={subscriber._id} className="hover:bg-gray-100">
                     <td className="border border-gray-300 px-4 py-2">{index + 1}</td>

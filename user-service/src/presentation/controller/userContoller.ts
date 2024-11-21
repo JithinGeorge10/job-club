@@ -16,10 +16,7 @@ export class UserController {
     async getUserController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const { id } = req.query;
-            console.log('id'+id)
             const userIdFromToken = req.user?.user;
-            console.log('userfromtokenid'+userIdFromToken)
-
             if (!id || typeof id !== 'string') {
                 res.status(200).send({ success: false, message: 'Invalid or missing user ID in request' });
             }
@@ -171,12 +168,12 @@ export class UserController {
     }
     async subscriberList(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
-           
+
             const subscriberList = await this.userService.subscriberList()
             res.status(200).send({ subscriberList })
         } catch (error) {
             next(error)
         }
     }
-    
+
 }

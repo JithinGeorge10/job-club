@@ -1,63 +1,64 @@
-"use client"
+"use client";
 
-import React from 'react'
-import { useForm } from 'react-hook-form'
-import axios from 'axios'
-import { AUTH_SERVICE_URL } from '@/utils/constants'
-import { toast } from 'react-toastify'
-import { useRouter } from 'next/navigation';
+import React from "react";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import { AUTH_SERVICE_URL } from "@/utils/constants";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { app } from '../firebase/config'
+import { app } from "../firebase/config";
 
-function page() {
-  const router = useRouter()
+function Page() {
+  const router = useRouter();
   const handleSignup = () => {
-    router.push(`signup`)
-  }
+    router.push(`signup`);
+  };
 
-  type login = {
-    email: string,
-    password: string
-  }
-  const { register, handleSubmit, formState: { errors } } = useForm<login>();
-  const onSubmit = async (data: login) => {
+  type Login = {
+    email: string;
+    password: string;
+  };
+
+  const { register, handleSubmit, formState: { errors } } = useForm<Login>();
+
+  const onSubmit = async (data: Login) => {
     try {
       let response = await axios.post(`${AUTH_SERVICE_URL}/user-login`, data, {
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        withCredentials: true
-      })
+        withCredentials: true,
+      });
 
-      const user = response.data.user
+      const user = response.data.user;
       if (response.data.success) {
-        localStorage.setItem('user', JSON.stringify(user));
-        toast.success('Welcome')
+        localStorage.setItem("user", JSON.stringify(user));
+        toast.success("Welcome");
         setTimeout(() => {
-          router.replace(`jobListingPage`)
+          router.replace(`jobListingPage`);
         }, 3000);
       }
-      if (response.data.errorMessage == 'Give valid credentials') {
-        toast.info('Give valid credentials');
+      if (response.data.errorMessage === "Give valid credentials") {
+        toast.info("Give valid credentials");
       }
-      if (response.data.errorMessage == 'User is blocked') {
-        toast.error('You are blocked');
+      if (response.data.errorMessage === "User is blocked") {
+        toast.error("You are blocked");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 403) {
-          toast.error('User is blocked');
+          toast.error("User is blocked");
         } else if (error.response?.status === 401) {
-          toast.error('Invalid credentials');
+          toast.error("Invalid credentials");
         } else {
-          toast.error('An unexpected error occurred');
+          toast.error("An unexpected error occurred");
         }
       } else {
-        toast.error('An unexpected error occurred');
+        toast.error("An unexpected error occurred");
         console.error(error);
       }
     }
-
   };
 
   const handleGoogleLogin = async () => {
@@ -69,47 +70,49 @@ function page() {
       console.log("User Info:", user);
       let response = await axios.post(`${AUTH_SERVICE_URL}/google-login`, user, {
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        withCredentials: true
-      })
+        withCredentials: true,
+      });
       console.log(response);
-      const googleUser = response.data.googleUser
+      const googleUser = response.data.googleUser;
       if (response.data.success) {
-        localStorage.setItem('user', JSON.stringify(googleUser));
-        toast.success('Welcome')
+        localStorage.setItem("user", JSON.stringify(googleUser));
+        toast.success("Welcome");
         setTimeout(() => {
-          router.replace(`jobListingPage`)
+          router.replace(`jobListingPage`);
         }, 3000);
       }
-      if (response.data.errorMessage == 'User is blocked') {
-        toast.error('You are blocked');
+      if (response.data.errorMessage === "User is blocked") {
+        toast.error("You are blocked");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 403) {
-          toast.error('User is blocked');
+          toast.error("User is blocked");
         } else if (error.response?.status === 401) {
-          toast.error('Invalid credentials');
+          toast.error("Invalid credentials");
         } else {
-          toast.error('An unexpected error occurred');
+          toast.error("An unexpected error occurred");
         }
       } else {
-        toast.error('An unexpected error occurred');
+        toast.error("An unexpected error occurred");
         console.error(error);
       }
-      
     }
   };
-  
-  
+
   return (
     <>
-
-      <div className="flex justify-center items-center min-h-screen bg-cover bg-center"
-        style={{ backgroundImage: `url('images/homepage1.jpg')` }}>
+      <div
+        className="flex flex-col justify-center items-center min-h-screen bg-cover bg-center"
+        style={{ backgroundImage: `url('images/homepage1.jpg')` }}
+      >
+        {/* Login Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg bg-black p-8 rounded-lg shadow-lg">
-          <h2 className="text-3xl font-semibold text-white text-center mb-6">Login to <span className="text-green-400">{`_JobClub.`}</span></h2>
+          <h2 className="text-3xl font-semibold text-white text-center mb-6">
+            Login to <span className="text-green-400">{`_JobClub.`}</span>
+          </h2>
 
           <div className="mb-4">
             <input
@@ -120,7 +123,7 @@ function page() {
                   message: "Please enter a valid email address.",
                 },
               })}
-              type='email'
+              type="email"
               placeholder="Enter email"
               className="w-full px-4 py-2 text-lg text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
@@ -132,18 +135,18 @@ function page() {
               {...register("password", {
                 required: "Enter password",
                 pattern: {
-                  value:
-                    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&*()_+~`|}{[\]:;?><,./-]).{8,}$/,
+                  value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&*()_+~`|}{[\]:;?><,./-]).{8,}$/,
                   message:
                     "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character",
                 },
               })}
-              type='password'
+              type="password"
               placeholder="Enter password"
               className="w-full px-4 py-2 text-lg text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             <p className="text-red-600">{errors.password?.message as string}</p>
           </div>
+
           <div className="space-y-2">
             <button
               type="submit"
@@ -151,29 +154,31 @@ function page() {
             >
               Login
             </button>
-
-
           </div>
-          <br />
-          <button
-            onClick={handleSignup}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
-          >
-            Already having an account? Sign up
-          </button>
-          <br />
-          <button
-            onClick={handleGoogleLogin}
-
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
-          >
-            Google
-          </button>
         </form>
 
+        <div className="w-full max-w-lg mt-4 space-y-4">
+          <button
+            onClick={handleSignup}
+            className="w-full bg-green-900 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
+          >
+            Already have an account? Sign Up
+          </button>
+          <button
+            onClick={handleGoogleLogin}
+            className="w-full bg-white border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg flex items-center justify-center space-x-2 transition-colors duration-300 hover:bg-gray-100"
+          >
+            <img
+              src="/images/glogo.png"
+              alt="Google logo"
+              className="w-5 h-5"
+            />
+            <span>Sign in with Google</span>
+          </button>
+        </div>
       </div>
     </>
   );
 }
 
-export default page
+export default Page;
