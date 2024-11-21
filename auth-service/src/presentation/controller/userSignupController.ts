@@ -125,8 +125,15 @@ export class UserController {
     async googleLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
 
-            console.log(req.body);
-
+            const { email, displayName } = req.body
+            const googleUser = await this.userService.googleUser(email, displayName)
+            console.log(googleUser)
+            if (googleUser) {
+                const userJwtToken = await this.JwtService.createJwt(googleUser._id, 'user')
+                res.status(200).cookie('userToken', userJwtToken, {
+                    maxAge: 60 * 60 * 24 * 1000
+                }).send({ googleUser, success: true, token: userJwtToken });
+            }
         } catch (error) {
             next(error)
         }

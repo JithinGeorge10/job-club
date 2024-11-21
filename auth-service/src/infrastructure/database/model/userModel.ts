@@ -3,11 +3,11 @@ import { genSalt, hash } from 'bcrypt'
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
-        required: [true, 'Email is required'],
+        required: [true, 'firstName is required'],
     },
     lastName: {
         type: String,
-        required: [true, 'Email is required'],
+        required: [true, 'lastName is required'],
     },
     email: {
         type: String,
@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
 
     phone: {
         type: Number,
-        required: [true, 'Email is required'],
+        required: [true, 'phone is required'],
     },
     isBlock: {
         type: Boolean,

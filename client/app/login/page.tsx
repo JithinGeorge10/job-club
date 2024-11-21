@@ -6,6 +6,8 @@ import axios from 'axios'
 import { AUTH_SERVICE_URL } from '@/utils/constants'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { app } from '../firebase/config'
 
 function page() {
   const router = useRouter()
@@ -58,13 +60,50 @@ function page() {
 
   };
 
-  const handleGoogleLogin = () => {
-    window.location.href = '/api/auth';
+  const handleGoogleLogin = async () => {
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+  
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log("User Info:", user);
+      let response = await axios.post(`${AUTH_SERVICE_URL}/google-login`, user, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      })
+      console.log(response);
+      const googleUser = response.data.googleUser
+      if (response.data.success) {
+        localStorage.setItem('user', JSON.stringify(googleUser));
+        toast.success('Welcome')
+        setTimeout(() => {
+          router.replace(`jobListingPage`)
+        }, 3000);
+      }
+      if (response.data.errorMessage == 'User is blocked') {
+        toast.error('You are blocked');
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 403) {
+          toast.error('User is blocked');
+        } else if (error.response?.status === 401) {
+          toast.error('Invalid credentials');
+        } else {
+          toast.error('An unexpected error occurred');
+        }
+      } else {
+        toast.error('An unexpected error occurred');
+        console.error(error);
+      }
+      
+    }
   };
   
-
-
-
+  
   return (
     <>
 

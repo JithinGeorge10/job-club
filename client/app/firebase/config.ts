@@ -18,4 +18,3 @@ const auth = getAuth(app);
 
 export default auth
 
-//config and export in main.js no need to wrap then go to signup page and get from firebase/auth

@@ -117,6 +117,17 @@ export class UserService {
             throw error;
         }
     }
-
+    async googleUser(email: any,displayName:any) {
+        try {
+            const isUserBlock=await getUserRepository.isUserBlock(email)
+            if(isUserBlock){
+                throw new Error("User is blocked");
+            }
+            const googleUser = await getUserRepository.googleUser( email, displayName);
+            return googleUser;
+        } catch (error) {
+            throw error;
+        }
+    }
     
 } 

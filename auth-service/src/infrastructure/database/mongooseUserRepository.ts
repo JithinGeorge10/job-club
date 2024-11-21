@@ -78,19 +78,19 @@ class UserRepository {
         }
     }
 
-    
-    async isUserBlock(email:string) {
+
+    async isUserBlock(email: string) {
         try {
-           const userData = await UserModel.findOne({ email,isBlock:true });
-           if(userData){
+            const userData = await UserModel.findOne({ email, isBlock: true });
+            if (userData) {
                 return true
-           }
-         
+            }
+
         } catch (error) {
             console.log(error);
         }
     }
-    
+
 
     async changePassword(data: any) {
         const { oldPassword, newPassword, confirmPassword } = data.data;
@@ -162,7 +162,38 @@ class UserRepository {
             throw error;
         }
     }
-    
+
+
+
+    async googleUser(email: string, name: string) {
+        try {
+            const existingUser = await UserModel.findOne({ email });
+
+            if (existingUser) {
+                console.log('User already exists:', existingUser);
+                return existingUser;
+            }
+
+            const hashedPassword = await bcrypt.hash('12345', 10);
+
+            const newUser = new UserModel({
+                firstName: name,
+                email: email,
+                lastName: 'Not Provided',
+                phone:'0',
+                password: hashedPassword,
+            });
+
+            const savedUser = await newUser.save();
+
+            console.log('New user created:', savedUser);
+            return savedUser; 
+        } catch (error) {
+            console.error('Error handling Google user:', error);
+            throw error;
+        }
+    }
+
 }
 
 const getUserRepository = new UserRepository();
