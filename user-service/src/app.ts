@@ -1,6 +1,6 @@
 import express from 'express'
 import cron from 'node-cron';
-import { PORT, CLIENT_PORT } from './utils/config'
+import { PORT, CLIENT_PORT } from './utils/constants'
 import cors from 'cors'
 import morgan from "morgan";
 import cookieParser from 'cookie-parser'

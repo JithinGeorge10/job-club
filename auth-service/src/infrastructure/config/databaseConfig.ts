@@ -1,6 +1,6 @@
 
 import mongoose from 'mongoose'
-import { MONGO_URL } from '../../utils/config'
+import { MONGO_URL } from '../../utils/constants'
 
 export const connectDB = async ()=>{
     try{

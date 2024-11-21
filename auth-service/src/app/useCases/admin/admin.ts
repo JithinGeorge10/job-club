@@ -1,4 +1,4 @@
-import { ADMIN_MAIL, ADMIN_PASSWORD } from "../../../utils/config";
+import { ADMIN_MAIL, ADMIN_PASSWORD } from "../../../utils/constants";
 
 export class AdminService {
 

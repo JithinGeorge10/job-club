@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
-import { JWT_KEY } from '../../utils/config';
+import { JWT_KEY } from '../../utils/constants';
 interface AuthenticatedRequest extends Request {
     admin?: {
         admin: string;

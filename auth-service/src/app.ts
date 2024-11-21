@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import morgan from "morgan";
 import {connectDB} from "./infrastructure/config/databaseConfig"
-import {PORT,CLIENT_PORT} from './utils/config'
+import {PORT,CLIENT_PORT} from './utils/constants'
 import {errorHandler} from './presentation/middleware/errorHandler'
 import userRoute from './presentation/routes/userRoute';
 import companyRoute from './presentation/routes/companyRoute';

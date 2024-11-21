@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { JWT_SECRET } from '../../utils/config';
+import { JWT_SECRET } from '../../utils/constants';
 
 export class JwtService {
     async createAccessToken(user: Object | undefined, role: String): Promise<String | undefined> {

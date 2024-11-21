@@ -145,7 +145,7 @@ export class UserController {
             const { email, displayName } = req.body
             const googleUser = await this.userService.googleUser(email, displayName)
             console.log(googleUser)
-            await produce('add-user', googleUser)
+            
             if (googleUser) {
                 const userJwtToken = await this.JwtService.createAccessToken(googleUser._id, 'user')
                 const userRefresh = await this.JwtService.createRefreshToken(googleUser._id, 'user')

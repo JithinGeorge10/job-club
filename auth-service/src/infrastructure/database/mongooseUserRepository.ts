@@ -3,6 +3,7 @@ import UserModel from './model/userModel';
 import otpModel from './model/otpModel';
 import bcrypt from 'bcrypt';
 import mongoose from "mongoose";
+import produce from "../service/producer";
 
 
 class UserRepository {
@@ -180,14 +181,14 @@ class UserRepository {
                 firstName: name,
                 email: email,
                 lastName: 'Not Provided',
-                phone:'0',
+                phone: '0',
                 password: hashedPassword,
             });
 
             const savedUser = await newUser.save();
-
+            await produce('add-user', savedUser)
             console.log('New user created:', savedUser);
-            return savedUser; 
+            return savedUser;
         } catch (error) {
             console.error('Error handling Google user:', error);
             throw error;
