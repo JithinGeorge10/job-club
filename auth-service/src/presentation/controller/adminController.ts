@@ -16,10 +16,18 @@ export class AdminController {
             const { email, password } = req.body
             const admin = await this.adminService.adminVerify(email, password)
             if (admin) {
-                const adminJwtToken = await this.JwtService.createJwt('admin@gmail.com', 'admin')
-                res.status(200).cookie('adminToken', adminJwtToken, {
-                    maxAge: 60 * 60 * 24 * 1000
+                const adminJwtToken = await this.JwtService.createAccessToken('admin@gmail.com', 'admin')
+                const adminRefresh = await this.JwtService.createRefreshToken('admin@gmail.com', 'admin')
+
+                res
+                .status(200)
+                .cookie('adminAccessToken', adminJwtToken, {
+                    httpOnly: false,
+                })
+                .cookie('adminRefreshToken', adminRefresh, {
+                    httpOnly: true,
                 }).send({ success: true, token: adminJwtToken });
+                
             } else {
                 res.status(200).send({ success: false });
             }

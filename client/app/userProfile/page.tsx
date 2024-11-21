@@ -49,9 +49,13 @@ const Profile = () => {
           }
         );
         if (response.data.failToken) {
+          console.log('failed token');
+          
           router.push('login');
         }
         if(response.data.success==false){
+          console.log('success false');
+          
           router.push('login');
         }
         setUserDetails(response.data.userDetails);

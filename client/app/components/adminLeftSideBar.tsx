@@ -7,7 +7,7 @@ function AdminLeftSideBar() {
 
   const handleLogout = () => {
     localStorage.clear();
-    Cookies.remove('adminToken');
+    Cookies.remove('adminAccessToken');
     router.push(`/`);
   };
 

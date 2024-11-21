@@ -37,11 +37,16 @@ export class CompanyController {
             const verifiedCompany = await this.companyService.verifyOtp(userOtp, email)
             if (verifiedCompany) {
 
-                const comapanyJwtToken = await this.JwtService.createJwt(verifiedCompany._id, 'company')
-
-                res.status(200).cookie('companyToken', comapanyJwtToken, {
-                    maxAge: 60 * 60 * 24 * 1000
-                }).send({ verifiedCompany, success: true, token: comapanyJwtToken });
+                const companyJwtToken = await this.JwtService.createAccessToken(verifiedCompany._id, 'company')
+                const companyRefresh = await this.JwtService.createRefreshToken(verifiedCompany._id, 'company')
+                res
+                    .status(200)
+                    .cookie('companyAccessToken', companyJwtToken, {
+                        httpOnly: false,
+                    })
+                    .cookie('companyRefreshToken', companyRefresh, {
+                        httpOnly: true,
+                    }).send({ verifiedCompany, success: true, token: companyJwtToken });
             }
         } catch (error) {
             next(error)
@@ -69,11 +74,17 @@ export class CompanyController {
             const company = await this.companyService.companyLogin(email, password);
 
             if (company && '_id' in company) {
-                const companyJwtToken = await this.JwtService.createJwt(company._id, 'company');
+                const companyJwtToken = await this.JwtService.createAccessToken(company._id, 'company');
+                const companyRefresh = await this.JwtService.createRefreshToken(company._id, 'company')
+                res
+                    .status(200)
+                    .cookie('companyAccessToken', companyJwtToken, {
+                        httpOnly: false,
+                    })
+                    .cookie('companyRefreshToken', companyRefresh, {
+                        httpOnly: true,
+                    }).send({ company, success: true, token: companyJwtToken });
 
-                res.status(200).cookie('companyToken', companyJwtToken, {
-                    maxAge: 60 * 60 * 24 * 1000,
-                }).send({ company, success: true, token: companyJwtToken });
             } else if (company && 'isBlocked' in company && company.isBlocked) {
                 res.status(403).send({ success: false, message: 'Company is blocked' });
             } else {
@@ -98,7 +109,7 @@ export class CompanyController {
 
             res.send({ companyDetails, success: true })
         } catch (error) {
-            next(error) 
+            next(error)
         }
     }
     async blockCompanyController(req: Request, res: Response, next: NextFunction): Promise<void> {

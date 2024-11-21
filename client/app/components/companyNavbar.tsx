@@ -20,7 +20,7 @@ function Navbar() {
 
   const handleLogout = () => {
     localStorage.clear();
-    Cookies.remove('companyToken');
+    Cookies.remove('companyAccessToken');
     router.push(`/`)
   }
   return (

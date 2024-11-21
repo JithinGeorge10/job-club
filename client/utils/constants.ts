@@ -13,3 +13,5 @@ export const AUTH_SERVICE_URL = `${AUTH_SERVICE_DOMAIN}/api/auth-service`;
 export const USER_SERVICE_URL = `${USER_SERVICE_DOMAIN}/api/user-service`;
 export const COMPANY_SERVICE_URL = `${COMPANY_SERVICE_DOMAIN}/api/company-service`;
 export const CHAT_SERVICE_URL = `${CHAT_SERVICE_DOMAIN}/api/chat-service`;
+
+

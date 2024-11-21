@@ -63,7 +63,6 @@ function page() {
   const handleGoogleLogin = async () => {
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
-  
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;

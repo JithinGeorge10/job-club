@@ -33,7 +33,7 @@ function Navbar() {
 
   const handleLogout = () => {
     localStorage.clear();
-    Cookies.remove('userToken');
+    Cookies.remove('userAccessToken');
     router.replace(`/`);
   };
 

@@ -3,6 +3,7 @@ import { UserService } from "../../app/useCases/user/user";
 
 import { JwtService } from '../../infrastructure/service/jwtService'
 import { User } from "../../domain/entities/user";
+import produce from "../../infrastructure/service/producer";
 
 interface AuthenticatedRequest extends Request {
     admin?: {
@@ -54,11 +55,17 @@ export class UserController {
             const verifiedUser = await this.userService.verifyOtp(userOtp, email)
             if (verifiedUser) {
 
-                const userJwtToken = await this.JwtService.createJwt(verifiedUser._id, 'user')
+                const userJwtToken = await this.JwtService.createAccessToken(verifiedUser._id, 'user')
+                const userRefresh = await this.JwtService.createRefreshToken(verifiedUser._id, 'user')
 
-                res.status(200).cookie('userToken', userJwtToken, {
-                    maxAge: 60 * 60 * 24 * 1000
-                }).send({ verifiedUser, success: true, token: userJwtToken });
+                res
+                    .status(200)
+                    .cookie('userAccessToken', userJwtToken, {
+                        httpOnly: false,
+                    })
+                    .cookie('userRefreshToken', userRefresh, {
+                        httpOnly: true,
+                    }).send({ verifiedUser, success: true, token: userJwtToken });
             }
         } catch (error) {
             next(error)
@@ -71,10 +78,21 @@ export class UserController {
             const user = await this.userService.userLogin(email, password)
 
             if (user) {
-                const userJwtToken = await this.JwtService.createJwt(user._id, 'user')
-                res.status(200).cookie('userToken', userJwtToken, {
-                    maxAge: 60 * 60 * 24 * 1000
-                }).send({ user, success: true, token: userJwtToken });
+                const userJwtToken = await this.JwtService.createAccessToken(user._id, 'user')
+                const userRefresh = await this.JwtService.createRefreshToken(user._id, 'user')
+                res
+                    .status(200)
+                    .cookie('userAccessToken', userJwtToken, {
+                        httpOnly: false,
+                    })
+                    .cookie('userRefreshToken', userRefresh, {
+                        httpOnly: true,
+                    })
+                    .send({
+                        success: true,
+                        user,
+                        token: userJwtToken,
+                    });
             }
         } catch (error) {
             next(error)
@@ -124,14 +142,20 @@ export class UserController {
 
     async googleLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-
             const { email, displayName } = req.body
             const googleUser = await this.userService.googleUser(email, displayName)
             console.log(googleUser)
+            await produce('add-user', googleUser)
             if (googleUser) {
-                const userJwtToken = await this.JwtService.createJwt(googleUser._id, 'user')
-                res.status(200).cookie('userToken', userJwtToken, {
-                    maxAge: 60 * 60 * 24 * 1000
+                const userJwtToken = await this.JwtService.createAccessToken(googleUser._id, 'user')
+                const userRefresh = await this.JwtService.createRefreshToken(googleUser._id, 'user')
+                res
+                .status(200)
+                .cookie('userAccessToken', userJwtToken, {
+                    httpOnly: false,
+                })
+                .cookie('userRefreshToken', userRefresh, {
+                    httpOnly: true,
                 }).send({ googleUser, success: true, token: userJwtToken });
             }
         } catch (error) {

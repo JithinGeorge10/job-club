@@ -5,9 +5,9 @@ import { adminVerifyToken } from './lib/adminVerifyToken';
 
 export async function middleware(req: NextRequest) {
     const url = req.nextUrl.clone();
-    const isValidUser = await userVerifyToken("userToken", req);
-    const isValidCompany = await companyVerifyToken("companyToken", req);
-    const isValidadmin = await adminVerifyToken("adminToken", req);
+    const isValidUser = await userVerifyToken("userAccessToken", req);
+    const isValidCompany = await companyVerifyToken("companyAccessToken", req);
+    const isValidadmin = await adminVerifyToken("adminAccessToken", req);
 
     if (url.pathname.startsWith('/login') || url.pathname.startsWith('/signup')
         || url.pathname.startsWith('/otpPage')) {
