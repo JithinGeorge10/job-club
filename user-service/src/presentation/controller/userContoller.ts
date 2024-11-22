@@ -15,16 +15,14 @@ export class UserController {
     }
     async getUserController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
-            const { id } = req.query;
             const userIdFromToken = req.user?.user;
-            if (!id || typeof id !== 'string') {
-                res.status(200).send({ success: false, message: 'Invalid or missing user ID in request' });
+            if (userIdFromToken) {
+                const userDetails = await this.userService.getUserDetails(userIdFromToken);
+                res.status(200).send({ success: true, userDetails });
+            } else {
+                console.error('User ID not found');
+                throw new Error('User ID is required.');
             }
-            if (id !== userIdFromToken) {
-                res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
-            }
-            const userDetails = await this.userService.getUserDetails(id);
-            res.status(200).send({ success: true, userDetails });
         } catch (error) {
             next(error);
         }

@@ -20,7 +20,7 @@ export class CompanyController {
                 res.status(200).send({ jobDetails })
             } else {
                 console.error('User ID not found');
-                throw new Error('User ID is required to fetch doctor profile.');
+                throw new Error('User ID is required .');
             }
         } catch (error) {
             next(error)
@@ -79,7 +79,7 @@ export class CompanyController {
                 res.status(200).send({ changeStatus })
             } else {
                 console.error('User ID not found');
-                throw new Error('User ID is required to fetch doctor profile.');
+                throw new Error('User ID is required');
             }
         } catch (error) {
             next(error)
@@ -93,7 +93,7 @@ export class CompanyController {
                 res.status(200).send({ filteredJobs })
             } else {
                 console.error('User ID not found');
-                throw new Error('User ID is required to fetch doctor profile.');
+                throw new Error('User ID is required to.');
             }
         } catch (error) {
             next(error)
@@ -107,7 +107,7 @@ export class CompanyController {
                 res.status(200).send({ updatedJob })
             } else {
                 console.error('User ID not found');
-                throw new Error('User ID is required to fetch doctor profile.');
+                throw new Error('User ID is required to.');
             }
         } catch (error) {
             next(error)

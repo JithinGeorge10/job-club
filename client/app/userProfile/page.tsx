@@ -6,7 +6,7 @@ import { USER_SERVICE_URL } from '@/utils/constants';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { uploadImagesToFireStore } from '../../utils/fireStore'
 import { toast } from 'react-toastify';
-import Cookies from 'js-cookie';
+
 const Profile = () => {
 
   const router = useRouter()
@@ -56,7 +56,7 @@ const Profile = () => {
         if (response.data.success == false) {
           console.log('success false');
 
-          router.push('login');
+          router.push('pageNotFound');
         }
         setUserDetails(response.data.userDetails);
       } catch (error) {
