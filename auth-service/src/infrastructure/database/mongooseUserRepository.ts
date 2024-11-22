@@ -164,27 +164,20 @@ class UserRepository {
         }
     }
 
-
-
     async googleUser(email: string, name: string) {
         try {
             const existingUser = await UserModel.findOne({ email });
-
             if (existingUser) {
                 console.log('User already exists:', existingUser);
                 return existingUser;
             }
-
-            const hashedPassword = await bcrypt.hash('12345', 10);
-
             const newUser = new UserModel({
                 firstName: name,
                 email: email,
                 lastName: 'Not Provided',
                 phone: '0',
-                password: hashedPassword,
+                password: '12345',
             });
-
             const savedUser = await newUser.save();
             await produce('add-user', savedUser)
             console.log('New user created:', savedUser);
@@ -194,7 +187,6 @@ class UserRepository {
             throw error;
         }
     }
-
 }
 
 const getUserRepository = new UserRepository();

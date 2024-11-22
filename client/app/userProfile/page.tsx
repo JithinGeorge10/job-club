@@ -50,12 +50,12 @@ const Profile = () => {
         );
         if (response.data.failToken) {
           console.log('failed token');
-          
+
           router.push('login');
         }
-        if(response.data.success==false){
+        if (response.data.success == false) {
           console.log('success false');
-          
+
           router.push('login');
         }
         setUserDetails(response.data.userDetails);
@@ -192,7 +192,6 @@ const Profile = () => {
   const handlePayment = () => {
     const isProfileComplete = userDetails?.profile?.profileImage &&
       userDetails?.profile?.resume &&
-      userDetails?.profile?.employment_details?.length > 0 &&
       userDetails?.profile?.education_details?.length > 0 &&
       userDetails?.profile?.skills?.length > 0;
 
@@ -200,6 +199,7 @@ const Profile = () => {
       toast.info('Please complete your profile to upgrade to Premium');
       return;
     }
+
 
     router.push(`/subscribePage?firstName=${userDetails?.firstName}&lastName=${userDetails?.lastName}&userId=${userDetails?._id}&email=${userDetails?.email}&phone=${userDetails?.phone}`);
   };

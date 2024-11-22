@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 
 export async function POST(req: any) {
+  console.log('reached failure');
+  
   const contentType = req.headers.get("content-type") || "";
 
   const formData = await req.formData();
@@ -10,6 +12,7 @@ export async function POST(req: any) {
     data[key] = value;
   });
   const { productinfo } = data;
+console.log(productinfo);
 
   const redirectUrl = `/paymentFailurePage?userId=${productinfo}`;
   redirect(redirectUrl);

@@ -21,7 +21,7 @@ export async function POST(req: any, res: NextApiResponse) {
   })
 
   const { productinfo } = data;
-
+  console.log(productinfo);
   const redirectUrl = `/paymentSuccessPage?userId=${productinfo}&transactionId=${data.txnid}&amountPaid=${data.amount}&bankRefNum=${data.bank_ref_num}`;
 
   redirect(redirectUrl);

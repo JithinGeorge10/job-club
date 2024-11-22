@@ -1,6 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 
 import { CompanyService } from '../../app/useCases/company/company'
+interface AuthenticatedRequest extends Request {
+    user?: {
+        user: string;
+        role: string;
+    };
+}
 export class CompanyController {
     private companyService: CompanyService;
     constructor() {
@@ -8,7 +14,6 @@ export class CompanyController {
     }
     async postJobController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-
             const jobDetails = await this.companyService.addJob(req.body)
             res.status(200).send({ jobDetails })
         } catch (error) {
@@ -16,12 +21,9 @@ export class CompanyController {
         }
     }
 
-    async getJobController(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getJobController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
-
-
             const jobDetails = await this.companyService.getJobDetails()
-
             res.status(200).send({ jobDetails })
         } catch (error) {
             next(error)
@@ -31,7 +33,6 @@ export class CompanyController {
         try {
             const { jobId } = req.query
             const jobDetails = await this.companyService.getSingleJobDetails(jobId)
-
             res.status(200).send({ jobDetails })
         } catch (error) {
             next(error)
@@ -150,15 +151,15 @@ export class CompanyController {
     }
 
 
-    
+
     async companyLogo(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
             console.log(req.body)
-        //    const { userId } = req.body;
-        //    const userIdFromToken = req.user?.user;
-        //     if (userId !== userIdFromToken) {
-        //         res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
-        //     }
+            //    const { userId } = req.body;
+            //    const userIdFromToken = req.user?.user;
+            //     if (userId !== userIdFromToken) {
+            //         res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
+            //     }
             const addProfileImage = await this.companyService.addProfileImage(req.body)
             res.status(200).send({ addProfileImage })
         } catch (error) {
