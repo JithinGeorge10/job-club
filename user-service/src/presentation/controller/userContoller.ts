@@ -76,14 +76,10 @@ export class UserController {
     async addResumeController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
 
-            const userIdFromToken = req.user?.user;
-            if (userIdFromToken) {
-                const userDetails = await this.userService.addResume(req.body, userIdFromToken)
+        
+                const userDetails = await this.userService.addResume(req.body)
                 res.status(200).send({ userDetails })
-            } else {
-                console.error('User ID not found');
-                throw new Error('User ID is required.');
-            }
+           
 
         } catch (error) {
             next(error)

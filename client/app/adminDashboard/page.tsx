@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
-// Register Chart.js components
+
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function Page() {
@@ -14,7 +14,7 @@ function Page() {
   const [companyDetails, setCompanyDetails] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch user details
+
   useEffect(() => {
     const fetchUserDetails = async () => {
       setLoading(true);

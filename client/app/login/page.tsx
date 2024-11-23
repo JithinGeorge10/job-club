@@ -64,6 +64,9 @@ function Page() {
   const handleGoogleLogin = async () => {
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' }); 
+
+
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
@@ -88,16 +91,10 @@ function Page() {
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        if (error.response?.status === 403) {
-          toast.error("User is blocked");
-        } else if (error.response?.status === 401) {
-          toast.error("Invalid credentials");
-        } else {
-          toast.error("An unexpected error occurred");
-        }
+        console.error("Axios Error:", error.response?.data || error.message);
+        toast.error("Login failed due to network or server issues");
       } else {
-        toast.error("An unexpected error occurred");
-        console.error(error);
+        console.error("Unexpected Error:", error);
       }
     }
   };

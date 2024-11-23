@@ -190,9 +190,11 @@ const Profile = () => {
   };
 
   const handlePayment = () => {
+    console.log(userDetails.profile)
     const isProfileComplete = userDetails?.profile?.profileImage &&
       userDetails?.profile?.resume &&
       userDetails?.profile?.education_details?.length > 0 &&
+      userDetails?.profile?.employment_details?.length > 0 &&
       userDetails?.profile?.skills?.length > 0;
 
     if (!isProfileComplete) {

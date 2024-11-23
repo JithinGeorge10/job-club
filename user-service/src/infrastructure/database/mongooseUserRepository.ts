@@ -99,13 +99,13 @@ class UserRepository {
     }
 
 
-    async addResume(resume: any,userIdFromToken:any) {
+    async addResume(resume: any) {
         try {
             
 
             const { uploadImageUrl, userId } = resume;
             const addResume = await UserProfileModel.updateOne(
-                { userIdFromToken },
+                { userId },
                 { $set: { resume: uploadImageUrl } },
                 { upsert: true }
             );
