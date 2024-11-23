@@ -37,8 +37,9 @@ export const authenticateToken = (req: AuthenticatedRequest, res: Response, next
                 iat: number;
                 exp: number;
             };
-
+            console.log(verified)
             req.user = verified; 
+
             return next();
         }
         if (refreshToken) {

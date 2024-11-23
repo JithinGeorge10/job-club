@@ -110,11 +110,7 @@ export class UserController {
     }
     async getUserController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
-            const adminIdFromToken = req.admin?.user;
-            const adminEmail = req.query.adminEmail;
-            if (adminEmail !== adminIdFromToken) {
-                res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
-            }
+           
             const userDetails = await this.userService.userDetails()
             res.status(200).send({ userDetails })
         } catch (error) {

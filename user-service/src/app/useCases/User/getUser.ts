@@ -9,34 +9,34 @@ export class UserService {
             throw error
         }
     }
-    async addEmployment(userData: any) {
+    async addEmployment(userData: any,userIdFromToken:any) {
         try {
             
-            const userDetails = await UserRepository.addEmployment(userData)
+            const userDetails = await UserRepository.addEmployment(userData,userIdFromToken)
             return userDetails
         } catch (error) {
             throw error
         }
     }
-    async addEducation(educationData: any) {
+    async addEducation(educationData: any,userIdFromToken:any) {
         try {
-            const userDetails = await UserRepository.addEducation(educationData)
+            const userDetails = await UserRepository.addEducation(educationData,userIdFromToken)
             return userDetails
         } catch (error) {
             throw error
         }
     }
-    async addSkills(educationData: any) {
+    async addSkills(educationData: any,userIdFromToken:any) {
         try {
-            const userDetails = await UserRepository.addSkills(educationData)
+            const userDetails = await UserRepository.addSkills(educationData,userIdFromToken)
             return userDetails
         } catch (error) {
             throw error
         }
     }
-    async addResume(resume: any) {
+    async addResume(resume: any,userIdFromToken:any) {
         try {
-            const userDetails = await UserRepository.addResume(resume)
+            const userDetails = await UserRepository.addResume(resume,userIdFromToken)
             return userDetails
         } catch (error) {
             throw error
@@ -50,9 +50,9 @@ export class UserService {
             throw error
         }
     }
-    async deleteResume(resume: any) {
+    async deleteResume(userIdFromToken:any) {
         try {
-            const deleteResume = await UserRepository.deleteResume(resume)
+            const deleteResume = await UserRepository.deleteResume(userIdFromToken)
             return deleteResume
         } catch (error) {
             throw error

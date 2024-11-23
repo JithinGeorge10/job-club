@@ -96,6 +96,9 @@ class companyRepository {
     async getCompany() {
         try {
           const companyDetails=await  companyModel.find();
+          
+          console.log(companyDetails);
+          
           return companyDetails
         } catch (error) {
             console.log(error);

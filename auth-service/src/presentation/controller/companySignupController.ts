@@ -100,14 +100,11 @@ export class CompanyController {
 
     async companyDetailsController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
-            const adminIdFromToken = req.admin?.user;
-            const adminEmail = req.query.adminEmail;
-            if (adminEmail !== adminIdFromToken) {
-                res.status(200).send({ success: false, message: 'Unauthorized: User ID does not match' });
-            }
-            const companyDetails = await this.companyService.getCompanyDetails()
+          
+                const companyDetails = await this.companyService.getCompanyDetails()
+                res.send({ companyDetails, success: true })
+          
 
-            res.send({ companyDetails, success: true })
         } catch (error) {
             next(error)
         }

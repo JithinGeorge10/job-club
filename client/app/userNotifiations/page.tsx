@@ -22,10 +22,17 @@ function Page() {
   }
   
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const userId = searchParams.get('id');
-  const [notifications, setNotifications] = useState<Notification[]>([]);
 
+  const [userId, setUserId] = useState<string | null>(null);
+
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  useEffect(() => {
+    const user: string | null = localStorage.getItem('user');
+    if (user && user !== 'undefined') {
+        const userDetails = JSON.parse(user);
+        setUserId(userDetails._id);
+    }
+}, []);
   useEffect(() => {
     const fetchNotifications = async () => {
       try {

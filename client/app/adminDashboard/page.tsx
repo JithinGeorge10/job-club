@@ -34,13 +34,11 @@ function Page() {
     fetchUserDetails();
   }, []);
 
-  // Fetch company details
   useEffect(() => {
     const fetchCompanyDetails = async () => {
       setLoading(true);
       try {
         const response = await axios.get(`${AUTH_SERVICE_URL}/get-companyDetails`, {
-          params: { adminEmail: "admin@gmail.com" },
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
         });

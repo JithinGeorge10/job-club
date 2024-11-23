@@ -1,7 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 
 import { ChatService } from '../../app/useCases/Chat/chatService'
-
+interface AuthenticatedRequest extends Request {
+    user?: {
+        user: string;
+        role: string;
+        iat: number;
+        exp: number;
+    };
+}
 export class ChatController {
     private chatService: ChatService;
     constructor() {
@@ -64,8 +71,9 @@ export class ChatController {
         }
     }
 
-    async getNotificationsController(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getNotificationsController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
+            console.log(req.user)
             const userId = req.query.userId as string;
             const notifications = await this.chatService.notifications(userId)
             res.status(200).send({ notifications })

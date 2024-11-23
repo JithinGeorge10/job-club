@@ -50,7 +50,7 @@ function Navbar() {
   };
 
   const handleNotifications = async () => {
-    router.push(`/userNotifiations?id=${userId}`);
+    router.push(`/userNotifiations`);
 
     if (notificationCount > 0) {
       try {

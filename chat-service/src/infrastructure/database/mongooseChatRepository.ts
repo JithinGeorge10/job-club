@@ -66,7 +66,7 @@ class ChatRepository {
                     lastMessage: room.lastMessage,
                     timestamp: room.timestamp,
                 }))
-              
+
             return roomDetails;
         } catch (error) {
             console.error("Error fetching room details:", error);
@@ -108,7 +108,7 @@ class ChatRepository {
     }
     async notifications(userId: string) {
         try {
-
+            console.log(userId);
             const notifications = await notificationModel.find({ userId })
                 .populate('messages.sender', 'companyName')
                 .sort({ createdAt: -1 });

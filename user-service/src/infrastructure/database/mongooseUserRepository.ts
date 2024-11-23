@@ -36,7 +36,7 @@ class UserRepository {
             throw error;
         }
     }
-    async addEmployment(userData: any) {
+    async addEmployment(userData: any,userIdFromToken:any) {
         try {
             const { companyName, jobTitle, experience, salary, skills, fromDate, toDate } = userData.data;
             const employmentDetails = {
@@ -45,7 +45,7 @@ class UserRepository {
 
             const userId = userData.userId;
             const result = await UserProfileModel.updateOne(
-                { userId: userId },
+                { userId: userIdFromToken },
                 { $push: { employment_details: employmentDetails } },
                 { new: true, upsert: true }
             );
@@ -55,7 +55,7 @@ class UserRepository {
             throw error;
         }
     }
-    async addEducation(educationData: any) {
+    async addEducation(educationData: any,userIdFromToken:any) {
         try {
             const { education, university, course, specialization, courseType, cgpa, fromYear, toYear } = educationData.data;
             const educationDetails = {
@@ -63,7 +63,7 @@ class UserRepository {
             };
             const userId = educationData.userId;
             const result = await UserProfileModel.updateOne(
-                { userId: userId },
+                { userId: userIdFromToken },
                 { $push: { education_details: educationDetails } },
                 { new: true, upsert: true }
             );
@@ -76,14 +76,14 @@ class UserRepository {
 
 
 
-    async addSkills(educationData: any) {
+    async addSkills(educationData: any,userIdFromToken:any) {
         try {
          
 
-            const { userId, skills } = educationData;
+            const {  skills } = educationData;
 
             const updateResult = await UserProfileModel.updateOne(
-                { userId: userId },
+                { userId: userIdFromToken },
                 {
                     $addToSet: {
                         skills: { $each: Object.values(skills) }
@@ -99,13 +99,13 @@ class UserRepository {
     }
 
 
-    async addResume(resume: any) {
+    async addResume(resume: any,userIdFromToken:any) {
         try {
             
 
             const { uploadImageUrl, userId } = resume;
             const addResume = await UserProfileModel.updateOne(
-                { userId },
+                { userIdFromToken },
                 { $set: { resume: uploadImageUrl } },
                 { upsert: true }
             );
@@ -136,12 +136,11 @@ class UserRepository {
             throw error;
         }
     }
-    async deleteResume(resume: any) {
+    async deleteResume(userIdFromToken:any) {
         try {
             
-            const { userId } = resume
             const deleteResume = await UserProfileModel.updateOne(
-                { userId },
+                { userIdFromToken },
                 { $unset: { resume: "" } }
             );
             return deleteResume
