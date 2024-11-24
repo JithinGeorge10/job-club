@@ -110,9 +110,16 @@ export class UserController {
     }
     async getUserController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
-           
-            const userDetails = await this.userService.userDetails()
-            res.status(200).send({ userDetails })
+            const authReq = req as any;
+            console.log(authReq.user);
+            if (authReq.user) {
+                const userDetails = await this.userService.userDetails()
+                res.status(200).send({ userDetails })
+            } else {
+                console.error('User ID not found');
+                throw new Error('User ID is required.');
+            }
+
         } catch (error) {
             next(error)
         }
@@ -141,18 +148,18 @@ export class UserController {
             const { email, displayName } = req.body
             const googleUser = await this.userService.googleUser(email, displayName)
             console.log(googleUser)
-            
+
             if (googleUser) {
                 const userJwtToken = await this.JwtService.createAccessToken(googleUser._id, 'user')
                 const userRefresh = await this.JwtService.createRefreshToken(googleUser._id, 'user')
                 res
-                .status(200)
-                .cookie('userAccessToken', userJwtToken, {
-                    httpOnly: false,
-                })
-                .cookie('userRefreshToken', userRefresh, {
-                    httpOnly: true,
-                }).send({ googleUser, success: true, token: userJwtToken });
+                    .status(200)
+                    .cookie('userAccessToken', userJwtToken, {
+                        httpOnly: false,
+                    })
+                    .cookie('userRefreshToken', userRefresh, {
+                        httpOnly: true,
+                    }).send({ googleUser, success: true, token: userJwtToken });
             }
         } catch (error) {
             next(error)

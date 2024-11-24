@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { UserController } from "../controller/userContoller";
 import {authenticateToken} from '../middleware/authenticateToken'
+import {adminToken} from '../middleware/adminToken'
+
 const userRoute = Router()
 const userController = new UserController();
 
@@ -16,7 +18,7 @@ userRoute.post('/paymentSuccess', userController.successPaymentController.bind(u
 userRoute.post('/saveJob',authenticateToken, userController.saveJobController.bind(userController));
 userRoute.post('/applyJob',authenticateToken, userController.applyJobController.bind(userController));
 userRoute.put('/unsave-job',authenticateToken, userController.unsaveJobController.bind(userController));
-userRoute.get('/subscriberList', userController.subscriberList.bind(userController));
+userRoute.get('/subscriberList', adminToken,userController.subscriberList.bind(userController));
 
 
 

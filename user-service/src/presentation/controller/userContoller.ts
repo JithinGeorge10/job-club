@@ -76,10 +76,10 @@ export class UserController {
     async addResumeController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
 
-        
-                const userDetails = await this.userService.addResume(req.body)
-                res.status(200).send({ userDetails })
-           
+
+            const userDetails = await this.userService.addResume(req.body)
+            res.status(200).send({ userDetails })
+
 
         } catch (error) {
             next(error)
@@ -162,7 +162,7 @@ export class UserController {
     }
     async unsaveJobController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
-            const {  jobId } = req.body
+            const { jobId } = req.body
             const userIdFromToken = req.user?.user;
             if (userIdFromToken) {
                 const unsaveJob = await this.userService.unsaveJob(userIdFromToken, jobId)
@@ -177,8 +177,15 @@ export class UserController {
     }
     async subscriberList(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
-            const subscriberList = await this.userService.subscriberList()
-            res.status(200).send({ subscriberList })
+            console.log(req.user)
+            if (req.user) {
+                const subscriberList = await this.userService.subscriberList()
+                res.status(200).send({ subscriberList })
+            } else {
+                console.error('User ID not found');
+                throw new Error('User ID is required.');
+            }
+
         } catch (error) {
             next(error)
         }

@@ -2,14 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { CompanyService } from "../../app/useCases/company/company";
 import { Company } from "../../domain/entities/company";
 import { JwtService } from '../../infrastructure/service/jwtService'
-interface AuthenticatedRequest extends Request {
-    admin?: {
-        user: string;
-        role: string;
-        iat: number;
-        exp: number;
-    };
-}
 export class CompanyController {
     private companyService: CompanyService;
     private JwtService: JwtService;
@@ -98,12 +90,17 @@ export class CompanyController {
 
 
 
-    async companyDetailsController(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    async companyDetailsController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-          
+            const authReq = req as any;
+            console.log(authReq.user);
+            if (authReq.user) {
                 const companyDetails = await this.companyService.getCompanyDetails()
                 res.send({ companyDetails, success: true })
-          
+            } else {
+                console.error('User ID not found');
+                throw new Error('User ID is required.');
+            }   
 
         } catch (error) {
             next(error)

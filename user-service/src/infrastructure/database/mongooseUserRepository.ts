@@ -102,14 +102,12 @@ class UserRepository {
     async addResume(resume: any) {
         try {
             
-
             const { uploadImageUrl, userId } = resume;
             const addResume = await UserProfileModel.updateOne(
                 { userId },
                 { $set: { resume: uploadImageUrl } },
                 { upsert: true }
             );
-
 
             return addResume;
         } catch (error) {
