@@ -36,6 +36,7 @@ function Page() {
             })();
         }
     }, [companyId]);
+    console.log(applicants)
 
     const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>, _id: any) => {
         const newStatus = e.target.value;
@@ -78,10 +79,14 @@ function Page() {
                 Swal.fire('Error', 'An error occurred while updating the status.', 'error');
             }
         } else {
-            e.target.value = ''; 
+            e.target.value = '';
         }
     };
+    const handleNameClick = (userId: String) => {
+        console.log(userId)
+        router.push(`applicantDetails?id=${userId}`)
 
+    }
     return (
         <>
             <CompanyNavbar />
@@ -103,7 +108,10 @@ function Page() {
                             {applicants.length > 0 ? (
                                 applicants.map((applicant: any) => (
                                     <tr key={applicant._id} className="hover:bg-gray-700">
-                                        <td className="border border-gray-600 px-4 py-2">
+                                        <td
+                                            className="border border-gray-600 px-4 py-2 cursor-pointer text-blue-500 hover:underline"
+                                            onClick={() => handleNameClick(applicant._id)}
+                                        >
                                             {applicant.firstName} {applicant.lastName}
                                         </td>
                                         <td className="border border-gray-600 px-4 py-2">

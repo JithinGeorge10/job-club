@@ -139,5 +139,14 @@ export class CompanyService {
         }
     }
     
+    async applicantDetails(applicantId: any) {
+        try {
+            const applicantDetails = await jobRepository.applicantDetails(applicantId)
+            return applicantDetails
+        } catch (error) {
+            throw error
+        }
+    }
+    
     
 }

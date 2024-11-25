@@ -20,6 +20,8 @@ companyRoute.get('/inreviewCompanies',authenticateToken, companyController.inrev
 companyRoute.get('/interviewCompanies', authenticateToken,companyController.interviewCompanies.bind(companyController));
 companyRoute.get('/companyDetails',authenticateToken, companyController.companyDetails.bind(companyController));
 companyRoute.post('/companyLogo',authenticateToken, companyController.companyLogo.bind(companyController));
+companyRoute.get('/applicantDetails', authenticateToken,companyController.applicantDetails.bind(companyController));
+
 
 
 

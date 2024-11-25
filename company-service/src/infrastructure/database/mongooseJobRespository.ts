@@ -219,38 +219,38 @@ class CompanyRepository {
     }
 
 
-    async hiredCompanies(userId:any) {
+    async hiredCompanies(userId: any) {
         try {
             console.log(userId);
-    
+
             // Fetch hired applicants first
             const hiredApplicants = await applicantionModel.find({
                 email: userId,
                 Status: 'Hired',
             });
-    
+
             // If no hired applicants found, return an empty array
             if (!hiredApplicants || hiredApplicants.length === 0) {
                 return [];
             }
-    
-           
+
+
             const populatePromises = hiredApplicants.map(async (applicant) => {
                 const [jobDetails, companyDetails] = await Promise.all([
                     jobModel.findById(applicant.jobId, 'jobTitle'),
                     companyModel.findById(applicant.companyId, 'companyName location'),
                 ]);
-    
+
                 return {
                     ...applicant.toObject(),
                     jobDetails,
                     companyDetails,
                 };
             });
-    
-  
+
+
             const populatedApplicants = await Promise.all(populatePromises);
-    
+
             console.log(populatedApplicants);
             return populatedApplicants;
         } catch (error) {
@@ -258,39 +258,39 @@ class CompanyRepository {
             return { success: false, message: "Error fetching hired applicants" };
         }
     }
-    
-    async rejectedCompanies(userId:any) {
+
+    async rejectedCompanies(userId: any) {
         try {
             console.log(userId);
-    
-           
+
+
             const RejectedApplicants = await applicantionModel.find({
                 email: userId,
                 Status: 'Rejected',
             });
-    
-            
+
+
             if (!RejectedApplicants || RejectedApplicants.length === 0) {
                 return [];
             }
-    
-           
+
+
             const populatePromises = RejectedApplicants.map(async (applicant) => {
                 const [jobDetails, companyDetails] = await Promise.all([
                     jobModel.findById(applicant.jobId, 'jobTitle'),
                     companyModel.findById(applicant.companyId, 'companyName location'),
                 ]);
-    
+
                 return {
                     ...applicant.toObject(),
                     jobDetails,
                     companyDetails,
                 };
             });
-    
-  
+
+
             const populatedApplicants = await Promise.all(populatePromises);
-    
+
             console.log(populatedApplicants);
             return populatedApplicants;
         } catch (error) {
@@ -298,7 +298,7 @@ class CompanyRepository {
             return { success: false, message: "Error fetching hired applicants" };
         }
     }
-    async inreviewCompanies(userId:any) {
+    async inreviewCompanies(userId: any) {
         try {
             const Inreview = await applicantionModel.find({
                 email: userId,
@@ -306,23 +306,23 @@ class CompanyRepository {
             });
             if (!Inreview || Inreview.length === 0) {
                 return [];
-            }       
+            }
             const populatePromises = Inreview.map(async (applicant) => {
                 const [jobDetails, companyDetails] = await Promise.all([
                     jobModel.findById(applicant.jobId, 'jobTitle'),
                     companyModel.findById(applicant.companyId, 'companyName location'),
                 ]);
-    
+
                 return {
                     ...applicant.toObject(),
                     jobDetails,
                     companyDetails,
                 };
             });
-    
-  
+
+
             const populatedApplicants = await Promise.all(populatePromises);
-    
+
             console.log(populatedApplicants);
             return populatedApplicants;
         } catch (error) {
@@ -330,40 +330,40 @@ class CompanyRepository {
             return { success: false, message: "Error fetching hired applicants" };
         }
     }
-    
-    
-    async interviewCompanies(userId:any) {
+
+
+    async interviewCompanies(userId: any) {
         try {
             console.log(userId);
-    
-           
+
+
             const interview = await applicantionModel.find({
                 email: userId,
                 Status: 'Interview',
             });
-    
-            
+
+
             if (!interview || interview.length === 0) {
                 return [];
             }
-    
-           
+
+
             const populatePromises = interview.map(async (applicant) => {
                 const [jobDetails, companyDetails] = await Promise.all([
                     jobModel.findById(applicant.jobId, 'jobTitle'),
                     companyModel.findById(applicant.companyId, 'companyName location'),
                 ]);
-    
+
                 return {
                     ...applicant.toObject(),
                     jobDetails,
                     companyDetails,
                 };
             });
-    
-  
+
+
             const populatedApplicants = await Promise.all(populatePromises);
-    
+
             console.log(populatedApplicants);
             return populatedApplicants;
         } catch (error) {
@@ -371,11 +371,27 @@ class CompanyRepository {
             return { success: false, message: "Error fetching hired applicants" };
         }
     }
-    
+
     async companyDetails(companyId: any) {
         try {
-            const result = await companyModel.find({_id:companyId})
+            const result = await companyModel.find({ _id: companyId })
             return result;
+        } catch (error) {
+            console.error('Error updating applicant status:', error);
+            return { success: false, message: "Error updating applicant status" };
+        }
+    }
+
+    async applicantDetails(applicantId: any) {
+        try {
+            const applicantDetails = await applicantionModel.findById(applicantId);
+
+            if (!applicantDetails) {
+                return { success: false, message: "No user" };
+            }
+console.log(applicantDetails);
+
+            return applicantDetails
         } catch (error) {
             console.error('Error updating applicant status:', error);
             return { success: false, message: "Error updating applicant status" };

@@ -29,5 +29,4 @@ userRoute.delete('/removeSkill', authenticateToken,userController.removeSkill.bi
 
 
 
-
 export default userRoute

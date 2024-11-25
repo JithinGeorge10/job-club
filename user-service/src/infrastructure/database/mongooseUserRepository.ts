@@ -16,7 +16,7 @@ class UserRepository {
     }
     async getUser(userId: User) {
         try {
-
+            console.log(userId)
 
             const [userDetails, userProfile] = await Promise.all([
                 userModel.findOne({ _id: userId }),
@@ -237,78 +237,78 @@ class UserRepository {
     }
     async removeEmployment(userId: any, employmentId: any) {
         try {
-          console.log('User ID:', userId);
-          console.log('Employment ID:', employmentId);
-          const userIdObject = new mongoose.Types.ObjectId(userId);
-          const employmentIdObject = new mongoose.Types.ObjectId(employmentId);
-      
-          const result = await UserProfileModel.updateOne(
-            { userId: userIdObject },
-            { $pull: { employment_details: { _id: employmentIdObject } } }
-          );
-      
-          console.log('Update Result:', result);
-      
-          if (result.modifiedCount > 0) {
-            console.log(`Employment ID ${employmentId} removed successfully for user ${userId}.`);
-            return { success: true, message: 'Employment removed successfully' };
-          } else {
-            console.log(`No matching employment ID ${employmentId} found for user ${userId}.`);
-            return { success: false, message: 'No matching employment found' };
-          }
+            console.log('User ID:', userId);
+            console.log('Employment ID:', employmentId);
+            const userIdObject = new mongoose.Types.ObjectId(userId);
+            const employmentIdObject = new mongoose.Types.ObjectId(employmentId);
+
+            const result = await UserProfileModel.updateOne(
+                { userId: userIdObject },
+                { $pull: { employment_details: { _id: employmentIdObject } } }
+            );
+
+            console.log('Update Result:', result);
+
+            if (result.modifiedCount > 0) {
+                console.log(`Employment ID ${employmentId} removed successfully for user ${userId}.`);
+                return { success: true, message: 'Employment removed successfully' };
+            } else {
+                console.log(`No matching employment ID ${employmentId} found for user ${userId}.`);
+                return { success: false, message: 'No matching employment found' };
+            }
         } catch (error) {
-          console.error('Error removing employment:', error);
-          throw error;
+            console.error('Error removing employment:', error);
+            throw error;
         }
-      }
+    }
 
 
 
-      async removeEducation(userId: any, educationId: any) {
+    async removeEducation(userId: any, educationId: any) {
         try {
-          console.log('User ID:', userId);
-          console.log('Employment ID:', educationId);
-          const userIdObject = new mongoose.Types.ObjectId(userId);
-          const educationIdObject = new mongoose.Types.ObjectId(educationId);
-      
-          const result = await UserProfileModel.updateOne(
-            { userId: userIdObject },
-            { $pull: { education_details: { _id: educationIdObject } } }
-          );
-      
-          console.log('Update Result:', result);
-      
-          if (result.modifiedCount > 0) {
-            console.log(`Employment ID ${educationId} removed successfully for user ${userId}.`);
-            return { success: true, message: 'Employment removed successfully' };
-          } else {
-            console.log(`No matching employment ID ${educationId} found for user ${userId}.`);
-            return { success: false, message: 'No matching employment found' };
-          }
+            console.log('User ID:', userId);
+            console.log('Employment ID:', educationId);
+            const userIdObject = new mongoose.Types.ObjectId(userId);
+            const educationIdObject = new mongoose.Types.ObjectId(educationId);
+
+            const result = await UserProfileModel.updateOne(
+                { userId: userIdObject },
+                { $pull: { education_details: { _id: educationIdObject } } }
+            );
+
+            console.log('Update Result:', result);
+
+            if (result.modifiedCount > 0) {
+                console.log(`Employment ID ${educationId} removed successfully for user ${userId}.`);
+                return { success: true, message: 'Employment removed successfully' };
+            } else {
+                console.log(`No matching employment ID ${educationId} found for user ${userId}.`);
+                return { success: false, message: 'No matching employment found' };
+            }
         } catch (error) {
-          console.error('Error removing employment:', error);
-          throw error;
+            console.error('Error removing employment:', error);
+            throw error;
         }
-      }
-      
+    }
 
 
-      async removeSkill(userId:any, skill:any) {
+
+    async removeSkill(userId: any, skill: any) {
         try {
             console.log('User ID:', userId);
             console.log('Skill to remove:', skill);
-    
-         
+
+
             const result = await UserProfileModel.updateOne(
                 { userId: userId },
                 { $pull: { skills: skill } }
             );
-    
+
             if (result.modifiedCount === 0) {
                 console.log('Skill not found or user does not exist.');
                 return { message: 'Skill not removed. Either skill does not exist or invalid user.' };
             }
-    
+
             console.log('Skill removed successfully.');
             return { message: 'Skill removed successfully.' };
         } catch (error) {
@@ -316,9 +316,9 @@ class UserRepository {
             throw error;
         }
     }
-    
-      
-      
+
+
+
 
     async expireSubscriptions() {
         const now = new Date();

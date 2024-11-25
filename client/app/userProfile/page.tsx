@@ -37,6 +37,8 @@ const Profile = () => {
 
   const searchParams = useSearchParams();
   const userId = searchParams.get('id');
+  const [isLoading, setIsLoading] = useState(false);
+  const [resumeIsLoading, resumeSetIsLoading] = useState(false);
   const [userDetails, setUserDetails] = useState<any | null>(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -131,11 +133,12 @@ const Profile = () => {
 
     formData.append('resume', selectedFile);
     formData.append('userId', userId);
+    resumeSetIsLoading(true);
     try {
 
       let uploadImageUrl = await uploadImagesToFireStore(selectedFile)
       if (uploadImageUrl) {
-        const response = await axios.post(`${USER_SERVICE_URL}/add-resume`, { uploadImageUrl, userId }, {
+        await axios.post(`${USER_SERVICE_URL}/add-resume`, { uploadImageUrl, userId }, {
           headers: {
             'Content-Type': 'application/json'
           },
@@ -146,6 +149,8 @@ const Profile = () => {
     } catch (error) {
       console.error('Error uploading the file:', error);
       toast.error('Error uploading the resume')
+    } finally {
+      resumeSetIsLoading(false);
     }
   };
 
@@ -169,31 +174,34 @@ const Profile = () => {
       toast.info('Please select a valid image file (JPEG or PNG)');
     }
   };
-
   const handleImageUpload = async () => {
     if (!selectedImage) {
       toast.info('Please select an image file to upload');
       return;
     }
+    setIsLoading(true);
     try {
       const uploadImageUrl = await uploadImagesToFireStore(selectedImage);
 
       if (uploadImageUrl) {
-        const response = await axios.post(`${USER_SERVICE_URL}/add-profile-image`, { uploadImageUrl, userId }, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          withCredentials: true,
-        });
+        await axios.post(`${USER_SERVICE_URL}/add-profile-image`,
+          { uploadImageUrl, userId },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+          }
+        );
         toast.success('Profile image uploaded successfully');
       }
-
     } catch (error) {
       console.error('Error uploading the image:', error);
       toast.error('Error uploading the profile image');
+    } finally {
+      setIsLoading(false);
     }
   };
-
   const handlePayment = () => {
     console.log(userDetails.profile)
     const isProfileComplete = userDetails?.profile?.profileImage &&
@@ -351,14 +359,25 @@ const Profile = () => {
                     onChange={handleImageChange}
                     className="mb-4"
                   />
-                  <button onClick={handleImageUpload} className="bg-green-500 text-black px-4 py-2 rounded mt-4">
-                    Upload Image
+                  <button
+                    onClick={handleImageUpload}
+                    className="bg-green-500 text-black px-4 py-2 rounded mt-4 flex items-center justify-center disabled:opacity-50"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      'Please wait...'
+                    ) : (
+                      'Upload Image'
+                    )}
                   </button>
                 </div>
               </div>
             </div>
             <div className="space-y-2 text-right">
-              <p>📞 {userDetails?.phone}</p>
+            {userDetails?.phone && userDetails.phone !== 0 ? (
+  <p>📞 {userDetails.phone}</p>
+) : null}
+
               <p>✉️ {userDetails?.email}</p>
             </div>
           </div>
@@ -388,8 +407,16 @@ const Profile = () => {
                 className="mb-4"
                 onChange={handleFileChange}
               />
-              <button onClick={handleFileUpload} className="bg-green-500 text-black px-4 py-2 rounded mt-4">
-                Update Resume.
+              <button
+                onClick={handleFileUpload}
+                className="bg-green-500 text-black px-4 py-2 rounded mt-4 flex items-center justify-center disabled:opacity-50"
+                disabled={resumeIsLoading}
+              >
+                {resumeIsLoading ? (
+                  <span className="animate-pulse">Please wait...</span>
+                ) : (
+                  'Update Resume.'
+                )}
               </button>
               <p className="text-gray-400 mt-2">Supported formats: pdf, up to 2 MB</p>
             </div>
