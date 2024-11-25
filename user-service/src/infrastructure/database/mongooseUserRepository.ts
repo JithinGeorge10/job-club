@@ -16,7 +16,7 @@ class UserRepository {
     }
     async getUser(userId: User) {
         try {
-          
+
 
             const [userDetails, userProfile] = await Promise.all([
                 userModel.findOne({ _id: userId }),
@@ -36,7 +36,7 @@ class UserRepository {
             throw error;
         }
     }
-    async addEmployment(userData: any,userIdFromToken:any) {
+    async addEmployment(userData: any, userIdFromToken: any) {
         try {
             const { companyName, jobTitle, experience, salary, skills, fromDate, toDate } = userData.data;
             const employmentDetails = {
@@ -55,7 +55,7 @@ class UserRepository {
             throw error;
         }
     }
-    async addEducation(educationData: any,userIdFromToken:any) {
+    async addEducation(educationData: any, userIdFromToken: any) {
         try {
             const { education, university, course, specialization, courseType, cgpa, fromYear, toYear } = educationData.data;
             const educationDetails = {
@@ -76,11 +76,11 @@ class UserRepository {
 
 
 
-    async addSkills(educationData: any,userIdFromToken:any) {
+    async addSkills(educationData: any, userIdFromToken: any) {
         try {
-         
 
-            const {  skills } = educationData;
+
+            const { skills } = educationData;
 
             const updateResult = await UserProfileModel.updateOne(
                 { userId: userIdFromToken },
@@ -101,7 +101,7 @@ class UserRepository {
 
     async addResume(resume: any) {
         try {
-            
+
             const { uploadImageUrl, userId } = resume;
             const addResume = await UserProfileModel.updateOne(
                 { userId },
@@ -118,7 +118,7 @@ class UserRepository {
     }
     async addProfileImage(resume: any) {
         try {
-           
+
 
             const { uploadImageUrl, userId } = resume;
             const addResume = await UserProfileModel.updateOne(
@@ -134,9 +134,9 @@ class UserRepository {
             throw error;
         }
     }
-    async deleteResume(userIdFromToken:any) {
+    async deleteResume(userIdFromToken: any) {
         try {
-            
+
             const deleteResume = await UserProfileModel.updateOne(
                 { userIdFromToken },
                 { $unset: { resume: "" } }
@@ -152,7 +152,8 @@ class UserRepository {
 
     async startPayment(userId: any) {
         try {
-           
+            console.log('payment started');
+
             const actualUserId = new mongoose.Types.ObjectId(userId.userId);
 
             const result = await userPaymentModel.findOneAndUpdate(
@@ -170,7 +171,7 @@ class UserRepository {
 
     async successPayment(userDetails: any) {
         try {
-           
+            console.log('payment success');
             const actualUserId = new mongoose.Types.ObjectId(userDetails.productinfo);
 
             const result = await userPaymentModel.findOneAndUpdate(
@@ -182,7 +183,7 @@ class UserRepository {
                 },
                 { upsert: true, new: true, setDefaultsOnInsert: true }
             );
-            const oneYearFromNow = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000); 
+            const oneYearFromNow = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
 
 
             await UserProfileModel.updateOne(
@@ -255,7 +256,7 @@ class UserRepository {
             console.log(error);
         }
     }
-    
+
     async subscriberList() {
         try {
             const result = await UserProfileModel.aggregate([
@@ -265,20 +266,20 @@ class UserRepository {
                 {
                     $lookup: {
                         from: "users",
-                        localField: "userId", 
-                        foreignField: "_id", 
+                        localField: "userId",
+                        foreignField: "_id",
                         as: "userDetails"
                     }
                 },
                 {
                     $project: {
-                        userId: 1, 
-                        subscriber: 1, 
+                        userId: 1,
+                        subscriber: 1,
                         userDetails: {
-                            _id: 1, 
+                            _id: 1,
                             firstName: 1,
-                            lastName:1,
-                            phone:1,
+                            lastName: 1,
+                            phone: 1,
                             email: 1
                         }
                     }
@@ -290,7 +291,7 @@ class UserRepository {
             throw error;
         }
     }
-    
+
 }
 const getUserRepository = new UserRepository();
 

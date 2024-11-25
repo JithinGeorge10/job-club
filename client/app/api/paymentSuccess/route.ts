@@ -4,6 +4,8 @@ import { NextApiResponse } from "next";
 import { redirect } from "next/navigation";
 
 export async function POST(req: any, res: NextApiResponse) {
+  console.log('reached suuccesssss');
+  
   const contentType = req.headers.get("content-type") || "";
 
   const formData = await req.formData();
@@ -12,6 +14,7 @@ export async function POST(req: any, res: NextApiResponse) {
   formData.forEach((value: any, key: string) => {
     data[key] = value;
   });
+console.log(data);
 
   let response = await axios.post(`${USER_SERVICE_URL}/paymentSuccess`, data, {
     headers: {

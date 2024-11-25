@@ -40,10 +40,9 @@ function Page() {
         socket.emit("joinRoom", roomId);
     
         const handleReceiveMessage = (msg: Message) => {
-            // If the message has no timestamp, assign the current timestamp once
             const messageWithTimestamp = {
                 ...msg,
-                timestamp: msg.timestamp || new Date().toISOString() // Set timestamp if missing
+                timestamp: msg.timestamp || new Date().toISOString() 
             };
     
             setMessages(prevMessages => {
@@ -68,7 +67,7 @@ function Page() {
                 if (prevMessages.length === 0) {
                     return response.data.getMessages.map((msg: { timestamp: any }) => ({
                         ...msg,
-                        timestamp: msg.timestamp || new Date().toISOString() // Set timestamp if missing in fetched messages
+                        timestamp: msg.timestamp || new Date().toISOString() 
                     }));
                 }
                 return prevMessages;

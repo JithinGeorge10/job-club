@@ -213,7 +213,7 @@ function Page() {
                             onClick={() => handleRoomClick(room.roomId)}
                         >
                             <div className="flex-1">
-                                <p className="text-black font-semibold">{room.firstName} {room.lastName || ''}</p>
+                                <p className="text-black font-semibold">{room.firstName}</p>
                                 <p className="text-black text-sm">{room.lastMessage || 'No message'}</p>
                             </div>
                         </div>

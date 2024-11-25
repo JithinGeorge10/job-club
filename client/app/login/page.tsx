@@ -159,7 +159,7 @@ function Page() {
             onClick={handleSignup}
             className="w-full bg-green-900 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
           >
-            Already have an account? Sign Up
+            New User? Sign Up
           </button>
           <button
             onClick={handleGoogleLogin}

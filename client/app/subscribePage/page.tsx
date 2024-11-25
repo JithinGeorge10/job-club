@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import CryptoJS from 'crypto-js';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
-import { USER_SERVICE_URL,PAYU_MERCHANT_KEY ,PAYU_MERCHANT_SALT,PUBLIC_PAYMENT_SUCCESS_URL,PUBLIC_PAYMENT_FAILURE_URL} from '@/utils/constants';
+import { USER_SERVICE_URL, PAYU_MERCHANT_KEY, PAYU_MERCHANT_SALT, PUBLIC_PAYMENT_SUCCESS_URL, PUBLIC_PAYMENT_FAILURE_URL } from '@/utils/constants';
 
 const PaymentPage = () => {
   const searchParams = useSearchParams();
@@ -26,8 +26,8 @@ const PaymentPage = () => {
     if (!txnid) return;
 
 
-    
-    const key = PAYU_MERCHANT_KEY;
+
+    const key = 'hLAGgn';
     const amount = '999';
     const productinfo = userId;
     const firstname = firstName || '';
@@ -37,7 +37,7 @@ const PaymentPage = () => {
     const udf3 = '';
     const udf4 = '';
     const udf5 = '';
-    const salt = PAYU_MERCHANT_SALT;
+    const salt = 'r9i1EoMfQy968ezHT4wch5ouStEp8o1l'
 
     const hashString = `${key}|${txnid}|${amount}|${productinfo}|${firstname}|${userEmail}|${udf1}|${udf2}|${udf3}|${udf4}|${udf5}||||||${salt}`;
     const generatedHash = CryptoJS.SHA512(hashString).toString();
@@ -46,7 +46,7 @@ const PaymentPage = () => {
   }, [txnid]);
 
   const handlePayment = async () => {
-    const response = await axios.post(`${USER_SERVICE_URL}/start-payment`, { userId }, {
+    const response = await axios.post(`${USER_SERVICE_URL}/start-payment`, { userId,txnid }, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -56,22 +56,24 @@ const PaymentPage = () => {
 
 
     const formData = {
-      key: PAYU_MERCHANT_KEY,
+      key: 'hLAGgn',
       txnid: txnid,
       productinfo: userId,
       amount: '999',
       email: email,
       firstname: firstName,
       lastname: lastName,
-      surl: PUBLIC_PAYMENT_SUCCESS_URL,
-      furl: PUBLIC_PAYMENT_FAILURE_URL,
+      surl: 'http://localhost:3000/api/paymentSuccess',
+      furl: 'http://localhost:3000/api/paymentFailure',
       phone: phone,
       hash: hash,
     };
 
     const form = document.createElement('form');
+    console.log(form)
     form.method = 'POST';
     form.action = 'https://test.payu.in/_payment';
+ 
 
     Object.keys(formData).forEach((key) => {
       const input = document.createElement('input');
