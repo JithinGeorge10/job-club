@@ -208,6 +208,23 @@ export class UserController {
             next(error)
         }
     }
+    async removeSkill(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
+        try {
+      
+            const { skill } = req.body
+            const userIdFromToken = req.user?.user;
+            if (userIdFromToken) {
+                const removeSkill = await this.userService.removeSkill(userIdFromToken, skill)
+                res.status(200).send({ removeSkill })
+            } else {
+                console.error('User ID not found');
+                throw new Error('User ID is required.');
+            }
+        } catch (error) {
+            next(error)
+        }
+    }
+    
     
     async subscriberList(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {

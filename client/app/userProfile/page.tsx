@@ -7,6 +7,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { uploadImagesToFireStore } from '../../utils/fireStore'
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
+import Footer from '../components/footer/footer';
 
 const Profile = () => {
 
@@ -221,7 +222,7 @@ const Profile = () => {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, delete it!',
       });
-  
+
       if (result.isConfirmed) {
         const response = await axios.delete(`${USER_SERVICE_URL}/removeEmployment`, {
           headers: {
@@ -230,10 +231,10 @@ const Profile = () => {
           withCredentials: true,
           data: { employmentId },
         });
-  
+
         Swal.fire('Deleted!', 'Employment detail has been deleted.', 'success');
-        
-    
+
+
         setTimeout(() => {
           window.location.reload();
         }, 2000);
@@ -243,11 +244,10 @@ const Profile = () => {
       Swal.fire('Error!', 'Failed to delete employment detail.', 'error');
     }
   };
-  
 
-  const handleDeleteEducation=async(educationId:any)=>{
+
+  const handleDeleteEducation = async (educationId: any) => {
     try {
-      console.log(educationId)
       const result = await Swal.fire({
         title: 'Are you sure?',
         text: 'Do you want to delete this education detail?',
@@ -257,7 +257,7 @@ const Profile = () => {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, delete it!',
       });
-  
+
       if (result.isConfirmed) {
         const response = await axios.delete(`${USER_SERVICE_URL}/removeEducation`, {
           headers: {
@@ -266,10 +266,10 @@ const Profile = () => {
           withCredentials: true,
           data: { educationId },
         });
-  
+
         Swal.fire('Deleted!', 'Employment detail has been deleted.', 'success');
-        
-    
+
+
         setTimeout(() => {
           window.location.reload();
         }, 2000);
@@ -280,6 +280,41 @@ const Profile = () => {
     }
   }
 
+
+  const handleDeleteSkill = async (skill: any) => {
+    try {
+      console.log(skill)
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you want to delete this education detail?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+      });
+
+      if (result.isConfirmed) {
+        const response = await axios.delete(`${USER_SERVICE_URL}/removeSkill`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true,
+          data: { skill },
+        });
+
+        Swal.fire('Deleted!', 'Employment detail has been deleted.', 'success');
+
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error deleting employment:', error);
+      Swal.fire('Error!', 'Failed to delete employment detail.', 'error');
+    }
+  }
   return (
     <>
       <Navbar></Navbar>
@@ -397,25 +432,25 @@ const Profile = () => {
             </div>
 
             {userDetails?.profile?.education_details && userDetails.profile.education_details.length > 0 ? (
-  userDetails.profile.education_details.map((education: EducationDetail, index: number) => (
-    <div key={index} className="mt-4">
-      <h4 className="font-semibold">{education.education}</h4>
-      <p>{education.course}</p>
-      <p>{education.university}</p>
-      <p className="text-gray-400">
-        {formatYear(education.fromYear)} to {formatYear(education.toYear)}
-      </p>
-      <button
-        className="mt-2 text-red-500 hover:text-red-700"
-        onClick={() => handleDeleteEducation(education._id)}
-      >
-        Delete
-      </button>
-    </div>
-  ))
-) : (
-  <p>No education details available</p>
-)}
+              userDetails.profile.education_details.map((education: EducationDetail, index: number) => (
+                <div key={index} className="mt-4">
+                  <h4 className="font-semibold">{education.education}</h4>
+                  <p>{education.course}</p>
+                  <p>{education.university}</p>
+                  <p className="text-gray-400">
+                    {formatYear(education.fromYear)} to {formatYear(education.toYear)}
+                  </p>
+                  <button
+                    className="mt-2 text-red-500 hover:text-red-700"
+                    onClick={() => handleDeleteEducation(education._id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p>No education details available</p>
+            )}
 
           </div>
 
@@ -425,19 +460,34 @@ const Profile = () => {
               <button onClick={handleSkill} className="text-green-500">Add Skill</button>
             </div>
             <div className="flex flex-wrap gap-2 mt-4">
-              {userDetails && userDetails.profile && userDetails.profile.skills && userDetails.profile.skills.length > 0 ? (
+              {userDetails &&
+                userDetails.profile &&
+                userDetails.profile.skills &&
+                userDetails.profile.skills.length > 0 ? (
                 userDetails.profile.skills.map((skill: string, index: number) => (
-                  <span key={index} className="bg-green-600 px-4 py-2 rounded-full text-black">
+                  <span
+                    key={index}
+                    className="bg-green-600 px-4 py-2 rounded-full text-black inline-flex items-center mr-2 mb-2"
+                  >
                     {skill}
+                    <button
+                      onClick={() => handleDeleteSkill(skill)}
+                      className="ml-2 text-black-500 hover:text-red-700 font-bold"
+                    >
+                      X
+                    </button>
                   </span>
                 ))
               ) : (
                 <span className="text-gray-400">No skills added</span>
               )}
+
             </div>
           </div>
         </div>
       </div >
+      <br />
+      <Footer />
     </>
   );
 };

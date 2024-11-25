@@ -117,6 +117,14 @@ export class UserService {
         }
     }
     
+    async removeSkill(userId:any,skill: any) {
+        try {
+            const removeSkill = await UserRepository.removeSkill(userId,skill)
+            return removeSkill
+        } catch (error) {
+            throw error
+        }
+    }
     
     async handleSubscriptionExpiry() {
         return await UserRepository.expireSubscriptions();

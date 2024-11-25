@@ -291,6 +291,35 @@ class UserRepository {
         }
       }
       
+
+
+      async removeSkill(userId:any, skill:any) {
+        try {
+            console.log('User ID:', userId);
+            console.log('Skill to remove:', skill);
+    
+         
+            const result = await UserProfileModel.updateOne(
+                { userId: userId },
+                { $pull: { skills: skill } }
+            );
+    
+            if (result.modifiedCount === 0) {
+                console.log('Skill not found or user does not exist.');
+                return { message: 'Skill not removed. Either skill does not exist or invalid user.' };
+            }
+    
+            console.log('Skill removed successfully.');
+            return { message: 'Skill removed successfully.' };
+        } catch (error) {
+            console.error('Error removing skill:', error);
+            throw error;
+        }
+    }
+    
+      
+      
+
     async expireSubscriptions() {
         const now = new Date();
 
