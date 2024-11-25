@@ -6,6 +6,7 @@ import { USER_SERVICE_URL } from '@/utils/constants';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { uploadImagesToFireStore } from '../../utils/fireStore'
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 
 const Profile = () => {
 
@@ -21,13 +22,16 @@ const Profile = () => {
     companyName: string;
     fromDate: string;
     toDate: string;
+    _id: String;
   }
   interface EducationDetail {
+    id(id: any): void;
     education: string;
     course: string;
     fromYear: string;
     university: string,
     toYear: string;
+    _id: String;
   }
 
   const searchParams = useSearchParams();
@@ -206,6 +210,76 @@ const Profile = () => {
     router.push(`/subscribePage?firstName=${userDetails?.firstName}&lastName=${userDetails?.lastName}&userId=${userDetails?._id}&email=${userDetails?.email}&phone=${userDetails?.phone}`);
   };
 
+  const handleDeleteEmployment = async (employmentId: any) => {
+    try {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you want to delete this employment detail?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+      });
+  
+      if (result.isConfirmed) {
+        const response = await axios.delete(`${USER_SERVICE_URL}/removeEmployment`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true,
+          data: { employmentId },
+        });
+  
+        Swal.fire('Deleted!', 'Employment detail has been deleted.', 'success');
+        
+    
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error deleting employment:', error);
+      Swal.fire('Error!', 'Failed to delete employment detail.', 'error');
+    }
+  };
+  
+
+  const handleDeleteEducation=async(educationId:any)=>{
+    try {
+      console.log(educationId)
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you want to delete this education detail?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+      });
+  
+      if (result.isConfirmed) {
+        const response = await axios.delete(`${USER_SERVICE_URL}/removeEducation`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true,
+          data: { educationId },
+        });
+  
+        Swal.fire('Deleted!', 'Employment detail has been deleted.', 'success');
+        
+    
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error deleting employment:', error);
+      Swal.fire('Error!', 'Failed to delete employment detail.', 'error');
+    }
+  }
+
   return (
     <>
       <Navbar></Navbar>
@@ -300,7 +374,12 @@ const Profile = () => {
                     <p>{employment.companyName}</p>
                     <p className="text-gray-400">{formatDate(employment.fromDate)} to {formatDate(employment.toDate)}</p>
                   </div>
-
+                  <button
+                    onClick={() => handleDeleteEmployment(employment._id)}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
                 </div>
               ))
             ) : (
@@ -318,17 +397,26 @@ const Profile = () => {
             </div>
 
             {userDetails?.profile?.education_details && userDetails.profile.education_details.length > 0 ? (
-              userDetails.profile.education_details.map((education: EducationDetail, index: number) => (
-                <div key={index} className="mt-4">
-                  <h4 className="font-semibold">{education.education}</h4>
-                  <p>{education.course}</p>
-                  <p>{education.university}</p>
-                  <p className="text-gray-400">{formatYear(education.fromYear)} to {formatYear(education.toYear)}</p>
-                </div>
-              ))
-            ) : (
-              <p>No education details available</p>
-            )}
+  userDetails.profile.education_details.map((education: EducationDetail, index: number) => (
+    <div key={index} className="mt-4">
+      <h4 className="font-semibold">{education.education}</h4>
+      <p>{education.course}</p>
+      <p>{education.university}</p>
+      <p className="text-gray-400">
+        {formatYear(education.fromYear)} to {formatYear(education.toYear)}
+      </p>
+      <button
+        className="mt-2 text-red-500 hover:text-red-700"
+        onClick={() => handleDeleteEducation(education._id)}
+      >
+        Delete
+      </button>
+    </div>
+  ))
+) : (
+  <p>No education details available</p>
+)}
+
           </div>
 
           <div className="bg-gray-800 rounded-lg p-6 mt-6">

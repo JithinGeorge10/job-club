@@ -176,6 +176,39 @@ export class UserController {
             next(error)
         }
     }
+    async removeEmployment(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
+        try {
+            console.log(req.body)
+            const { employmentId } = req.body
+            const userIdFromToken = req.user?.user;
+            if (userIdFromToken) {
+                const removeEmployment = await this.userService.removeEmployment(userIdFromToken, employmentId)
+                res.status(200).send({ removeEmployment })
+            } else {
+                console.error('User ID not found');
+                throw new Error('User ID is required.');
+            }
+        } catch (error) {
+            next(error)
+        }
+    }
+    async removeEducation(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
+        try {
+            console.log(req.body)
+            const { educationId } = req.body
+            const userIdFromToken = req.user?.user;
+            if (userIdFromToken) {
+                const removeEducation = await this.userService.removeEducation(userIdFromToken, educationId)
+                res.status(200).send({ removeEducation })
+            } else {
+                console.error('User ID not found');
+                throw new Error('User ID is required.');
+            }
+        } catch (error) {
+            next(error)
+        }
+    }
+    
     async subscriberList(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
             console.log(req.user)

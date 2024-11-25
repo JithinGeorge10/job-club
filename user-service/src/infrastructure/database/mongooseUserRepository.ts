@@ -235,6 +235,62 @@ class UserRepository {
             throw error;
         }
     }
+    async removeEmployment(userId: any, employmentId: any) {
+        try {
+          console.log('User ID:', userId);
+          console.log('Employment ID:', employmentId);
+          const userIdObject = new mongoose.Types.ObjectId(userId);
+          const employmentIdObject = new mongoose.Types.ObjectId(employmentId);
+      
+          const result = await UserProfileModel.updateOne(
+            { userId: userIdObject },
+            { $pull: { employment_details: { _id: employmentIdObject } } }
+          );
+      
+          console.log('Update Result:', result);
+      
+          if (result.modifiedCount > 0) {
+            console.log(`Employment ID ${employmentId} removed successfully for user ${userId}.`);
+            return { success: true, message: 'Employment removed successfully' };
+          } else {
+            console.log(`No matching employment ID ${employmentId} found for user ${userId}.`);
+            return { success: false, message: 'No matching employment found' };
+          }
+        } catch (error) {
+          console.error('Error removing employment:', error);
+          throw error;
+        }
+      }
+
+
+
+      async removeEducation(userId: any, educationId: any) {
+        try {
+          console.log('User ID:', userId);
+          console.log('Employment ID:', educationId);
+          const userIdObject = new mongoose.Types.ObjectId(userId);
+          const educationIdObject = new mongoose.Types.ObjectId(educationId);
+      
+          const result = await UserProfileModel.updateOne(
+            { userId: userIdObject },
+            { $pull: { education_details: { _id: educationIdObject } } }
+          );
+      
+          console.log('Update Result:', result);
+      
+          if (result.modifiedCount > 0) {
+            console.log(`Employment ID ${educationId} removed successfully for user ${userId}.`);
+            return { success: true, message: 'Employment removed successfully' };
+          } else {
+            console.log(`No matching employment ID ${educationId} found for user ${userId}.`);
+            return { success: false, message: 'No matching employment found' };
+          }
+        } catch (error) {
+          console.error('Error removing employment:', error);
+          throw error;
+        }
+      }
+      
     async expireSubscriptions() {
         const now = new Date();
 

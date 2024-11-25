@@ -99,6 +99,24 @@ export class UserService {
             throw error
         }
     }
+
+    async removeEmployment(userId:any,employmentId: any) {
+        try {
+            const removeEmployment = await UserRepository.removeEmployment(userId,employmentId)
+            return removeEmployment
+        } catch (error) {
+            throw error
+        }
+    }
+    async removeEducation(userId:any,educationId: any) {
+        try {
+            const removeEducation = await UserRepository.removeEducation(userId,educationId)
+            return removeEducation
+        } catch (error) {
+            throw error
+        }
+    }
+    
     
     async handleSubscriptionExpiry() {
         return await UserRepository.expireSubscriptions();

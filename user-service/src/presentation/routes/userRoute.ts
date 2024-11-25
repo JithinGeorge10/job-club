@@ -19,6 +19,8 @@ userRoute.post('/saveJob',authenticateToken, userController.saveJobController.bi
 userRoute.post('/applyJob',authenticateToken, userController.applyJobController.bind(userController));
 userRoute.put('/unsave-job',authenticateToken, userController.unsaveJobController.bind(userController));
 userRoute.get('/subscriberList', adminToken,userController.subscriberList.bind(userController));
+userRoute.delete('/removeEmployment', authenticateToken,userController.removeEmployment.bind(userController));
+userRoute.delete('/removeEducation', authenticateToken,userController.removeEducation.bind(userController));
 
 
 
