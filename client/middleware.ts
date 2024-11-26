@@ -38,9 +38,17 @@ export async function middleware(req: NextRequest) {
 
 
     if (url.pathname.startsWith('/userChat')
-        || url.pathname.startsWith('/userProfile')
         || url.pathname.startsWith('/reviewProfile')
+        || url.pathname.startsWith('/addEducation')
+        || url.pathname.startsWith('/addEmployment')
+        || url.pathname.startsWith('/addSkill')
         || url.pathname.startsWith('/changePassword')
+        || url.pathname.startsWith('/hiredJobs')
+        || url.pathname.startsWith('/inReviewJobs')
+        || url.pathname.startsWith('/inerviewJobs')
+        || url.pathname.startsWith('/rejectedJobs')
+        || url.pathname.startsWith('/userProfile')
+        || url.pathname.startsWith('/jobView')
         || url.pathname.startsWith('/jobListingPage') || url.pathname.startsWith('/userNotifiations')
         || url.pathname.startsWith('/myJobs') || url.pathname.startsWith('/appliedJobs')) {
         if (!isValidUser) {
@@ -49,8 +57,10 @@ export async function middleware(req: NextRequest) {
         }
     }
 
-    if (url.pathname.startsWith('/companyDashboard') || url.pathname.startsWith('/companyChat')
-        || url.pathname.startsWith('/companyApplicants') || url.pathname.startsWith('/companyJobListing')) {
+    if (url.pathname.startsWith('/companyDashboard') || url.pathname.startsWith('/companyChat') || url.pathname.startsWith('/applicantDetails')
+        || url.pathname.startsWith('/companyApplicants') || url.pathname.startsWith('/companyJobListing') || url.pathname.startsWith('/companyManagement')
+        || url.pathname.startsWith('/companyProfile') || url.pathname.startsWith('/editJob')
+    ) {
         if (!isValidCompany) {
             url.pathname = '/companyLogin';
             return NextResponse.redirect(url);
