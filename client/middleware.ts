@@ -35,8 +35,6 @@ export async function middleware(req: NextRequest) {
         return NextResponse.next();
     }
 
-
-
     if (url.pathname.startsWith('/userChat')
         || url.pathname.startsWith('/reviewProfile')
         || url.pathname.startsWith('/addEducation')
