@@ -9,7 +9,7 @@ export async function middleware(req: NextRequest) {
     const isValidCompany = await companyVerifyToken("companyAccessToken", req);
     const isValidadmin = await adminVerifyToken("adminAccessToken", req);
 
-    if (url.pathname.startsWith('/login') || url.pathname.startsWith('/signup')
+    if (url.pathname.startsWith('/login') || url.pathname.startsWith('/signup') || url.pathname.startsWith('/otpPage')
         || url.pathname.startsWith('/otpPage')) {
         if (isValidUser) {
             url.pathname = '/jobListingPage';
@@ -39,6 +39,7 @@ export async function middleware(req: NextRequest) {
 
     if (url.pathname.startsWith('/userChat')
         || url.pathname.startsWith('/userProfile')
+        || url.pathname.startsWith('/reviewProfile')
         || url.pathname.startsWith('/changePassword')
         || url.pathname.startsWith('/jobListingPage') || url.pathname.startsWith('/userNotifiations')
         || url.pathname.startsWith('/myJobs') || url.pathname.startsWith('/appliedJobs')) {
