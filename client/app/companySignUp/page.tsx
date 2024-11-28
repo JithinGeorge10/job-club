@@ -10,7 +10,7 @@ import { AUTH_SERVICE_URL } from '@/utils/constants'
 import Link from 'next/link';
 
 
-function page() {
+function Page() {
 
 
   type signup = {
@@ -216,4 +216,4 @@ function page() {
   )
 }
 
-export default page
+export default Page

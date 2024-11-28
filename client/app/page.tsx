@@ -4,7 +4,7 @@ import Footer from './components/footer/footer'
 import HomePage from './homePage/page'
 
 
-function page() {
+function Page() {
     return (
         <>
        
@@ -22,4 +22,4 @@ function page() {
     )
 }
 
-export default page
+export default Page

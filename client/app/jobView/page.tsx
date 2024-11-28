@@ -7,7 +7,7 @@ import { CHAT_SERVICE_URL, COMPANY_SERVICE_URL, USER_SERVICE_URL } from '@/utils
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
-function page() {
+function Page() {
 
     interface JobDetails {
         _id: String;
@@ -209,4 +209,4 @@ function page() {
     );
 }
 
-export default page;
+export default Page;
