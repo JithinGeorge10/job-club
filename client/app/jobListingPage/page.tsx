@@ -46,13 +46,14 @@ function Page() {
     fetchData();
   }, []);
 
-  const debounce = (func: Function, delay: number) => {
+  const debounce = <T extends (...args: any[]) => void>(func: T, delay: number) => {
     let timer: NodeJS.Timeout;
-    return (...args: any[]) => {
+    return (...args: Parameters<T>) => {
       clearTimeout(timer);
       timer = setTimeout(() => func(...args), delay);
     };
   };
+  
 
   const handleSearch = useCallback(() => {
     let filtered = jobDetails;

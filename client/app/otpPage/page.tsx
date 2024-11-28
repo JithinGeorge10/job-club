@@ -3,22 +3,22 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import axios from 'axios'
 import { AUTH_SERVICE_URL } from '@/utils/constants'
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation'
 
-export default function OTPVerification({ params }: { params: { email: string } }) {
+export default function OTPVerification() {
     const { register, handleSubmit } = useForm()
     const [timer, setTimer] = useState(50)
     const [showVerify, setShowVerify] = useState(true)
     const router = useRouter()
-    const searchParams = useSearchParams();
-    const email = searchParams.get('id');
-    let interval: NodeJS.Timeout;
+    const searchParams = useSearchParams()
+    const email = searchParams.get('email') // Ensure this key matches your query parameter
 
- 
+    let interval: NodeJS.Timeout
+
     const calculateTimeLeft = () => {
         const storedTime = localStorage.getItem('otpStartTime')
         const currentTime = Date.now()
@@ -69,33 +69,42 @@ export default function OTPVerification({ params }: { params: { email: string } 
     }
 
     const onSubmit = async (data: any) => {
+        if (!email) {
+            toast.error('Email not found in query parameters')
+            return
+        }
         try {
             const { otp } = data
-
-            let response = await axios.post(`${AUTH_SERVICE_URL}/verify-otp`, { otp, email }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                withCredentials: true
-            })
-            const user=response.data.verifiedUser
+            let response = await axios.post(
+                `${AUTH_SERVICE_URL}/verify-otp`,
+                { otp, email },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    withCredentials: true,
+                }
+            )
+            const user = response.data.verifiedUser
             if (response.data.success) {
-                localStorage.setItem('user',JSON.stringify(user));
+                localStorage.setItem('user', JSON.stringify(user))
                 toast.success('Account created')
                 setTimeout(() => {
-                    router.push(`jobListingPage`)//pass values as params---folder structure :jobListingPage
-                }, 3000);
+                    router.push(`jobListingPage`) //pass values as params---folder structure :jobListingPage
+                }, 3000)
             } else {
                 toast.error('Invalid OTP')
             }
-
         } catch (error) {
             console.log(error)
         }
     }
 
     const handleResend = async () => {
-
+        if (!email) {
+            toast.error('Email not found in query parameters')
+            return
+        }
         setShowVerify(true)
         setTimer(50)
         localStorage.setItem('otpStartTime', Date.now().toString())
@@ -113,11 +122,16 @@ export default function OTPVerification({ params }: { params: { email: string } 
                 }
             })
         }, 1000)
-        let response = await axios.post(`${AUTH_SERVICE_URL}/resend-otp`, {email}, {
-            headers: {
-                'Content-Type': 'application/json'
+
+        await axios.post(
+            `${AUTH_SERVICE_URL}/resend-otp`,
+            { email },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             }
-        })
+        )
     }
 
     return (
@@ -182,8 +196,6 @@ export default function OTPVerification({ params }: { params: { email: string } 
                         Resend OTP
                     </motion.button>
                 )}
-
-
             </motion.div>
         </div>
     )
