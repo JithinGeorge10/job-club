@@ -1,7 +1,7 @@
 import { User } from "../../domain/entities/user";
 import UserModel from './model/userModel';
 import otpModel from './model/otpModel';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import mongoose from "mongoose";
 import produce from "../service/producer";
 

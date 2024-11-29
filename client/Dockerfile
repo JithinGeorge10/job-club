@@ -2,11 +2,9 @@ FROM node:20.8.0
 
 WORKDIR /app
 
-# Define build argument for JWT key
 ARG JWT_KEY
 ARG NEXT_PUBLIC_APIKEY
 
-# Set the environment variable
 ENV JWT_KEY=$JWT_KEY
 ENV NEXT_PUBLIC_APIKEY=${NEXT_PUBLIC_APIKEY}
 

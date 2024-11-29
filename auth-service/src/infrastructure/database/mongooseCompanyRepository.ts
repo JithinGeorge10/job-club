@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { Company } from "../../domain/entities/company";
 import companyModel from "./model/companyModel";
 import otpModel from "./model/otpModel";
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 class companyRepository {
     async findCompanyByEmail(email: string): Promise<Company | null> {
         try {
