@@ -1,4 +1,4 @@
-import { User } from "../../domain/entities/User";
+import { User } from "../../domain/entities/user";
 import userModel from "./model/userModel";
 import mongoose from 'mongoose';
 import UserProfileModel from "./model/userProfileModel";
