@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: jithingeorge10/jobclub-user-service:latest  # Replace with your Docker image
+          ports:
+            - containerPort: 4001  # The port your user-service listens on
+          envFrom:
+            - configMapRef:
+                name: user-service-env  # Reference to the ConfigMap we'll create
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service-srv
+spec:
+  selector:
+    app: user-service
+  ports:
+    - name: user-service-port
+      protocol: TCP
+      port: 4001
+      targetPort: 4001

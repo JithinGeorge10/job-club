@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: company-service-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: company-service
+  template:
+    metadata:
+      labels:
+        app: company-service
+    spec:
+      containers:
+        - name: company-service
+          image: jithingeorge10/jobclub-company-service:latest  # Replace with your Docker image
+          ports:
+            - containerPort: 4002  # The port your company-service listens on
+          envFrom:
+            - configMapRef:
+                name: company-service-env  # Reference to the ConfigMap we'll create
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: company-service-srv
+spec:
+  selector:
+    app: company-service
+  ports:
+    - name: company-service-port
+      protocol: TCP
+      port: 4002
+      targetPort: 4002
