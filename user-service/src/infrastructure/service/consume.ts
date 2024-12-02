@@ -1,4 +1,3 @@
-
 import kafka from '../config/kafkaConfig'
 import { UserService } from '../../app/useCases/User/addUser'
 async function consume() {

@@ -15,19 +15,19 @@ spec:
     spec:
       containers:
         - name: auth-service
-          image: jithingeorge10/jobclub-auth-service:latest  # Replace with your Docker image
+          image: jithingeorge10/jobclub-auth-service:latest # Replace with your Docker image
           ports:
-            - containerPort: 4000  # The port your auth-service listens on
+            - containerPort: 4000 # The port your auth-service listens on
           envFrom:
             - configMapRef:
-                name: auth-service-env  # Reference to the ConfigMap we'll create
+                name: auth-service-env # Reference to the ConfigMap we'll create
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: auth-service-srv
 spec:
-  selector:cc
+  selector:
     app: auth-service
   ports:
     - name: auth-service-port

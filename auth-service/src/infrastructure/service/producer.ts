@@ -4,8 +4,6 @@ import {Partitioners} from 'kafkajs'
 
 async function produce(topic:string, message:any) {
     try {
-       
-        
         const producer = kafka.producer({createPartitioner: Partitioners.LegacyPartitioner})
         await producer.connect()
         await producer.send({

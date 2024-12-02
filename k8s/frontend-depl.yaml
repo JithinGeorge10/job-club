@@ -19,12 +19,12 @@ spec:
             - containerPort: 3000
           envFrom:
             - configMapRef:
-                name: frontend-env  # ConfigMap to be created in the GKE cluster
+                name: frontend-env # ConfigMap to be created in the GKE cluster
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-srv
+  name: frontend-service
 spec:
   selector:
     app: frontend
