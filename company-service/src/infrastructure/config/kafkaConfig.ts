@@ -1,7 +1,7 @@
 import {Kafka} from 'kafkajs'
 const kafka = new Kafka({
     clientId: "company-service",
-    brokers: [process.env.KAFKA_BROKER ||'localhost:9092']
+    brokers: [String(process.env.KAFKA_BROKER)]
 })
 export default kafka
 
