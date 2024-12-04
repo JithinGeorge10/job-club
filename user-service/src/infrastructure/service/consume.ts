@@ -7,7 +7,7 @@ async function consume() {
     const consumer = kafka.consumer({ groupId: "user-group" });
     await consumer.connect();
     await consumer.subscribe({
-      topics: ["add-user", 'delete-user'],
+      topics: ["add-user"],
       fromBeginning: true,
     });
     console.log("post adding user");

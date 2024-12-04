@@ -3,13 +3,25 @@ kind: Ingress
 metadata:
   name: app-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: / # Rewrite target path
-    nginx.ingress.kubernetes.io/ssl-redirect: "false" # Disable SSL for testing; remove this for production
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "http://jobclub.live, https://jobclub.live"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
+  ingressClassName: "nginx"
   rules:
-    - host: "" # Replace with your custom domain or localhost for testing
+    - host: jobclub.live # Replace with your custom domain or localhost for testing
       http:
         paths:
+          - path: /.well-known/acme-challenge/
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: cm-acme-http-solver
+                port:
+                  number: 8089
           - path: /api/auth-service/
             pathType: Prefix
             backend:
@@ -52,3 +64,7 @@ spec:
                 name: frontend-srv
                 port:
                   number: 3000
+  tls:
+    - hosts:
+        - jobclub.live
+      secretName: jobclub-live-tls

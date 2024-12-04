@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: jobclub-live-tls
+  namespace: cert-manager
+spec:
+  secretName: jobclub-live-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: jobclub.live
+  dnsNames:
+    - jobclub.live
+
+

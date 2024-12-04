@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-kafka-topics
+spec:
+  template:
+    spec:
+      containers:
+        - name: kafka-topic-creator
+          image: bitnami/kafka:latest
+          command:
+            - /bin/bash
+            - -c
+            - |
+              kafka-topics.sh --create --bootstrap-server kafka-service:9092 --replication-factor 1 --partitions 1 --topic add-user
+              kafka-topics.sh --create --bootstrap-server kafka-service:9092 --replication-factor 1 --partitions 1 --topic add-company
+      restartPolicy: Never
+  backoffLimit: 4
