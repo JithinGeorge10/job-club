@@ -7,20 +7,17 @@ spec:
   selector:
     matchLabels:
       app: auth-service
-
   template:
     metadata:
       labels:
         app: auth-service
     spec:
       containers:
-        - name: auth-service
-          image: jithingeorge10/jobclub-auth-service:latest # Replace with your Docker image
-          ports:
-            - containerPort: 4000 # The port your auth-service listens on
+        - name: auth-service-container
+          image: jithingeorge10/jobclub-auth-service
           envFrom:
             - configMapRef:
-                name: auth-service-env # Reference to the ConfigMap we'll create
+                name: auth-service-env
 ---
 apiVersion: v1
 kind: Service
@@ -30,7 +27,7 @@ spec:
   selector:
     app: auth-service
   ports:
-    - name: auth-service-port
+    - name: auth-service-ports
       protocol: TCP
       port: 4000
       targetPort: 4000

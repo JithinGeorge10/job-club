@@ -1,10 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: app-ingress
+  name: ingress-controller
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-origin: "http://jobclub.live, https://jobclub.live"
@@ -12,14 +10,14 @@ metadata:
 spec:
   ingressClassName: "nginx"
   rules:
-    - host: jobclub.live # Replace with your custom domain or localhost for testing
+    - host: jobclub.live
       http:
         paths:
           - path: /.well-known/acme-challenge/
             pathType: ImplementationSpecific
             backend:
               service:
-                name: cm-acme-http-solver
+                name: cm-acme-http-solver-jobclub
                 port:
                   number: 8089
           - path: /api/auth-service/

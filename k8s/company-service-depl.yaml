@@ -13,17 +13,11 @@ spec:
         app: company-service
     spec:
       containers:
-        - name: company-service
-          image: jithingeorge10/jobclub-company-service:latest # Replace with your Docker image
-          ports:
-            - containerPort: 4002 # The port your company-service listens on
+        - name: company-service-container
+          image: jithingeorge10/jobclub-company-service:latest
           envFrom:
             - configMapRef:
-                name: company-service-env # Reference to the ConfigMap we'll create
-          env:
-            - name: KAFKA_BROKER
-              value: "kafka-service:9092" # Update to use the Kafka service name in the cluster
-
+                name: company-service-env
 ---
 apiVersion: v1
 kind: Service
@@ -33,7 +27,7 @@ spec:
   selector:
     app: company-service
   ports:
-    - name: company-service-port
+    - name: company-service-ports
       protocol: TCP
       port: 4002
       targetPort: 4002

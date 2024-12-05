@@ -13,16 +13,11 @@ spec:
         app: user-service
     spec:
       containers:
-        - name: user-service
-          image: jithingeorge10/jobclub-user-service:latest # Replace with your Docker image
-          ports:
-            - containerPort: 4001 # The port your user-service listens on
+        - name: user-service-container
+          image: jithingeorge10/jobclub-user-service:latest
           envFrom:
             - configMapRef:
-                name: user-service-env # Reference to the ConfigMap we'll create
-          env:
-            - name: KAFKA_BROKER
-              value: kafka-service:9092 # Kubernetes service name for Kafka with port
+                name: user-service-env
 ---
 apiVersion: v1
 kind: Service
@@ -32,7 +27,7 @@ spec:
   selector:
     app: user-service
   ports:
-    - name: user-service-port
+    - name: user-service-ports
       protocol: TCP
       port: 4001
       targetPort: 4001

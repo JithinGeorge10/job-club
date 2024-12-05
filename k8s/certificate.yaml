@@ -2,7 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: jobclub-live-tls
-  namespace: cert-manager
+  namespace: default
 spec:
   secretName: jobclub-live-tls
   issuerRef:
@@ -11,5 +11,3 @@ spec:
   commonName: jobclub.live
   dnsNames:
     - jobclub.live
-
-

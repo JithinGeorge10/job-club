@@ -1,11 +1,11 @@
-import {Kafka} from 'kafkajs'
+import { Kafka } from 'kafkajs'
 const kafka = new Kafka({
     clientId: 'user-service',
-    brokers: [String(process.env.KAFKA_BROKER)]
+    brokers: [String('kafka-service:9092')],
 });
 
 export default kafka
 
- 
+
 
 

@@ -15,21 +15,19 @@ spec:
       containers:
         - name: frontend
           image: jithingeorge10/jobclub-frontend:latest
-          ports:
-            - containerPort: 3000
           envFrom:
             - configMapRef:
-                name: frontend-env # ConfigMap to be created in the GKE cluster
+                name: frontend-env
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service
+  name: frontend-srv
 spec:
   selector:
     app: frontend
   ports:
-    - name: frontend-port
+    - name: frontend-ports
       protocol: TCP
       port: 3000
       targetPort: 3000
