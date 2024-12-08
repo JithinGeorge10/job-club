@@ -18,6 +18,7 @@ export class UserController {
             const userIdFromToken = req.user?.user;
             if (userIdFromToken) {
                 const userDetails = await this.userService.getUserDetails(userIdFromToken);
+                console.log(userDetails)
                 res.status(200).send({ success: true, userDetails });
             } else {
                 console.error('User ID not found');

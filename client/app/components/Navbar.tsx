@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import { CHAT_SERVICE_URL } from '@/utils/constants';
 import io from "socket.io-client";
-const socket = io('http://localhost:4003');
+const socket = io('https://jobclub.live');
 
 function Navbar() {
   interface Room {

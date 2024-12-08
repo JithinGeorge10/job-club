@@ -14,7 +14,9 @@ spec:
     spec:
       containers:
         - name: auth-service-container
-          image: jithingeorge10/jobclub-auth-service
+          image: jithingeorge10/jobclub-auth-service:latest
+          ports:
+            - containerPort: 4000
           envFrom:
             - configMapRef:
                 name: auth-service-env

@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { CHAT_SERVICE_URL } from '@/utils/constants';
 import axios from 'axios';
 import io from "socket.io-client";
-const socket = io('http://localhost:4003');
+const socket = io('https://jobclub.live');
 
 
 interface Room {

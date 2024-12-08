@@ -5,7 +5,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/cors-allow-origin: "http://jobclub.live, https://jobclub.live"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://jobclub.live"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: "nginx"
@@ -34,13 +34,6 @@ spec:
                 name: user-service-srv
                 port:
                   number: 4001
-          - path: /api/company-service/
-            pathType: Prefix
-            backend:
-              service:
-                name: company-service-srv
-                port:
-                  number: 4002
           - path: /socket.io
             pathType: Prefix
             backend:
@@ -55,6 +48,13 @@ spec:
                 name: chat-service-srv
                 port:
                   number: 4003
+          - path: /api/company-service/
+            pathType: Prefix
+            backend:
+              service:
+                name: company-service-srv
+                port:
+                  number: 4002
           - path: /
             pathType: Prefix
             backend:
@@ -65,4 +65,4 @@ spec:
   tls:
     - hosts:
         - jobclub.live
-      secretName: jobclub-live-tls
+      secretName: jobclub-life-tls

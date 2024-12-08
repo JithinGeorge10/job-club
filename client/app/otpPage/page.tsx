@@ -15,8 +15,8 @@ export default function OTPVerification() {
     const [showVerify, setShowVerify] = useState(true)
     const router = useRouter()
     const searchParams = useSearchParams()
-    const email = searchParams.get('email') // Ensure this key matches your query parameter
-
+    const email = searchParams.get('id') // Ensure this key matches your query parameter
+    console.log(email)
     let interval: NodeJS.Timeout
 
     const calculateTimeLeft = () => {
@@ -90,7 +90,7 @@ export default function OTPVerification() {
                 localStorage.setItem('user', JSON.stringify(user))
                 toast.success('Account created')
                 setTimeout(() => {
-                    router.push(`jobListingPage`) //pass values as params---folder structure :jobListingPage
+                    router.replace(`jobListingPage`) //pass values as params---folder structure :jobListingPage
                 }, 3000)
             } else {
                 toast.error('Invalid OTP')

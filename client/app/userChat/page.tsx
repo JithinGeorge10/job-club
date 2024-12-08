@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState, useRef } from 'react';
 import io from "socket.io-client";
 
-const socket = io('http://localhost:4003');
+const socket = io('https://jobclub.live');
 interface Message {
     sender: string;
     receiver: string;

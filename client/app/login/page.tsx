@@ -24,12 +24,12 @@ function Page() {
 
   const onSubmit = async (data: Login) => {
     try {
-      let response = await axios.post(`${AUTH_SERVICE_URL}/user-login`, data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      });
+        let response = await axios.post(`${AUTH_SERVICE_URL}/user-login`, data, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
 
       const user = response.data.user;
       if (response.data.success) {

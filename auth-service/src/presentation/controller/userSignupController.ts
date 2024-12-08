@@ -74,6 +74,7 @@ export class UserController {
 
     async userLoginController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
+            console.log('reached user controller');
             const { email, password } = req.body
             const user = await this.userService.userLogin(email, password)
 

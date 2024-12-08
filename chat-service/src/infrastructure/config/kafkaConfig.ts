@@ -6,6 +6,6 @@ const kafka = new Kafka({
 
 export default kafka
 
-   
+ 
 
 

@@ -6,13 +6,13 @@ import userPaymentModel from "./model/userPaymentModel";
 
 class UserRepository {
     async addUser(userDetails: User) {
-        try {
-            const newUser = new userModel(userDetails);
-            await newUser.save()
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
+        const newUser = new userModel(userDetails);
+        const savedUser = await newUser.save();
+        const userProfile = new UserProfileModel({
+            userId: savedUser._id
+        });
+
+        await userProfile.save();
     }
     async getUser(userId: User) {
         try {

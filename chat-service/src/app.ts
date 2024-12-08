@@ -13,7 +13,7 @@ const app = express();
 const httpServer = createServer(app); 
 const io = new Server(httpServer, {
     cors: {
-        origin: CLIENT_PORT,
+        origin: 'https://jobclub.live',
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
         allowedHeaders: ['Content-Type', 'Authorization', 'Role'],
         credentials: true,
@@ -22,12 +22,19 @@ const io = new Server(httpServer, {
 
 app.use(express.json());
 connectDB();
-app.use(cors({
-    origin: CLIENT_PORT,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Role'],
-    credentials: true
-}));
+const corsOptions = {
+    origin: (origin: any, callback: any) => {
+        const allowedOrigins = ['https://jobclub.live'];
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+};
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(morgan("dev"));
 app.use(cookieParser());

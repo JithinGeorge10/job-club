@@ -63,8 +63,8 @@ const PaymentPage = () => {
       email: email,
       firstname: firstName,
       lastname: lastName,
-      surl: 'http://localhost:3000/api/paymentSuccess',
-      furl: 'http://localhost:3000/api/paymentFailure',
+      surl: 'https://jobclub.live/api/paymentSuccess',
+      furl: 'https://jobclub.live/api/paymentFailure',
       phone: phone,
       hash: hash,
     };

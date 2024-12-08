@@ -9,12 +9,20 @@ import consume from './infrastructure/service/consume'
 const app = express()
 app.use(express.json());
 connectDB()
-app.use(cors({
-    origin: CLIENT_PORT,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Role'],
-    credentials: true
-}));
+const corsOptions = {
+    origin: (origin: any, callback: any) => {
+        const allowedOrigins = ['https://jobclub.live'];
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+};
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
+
 app.use(morgan("dev"));
 app.use(cookieParser());
 consume()
@@ -22,5 +30,5 @@ consume()
 app.use("/api/company-service", companyRoute);
 
 app.listen(PORT, () => {
-    console.log('app started')
+    console.log(`Server is running on port ${PORT}`)
 }) 

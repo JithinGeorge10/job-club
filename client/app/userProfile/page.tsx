@@ -55,6 +55,8 @@ const Profile = () => {
             withCredentials: true,
           }
         );
+        console.log('res')
+        console.log(response)
         if (response.data.failToken) {
           console.log('failed token');
 
