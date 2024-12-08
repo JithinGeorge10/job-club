@@ -87,20 +87,12 @@ export class CompanyController {
         }
     }
 
-
-
-
     async companyDetailsController(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const authReq = req as any;
-            console.log(authReq.user);
-            if (authReq.user) {
+          
                 const companyDetails = await this.companyService.getCompanyDetails()
                 res.send({ companyDetails, success: true })
-            } else {
-                console.error('User ID not found');
-                throw new Error('User ID is required.');
-            }   
+           
 
         } catch (error) {
             next(error)

@@ -7,30 +7,32 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 function ProfilePage() {
-    const router = useRouter()
+    const router = useRouter();
     const searchParams = useSearchParams();
     const userId = searchParams.get('userId');
     const jobId = searchParams.get('jobId');
 
     const [userDetails, setUserDetails] = useState<any | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchUserDetails = async () => {
             if (userId) {
                 try {
-                    let response = await axios.get(`${USER_SERVICE_URL}/get-userDetails?id=${userId}`, {
+                    const response = await axios.get(`${USER_SERVICE_URL}/get-userDetails?id=${userId}`, {
                         headers: { 'Content-Type': 'application/json' },
                         withCredentials: true,
                     });
                     setUserDetails(response.data.userDetails);
+                    setLoading(false);
                 } catch (error) {
                     console.error("Error fetching user details", error);
+                    setLoading(false);
                 }
             }
         };
         fetchUserDetails();
     }, [userId]);
-
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -42,23 +44,30 @@ function ProfilePage() {
     };
 
     const handleSubmit = async () => {
-        let applyResponse = await axios.post(`${USER_SERVICE_URL}/applyJob`, { jobId, userId }, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            withCredentials: true
-        });
-        const response = await axios.post(`${COMPANY_SERVICE_URL}/submitApplication`, { userDetails, jobId }, {
-            headers: { 'Content-Type': 'application/json' },
-            withCredentials: true,
-        })
-        toast.success('Job Applied');
-        setTimeout(() => {
-            router.push(`/jobListingPage`);
-        }, 3000);
+        try {
+            await axios.post(`${USER_SERVICE_URL}/applyJob`, { jobId, userId }, {
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true,
+            });
 
+            await axios.post(`${COMPANY_SERVICE_URL}/submitApplication`, { userDetails, jobId }, {
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true,
+            });
 
+            toast.success('Job Applied');
+            setTimeout(() => {
+                router.push(`/jobListingPage`);
+            }, 3000);
+        } catch (error) {
+            console.error('Error submitting application', error);
+            toast.error('Error applying for job');
+        }
     };
+
+    if (loading) {
+        return <p className="text-center text-white">Loading...</p>;
+    }
 
     return (
         <div className="min-h-screen bg-black text-white font-sans">
@@ -69,8 +78,14 @@ function ProfilePage() {
                         <div>
                             <h2 className="text-3xl font-bold">Review your Profile</h2>
                             <br />
-                            <h2 className="text-3xl font-bold">{userDetails?.firstName} {userDetails?.lastName}</h2>
-                            <p className="text-gray-400">{userDetails?.profile?.headline || 'Professional'}</p>
+                            {userDetails ? (
+                                <>
+                                    <h2 className="text-3xl font-bold">{userDetails.firstName} {userDetails.lastName}</h2>
+                                    <p className="text-gray-400">{userDetails.profile?.headline || 'Professional'}</p>
+                                </>
+                            ) : (
+                                <p>Loading...</p>
+                            )}
                         </div>
                     </div>
                     {userDetails?.profile?.resume ? (

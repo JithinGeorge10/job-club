@@ -6,14 +6,12 @@ import axios from 'axios';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
-
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function Page() {
-  const [userDetails, setUserDetails] = useState<any[]>([]);
-  const [companyDetails, setCompanyDetails] = useState<any[]>([]);
+  const [userDetails, setUserDetails] = useState<any[]>([]);  // Initialize as empty array
+  const [companyDetails, setCompanyDetails] = useState<any[]>([]);  // Initialize as empty array
   const [loading, setLoading] = useState(true);
-
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -24,7 +22,7 @@ function Page() {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
         });
-        setUserDetails(response.data.userDetails);
+        setUserDetails(response.data.userDetails || []);  // Ensure userDetails is always an array
       } catch (error) {
         console.error("Error fetching user details:", error);
       } finally {
@@ -42,7 +40,7 @@ function Page() {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
         });
-        setCompanyDetails(response.data.companyDetails);
+        setCompanyDetails(response.data.companyDetails || []);  // Ensure companyDetails is always an array
       } catch (error) {
         console.error("Error fetching company details:", error);
       } finally {
@@ -52,14 +50,15 @@ function Page() {
     fetchCompanyDetails();
   }, []);
 
+  // Safe chart data handling, ensures userDetails and companyDetails are arrays before accessing their lengths
   const chartData = {
     labels: ['Users', 'Companies'],
     datasets: [
       {
         label: 'Counts',
-        data: [userDetails.length, companyDetails.length], 
+        data: [userDetails.length, companyDetails.length], // Safe access to length
         backgroundColor: ['#4CAF50', '#FF9800'],
-        borderColor: ['#388E3C', '#F57C00'], 
+        borderColor: ['#388E3C', '#F57C00'],
         borderWidth: 1,
       },
     ],
@@ -68,13 +67,12 @@ function Page() {
   const chartOptions = {
     responsive: true,
     plugins: {
-        legend: {
-            display: true,
-            position: 'top' as const, 
-        },
+      legend: {
+        display: true,
+        position: 'top' as const,
+      },
     },
-};
-
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -109,18 +107,17 @@ function Page() {
         </section>
 
         <section className="mt-10 bg-gray-100 p-6 rounded-lg shadow-md">
-  <header className="flex justify-between items-center mb-6">
-    <h3 className="font-bold text-lg">Application Response</h3>
-  </header>
-  <div className="mt-6">
-    {!loading && (
-      <div style={{ width: '400px', height: '300px', margin: '0 auto' }}>
-        <Bar data={chartData} options={chartOptions} />
-      </div>
-    )}
-  </div>
-</section>
-
+          <header className="flex justify-between items-center mb-6">
+            <h3 className="font-bold text-lg">Application Response</h3>
+          </header>
+          <div className="mt-6">
+            {!loading && (
+              <div style={{ width: '400px', height: '300px', margin: '0 auto' }}>
+                <Bar data={chartData} options={chartOptions} />
+              </div>
+            )}
+          </div>
+        </section>
       </main>
     </div>
   );

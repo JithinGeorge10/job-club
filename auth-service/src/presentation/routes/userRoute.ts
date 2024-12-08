@@ -18,3 +18,4 @@ userRoute.post('/google-login', userController.googleLogin.bind(userController))
 
 
 export default userRoute
+

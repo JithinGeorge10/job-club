@@ -126,7 +126,7 @@ function Navbar() {
               </div>
               <div onClick={handleUserProfile} className="text-white flex items-center space-x-2 hover:text-green-400 transition-colors cursor-pointer">
                 <FaUser />
-                <span>User Profile</span>
+                <span>My Profile</span>
               </div>
             </div>
 
