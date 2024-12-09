@@ -4,6 +4,8 @@ import AdminLeftSideBar from '../components/adminLeftSideBar';
 import axios from 'axios';
 import { AUTH_SERVICE_URL } from '@/utils/constants';
 import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
+import { jsPDF } from 'jspdf';
 
 interface Company {
     _id: string;
@@ -26,7 +28,7 @@ function Page() {
             setLoading(true);
             try {
                 const response = await axios.get(`${AUTH_SERVICE_URL}/get-companyDetails`, {
-                    params: { adminEmail: "admin@gmail.com" }, 
+                    params: { adminEmail: "admin@gmail.com" },
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true,
                 });
@@ -39,7 +41,6 @@ function Page() {
         };
         fetchData();
     }, []);
-    
 
     const filteredCompanies = companyDetails.filter(company =>
         company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -65,7 +66,7 @@ function Page() {
         const actionText = action === 'block' ? 'block' : 'unblock';
         const confirmationText = `You want to ${actionText} this company.`;
         const confirmButtonColor = action === 'block' ? '#d33' : '#3085d6';
-        
+
         const result = await Swal.fire({
             title: 'Are you sure?',
             text: confirmationText,
@@ -91,6 +92,43 @@ function Page() {
             }
         }
     }, []);
+
+    // Export to Excel
+    const exportToExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(filteredCompanies.map(company => ({
+            "Company Name": company.companyName,
+            "Company Email": company.email,
+            "Status": company.status || 'Active',
+            "Created Date": company.createdAt ? new Date(company.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A',
+            "Blocked": company.isBlocked ? 'Yes' : 'No'
+        })));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Company Details");
+        XLSX.writeFile(wb, "CompanyDetails.xlsx");
+    };
+
+    // Export to PDF
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+        doc.setFontSize(12);
+        const title = "Company Details";
+        doc.text(title, 14, 10);
+        
+        let y = 20;
+        filteredCompanies.forEach((company, index) => {
+            const text = [
+                `Company Name: ${company.companyName}`,
+                `Company Email: ${company.email}`,
+                `Status: ${company.status || 'Active'}`,
+                `Created Date: ${company.createdAt ? new Date(company.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}`,
+                `Blocked: ${company.isBlocked ? 'Yes' : 'No'}`
+            ];
+            doc.text(text, 14, y);
+            y += 40; // space between each company's details
+        });
+
+        doc.save("CompanyDetails.pdf");
+    };
 
     return (
         <div className="flex min-h-screen bg-black">
@@ -186,6 +224,21 @@ function Page() {
                         className={`px-4 py-2 bg-gray-700 text-white rounded-md ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                         Next
+                    </button>
+                </div>
+
+                <div className="mt-6 flex justify-end space-x-4">
+                    <button
+                        onClick={exportToExcel}
+                        className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                    >
+                        Download Excel
+                    </button>
+                    <button
+                        onClick={exportToPDF}
+                        className="px-4 py-2 bg-red-500 text-white rounded-md"
+                    >
+                        Download PDF
                     </button>
                 </div>
             </div>
