@@ -4,7 +4,6 @@ import AdminLeftSideBar from '../components/adminLeftSideBar';
 import axios from 'axios';
 import { AUTH_SERVICE_URL } from '@/utils/constants';
 import Swal from 'sweetalert2';
-import { useRouter } from 'next/navigation';
 
 interface Company {
     _id: string;

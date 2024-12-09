@@ -13,26 +13,26 @@ function Page() {
     messages: {
       message: string;
       roomId: string;
-      sender: {
-        companyName: string;
+      sender?: {
+        companyName?: string;
       };
       createdAt: string;
     }[];
     createdAt: string;
   }
-  
+
   const router = useRouter();
-
   const [userId, setUserId] = useState<string | null>(null);
-
   const [notifications, setNotifications] = useState<Notification[]>([]);
+
   useEffect(() => {
     const user: string | null = localStorage.getItem('user');
     if (user && user !== 'undefined') {
-        const userDetails = JSON.parse(user);
-        setUserId(userDetails._id);
+      const userDetails = JSON.parse(user);
+      setUserId(userDetails._id);
     }
-}, []);
+  }, []);
+
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -47,37 +47,52 @@ function Page() {
           setNotifications(response.data.notifications);
         }
       } catch (error) {
-        console.error("Error fetching notifications:", error);
+        console.error('Error fetching notifications:', error);
       }
     };
     fetchNotifications();
   }, [userId]);
 
-  const handleNotificationClick = async (companyId: any) => {
-    let response = await axios.post(`${CHAT_SERVICE_URL}/createRoom`, { userId, companyId }, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      withCredentials: true
-    });
-    const { chatRoom } = response.data;
-    router.push(`userChat?roomDetails=${encodeURIComponent(JSON.stringify(chatRoom))}`);
+  const handleNotificationClick = async (companyId: string | undefined) => {
+    if (!companyId) return;
+
+    try {
+      const response = await axios.post(
+        `${CHAT_SERVICE_URL}/createRoom`,
+        { userId, companyId },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true,
+        }
+      );
+      const { chatRoom } = response.data;
+      router.push(`userChat?roomDetails=${encodeURIComponent(JSON.stringify(chatRoom))}`);
+    } catch (error) {
+      console.error('Error creating room:', error);
+    }
   };
 
   // Flatten the messages array, sort by createdAt, and take only the last 4
   const recentMessages = notifications
-    .flatMap(notification => notification.messages)
+    .flatMap((notification) => notification.messages)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 4);
 
-    return (
-      <>
-        <Navbar />
-        <div className="bg-black text-white min-h-screen flex flex-col p-6 font-sans">
-          <header className="text-center text-3xl font-bold mt-10">Notifications</header>
-          <div className="flex flex-col items-center mt-8 space-y-6 flex-grow mb-10">
-            {recentMessages.map((msg, index) => (
-              <div key={index} className="w-11/12 md:w-1/2 bg-gray-800 rounded-lg p-5 flex items-center justify-between">
+  return (
+    <>
+      <Navbar />
+      <div className="bg-black text-white min-h-screen flex flex-col p-6 font-sans">
+        <header className="text-center text-3xl font-bold mt-10">Notifications</header>
+        <div className="flex flex-col items-center mt-8 space-y-6 flex-grow mb-10">
+          {recentMessages.map((msg, index) => {
+            const companyName = msg.sender?.companyName || 'Unknown Company';
+            return (
+              <div
+                key={index}
+                className="w-11/12 md:w-1/2 bg-gray-800 rounded-lg p-5 flex items-center justify-between"
+              >
                 <div className="flex items-center space-x-4">
                   <div className="bg-gray-600 p-3 rounded-full">
                     <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -85,20 +100,23 @@ function Page() {
                     </svg>
                   </div>
                   <div>
-                    <button onClick={() => handleNotificationClick(msg.sender)} className="font-bold text-lg">New Message!</button>
-                    <p className="text-gray-300">
-                      You have a new message from {msg.sender.companyName}
-                    </p>
+                    <button
+                      onClick={() => handleNotificationClick(msg.sender?.companyName)}
+                      className="font-bold text-lg"
+                    >
+                      New Message!
+                    </button>
+                    <p className="text-gray-300">You have a new message from {companyName}</p>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-          <Footer />
+            );
+          })}
         </div>
-      </>
-    );
-    
+        <Footer />
+      </div>
+    </>
+  );
 }
 
 export default Page;

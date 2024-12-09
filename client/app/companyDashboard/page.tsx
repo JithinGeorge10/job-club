@@ -25,10 +25,14 @@ function Page() {
         Status: string;
     }
 
+    interface JobDetail {
+        companyId: { _id: string } | null;
+    }
+
     const searchParams = useSearchParams();
-    const companyId = searchParams.get('id');
-    const [jobDetails, setJobDetails] = useState<any[]>([]);
-    const [filteredJobDetails, setFilteredJobDetails] = useState<any[]>([]);
+    const companyId = searchParams?.get('id');
+    const [jobDetails, setJobDetails] = useState<JobDetail[]>([]);
+    const [filteredJobDetails, setFilteredJobDetails] = useState<JobDetail[]>([]);
     const [applicants, setApplicants] = useState<Applicant[]>([]);
 
     useEffect(() => {
@@ -38,7 +42,7 @@ function Page() {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true,
                 });
-                setJobDetails(response.data.jobDetails);
+                setJobDetails(response.data.jobDetails || []);
             } catch (error) {
                 console.error('Failed to fetch job details:', error);
             }
@@ -48,7 +52,9 @@ function Page() {
 
     useEffect(() => {
         if (companyId) {
-            const filteredJobs = jobDetails.filter((job) => job.companyId._id === companyId);
+            const filteredJobs = jobDetails.filter(
+                (job) => job.companyId && job.companyId._id === companyId
+            );
             setFilteredJobDetails(filteredJobs);
         }
     }, [companyId, jobDetails]);
@@ -62,7 +68,7 @@ function Page() {
                         params: { companyId },
                         withCredentials: true,
                     });
-                    setApplicants(response.data.applicants);
+                    setApplicants(response.data.applicants || []);
                 } catch (error) {
                     console.error('Error fetching applicants:', error);
                 }
@@ -91,12 +97,10 @@ function Page() {
         plugins: {
             legend: {
                 display: true,
-                position: 'top' as const, 
+                position: 'top' as const,
             },
         },
     };
-    
-    
 
     return (
         <>

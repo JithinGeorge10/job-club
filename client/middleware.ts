@@ -56,8 +56,7 @@ export async function middleware(req: NextRequest) {
     }
 
     if (url.pathname.startsWith('/companyDashboard') || url.pathname.startsWith('/companyChat') || url.pathname.startsWith('/applicantDetails')
-        || url.pathname.startsWith('/companyApplicants') || url.pathname.startsWith('/companyJobListing') || url.pathname.startsWith('/companyManagement')
-        || url.pathname.startsWith('/companyProfile') || url.pathname.startsWith('/editJob')
+        || url.pathname.startsWith('/companyApplicants') || url.pathname.startsWith('/companyJobListing') ||  url.pathname.startsWith('/companyProfile') || url.pathname.startsWith('/editJob')
     ) {
         if (!isValidCompany) {
             url.pathname = '/companyLogin';
@@ -65,7 +64,7 @@ export async function middleware(req: NextRequest) {
         }
     }
 
-    if (url.pathname.startsWith('/adminDashboard') || url.pathname.startsWith('/companyManagement')
+    if (url.pathname.startsWith('/adminDashboard') 
         || url.pathname.startsWith('/userManagement')) {
         if (!isValidadmin) {
             url.pathname = '/admin';
