@@ -15,6 +15,7 @@ function Page() {
       roomId: string;
       sender?: {
         companyName?: string;
+        _id?:string
       };
       createdAt: string;
     }[];
@@ -68,18 +69,21 @@ function Page() {
         }
       );
       const { chatRoom } = response.data;
+      console.log(userId);
+      console.log(companyId);
+      console.log('not');
+      console.log(chatRoom)
       router.push(`userChat?roomDetails=${encodeURIComponent(JSON.stringify(chatRoom))}`);
     } catch (error) {
       console.error('Error creating room:', error);
     }
   };
 
-  // Flatten the messages array, sort by createdAt, and take only the last 4
   const recentMessages = notifications
     .flatMap((notification) => notification.messages)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 4);
-
+  console.log(recentMessages)
   return (
     <>
       <Navbar />
@@ -101,7 +105,7 @@ function Page() {
                   </div>
                   <div>
                     <button
-                      onClick={() => handleNotificationClick(msg.sender?.companyName)}
+                      onClick={() => handleNotificationClick(msg.sender?._id)}
                       className="font-bold text-lg"
                     >
                       New Message!

@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import morgan from "morgan";
 import { connectDB } from "./infrastructure/config/databaseConfig"
-import { PORT, CLIENT_PORT } from './utils/constants'
+import { CLIENT_PORT, PORT } from './utils/constants'
 import { errorHandler } from './presentation/middleware/errorHandler'
 import userRoute from './presentation/routes/userRoute';
 import companyRoute from './presentation/routes/companyRoute';
@@ -13,7 +13,7 @@ app.use(express.json());
 
 connectDB()
 const corsOptions = {
-  origin: 'https://jobclub.live', 
+  origin: CLIENT_PORT, 
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   credentials: true
 };

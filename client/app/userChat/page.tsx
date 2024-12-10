@@ -11,7 +11,7 @@ interface Message {
     receiver: string;
     message: string;
     roomId: string;
-    timestamp: string; // New property for timestamp
+    timestamp: string;
 }
 
 
@@ -62,7 +62,7 @@ function Page() {
                     'Content-Type': 'application/json'
                 },
                 withCredentials: true
-            });
+            })
             setMessages((prevMessages) => {
                 if (prevMessages.length === 0) {
                     return response.data.getMessages.map((msg: { timestamp: any }) => ({
@@ -87,13 +87,13 @@ function Page() {
 
         const timestamp = new Date().toISOString();
 
-        // Send the message to the server with timestamp
+
         let response = await axios.post(`${CHAT_SERVICE_URL}/postMessage`, {
             sender: userId,
             receiver: companyId,
             message,
             roomId: _id,
-            timestamp // Include timestamp
+            timestamp
         }, {
             headers: {
                 'Content-Type': 'application/json'
@@ -101,13 +101,13 @@ function Page() {
             withCredentials: true
         });
 
-        // Emit the message with timestamp using socket
+  
         socket.emit('sendMessage', { roomId: _id, message, sender: userId, timestamp });
 
-        // Add message to the local state
+
         setMessages(prevMessages => [
             ...prevMessages,
-            { sender: userId, receiver: companyId, message, roomId: _id, timestamp } // Make sure to include timestamp
+            { sender: userId, receiver: companyId, message, roomId: _id, timestamp } 
         ]);
 
         setMessage('');
