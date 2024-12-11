@@ -344,13 +344,14 @@ class UserRepository {
 
     async subscriberList() {
         try {
-            const result = await UserProfileModel.aggregate([
+            // Step 1: Fetch subscriber details with user details
+            const subscriberDetails = await UserProfileModel.aggregate([
                 {
-                    $match: { subscriber: true }
+                    $match: { subscriber: true } // Filter subscribers
                 },
                 {
                     $lookup: {
-                        from: "users",
+                        from: "users", // Lookup user details
                         localField: "userId",
                         foreignField: "_id",
                         as: "userDetails"
@@ -370,12 +371,33 @@ class UserRepository {
                     }
                 }
             ]);
+    
+            // Step 2: Extract userId values
+            const userIds = subscriberDetails.map(subscriber => subscriber.userId);
+    
+            // Step 3: Fetch payment details based on userId
+            const paymentDetails = await userPaymentModel.find({
+                userId: { $in: userIds }
+            });
+    
+            // Step 4: Merge payment details with the main result
+            const result = subscriberDetails.map(subscriber => {
+                const payments = paymentDetails.filter(
+                    payment => payment.userId.toString() === subscriber.userId.toString()
+                );
+                return {
+                    ...subscriber,
+                    paymentDetails: payments
+                };
+            });
+    
             return result;
         } catch (error) {
             console.error("Error fetching subscriber list:", error);
             throw error;
         }
     }
+    
 
 }
 const getUserRepository = new UserRepository();
