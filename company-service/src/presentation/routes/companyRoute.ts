@@ -21,6 +21,7 @@ companyRoute.get('/interviewCompanies', authenticateToken,companyController.inte
 companyRoute.get('/companyDetails',authenticateToken, companyController.companyDetails.bind(companyController));
 companyRoute.post('/companyLogo',authenticateToken, companyController.companyLogo.bind(companyController));
 companyRoute.get('/applicantDetails', authenticateToken,companyController.applicantDetails.bind(companyController));
+companyRoute.get('/singleJobApplicants', authenticateToken,companyController.singleJobApplicants.bind(companyController));
 
 
 

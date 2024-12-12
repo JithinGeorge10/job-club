@@ -124,7 +124,10 @@ function JobTable() {
       setCurrentPage(page);
     }
   };
-
+  const handleSelectJob = (jobId: string) => {
+    console.log('Selected Job ID:', jobId);
+    router.push(`applicantSingleJob?id=${jobId}`);
+  };
   return (
     <>
       <CompanyNavbar />
@@ -139,54 +142,53 @@ function JobTable() {
             onChange={handleSearch}
             className="w-full max-w-4xl p-2 mb-4 rounded-lg text-gray-800"
           />
-
           <div className="overflow-x-auto w-full max-w-4xl shadow-lg rounded-lg">
             <table className="w-full bg-gray-800 text-white rounded-lg shadow-lg">
               <thead>
                 <tr className="bg-gray-700 text-left border-b border-gray-600">
-                  {['Role', 'Status', 'Start Date', 'Due Date', 'Type', 'Applicants', 'Action'].map((header) => (
+                  {['Role', 'Status', 'Start Date', 'Due Date', 'Type', 'Action'].map((header) => (
                     <th key={header} className="p-4 text-sm md:text-base">{header}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {currentJobs.length > 0 ? (
-                  currentJobs.map((job) => (
-                    <tr key={job._id} className="border-b border-gray-700 hover:bg-gray-700 transition">
-                      <td className="p-3 md:p-4">{job.jobTitle}</td>
-                      <td className="p-3 md:p-4">
-                        <span className={`px-2 py-1 rounded-full text-xs ${job.status ? 'bg-green-600' : 'bg-red-600'}`}>
-                          {job.status ? 'Live' : 'Closed'}
-                        </span>
-                      </td>
-                      <td className="p-3 md:p-4">{new Date(job.startDate).toLocaleDateString()}</td>
-                      <td className="p-3 md:p-4">{new Date(job.endDate).toLocaleDateString()}</td>
-                      <td className="p-3 md:p-4">{job.employmentType[0]}</td>
-                      <td className="p-3 md:p-4">{job.slots}</td>
-                      <td className="p-3 md:p-4 flex space-x-2">
-                        {job.status ? (
-                          <button onClick={() => handleCloseJob(job._id)} className="bg-green-600 hover:bg-green-500 px-3 py-1 rounded-full">
-                            Close
-                          </button>
-                        ) : (
-                          <button disabled className="bg-gray-600 px-3 py-1 rounded-full">
-                            Closed
-                          </button>
-                        )}
-                        <button onClick={() => handleEditJob(job._id)} className="bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded-full">
-                          Edit
+                {currentJobs.map((job) => (
+                  <tr key={job._id} className="border-b border-gray-700 hover:bg-gray-700 transition">
+                    <td
+                      className="p-3 md:p-4 cursor-pointer hover:underline"
+                      onClick={() => handleSelectJob(job._id)}
+                    >
+                      {job.jobTitle}
+                    </td>
+                    <td className="p-3 md:p-4">
+                      <span className={`px-2 py-1 rounded-full text-xs ${job.status ? 'bg-green-600' : 'bg-red-600'}`}>
+                        {job.status ? 'Live' : 'Closed'}
+                      </span>
+                    </td>
+                    <td className="p-3 md:p-4">{new Date(job.startDate).toLocaleDateString()}</td>
+                    <td className="p-3 md:p-4">{new Date(job.endDate).toLocaleDateString()}</td>
+                    <td className="p-3 md:p-4">{job.employmentType[0]}</td>
+                 
+                    <td className="p-3 md:p-4 flex space-x-2">
+                      {job.status ? (
+                        <button onClick={() => handleCloseJob(job._id)} className="bg-green-600 hover:bg-green-500 px-3 py-1 rounded-full">
+                          Close
                         </button>
-                        <button onClick={() => handleDeleteJob(job._id)} className="bg-red-600 hover:bg-red-500 px-3 py-1 rounded-full">
-                          Delete
+                      ) : (
+                        <button disabled className="bg-gray-600 px-3 py-1 rounded-full">
+                          Closed
                         </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={7} className="p-4 text-center">No jobs found</td>
+                      )}
+                      <button onClick={() => handleEditJob(job._id)} className="bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded-full">
+                        Edit
+                      </button>
+                      <button onClick={() => handleDeleteJob(job._id)} className="bg-red-600 hover:bg-red-500 px-3 py-1 rounded-full">
+                        Delete
+                      </button>
+                    </td>
                   </tr>
-                )}
+                ))}
+
               </tbody>
             </table>
           </div>

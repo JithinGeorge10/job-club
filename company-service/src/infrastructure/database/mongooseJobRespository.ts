@@ -389,7 +389,7 @@ class CompanyRepository {
             if (!applicantDetails) {
                 return { success: false, message: "No user" };
             }
-console.log(applicantDetails);
+            console.log(applicantDetails);
 
             return applicantDetails
         } catch (error) {
@@ -397,8 +397,25 @@ console.log(applicantDetails);
             return { success: false, message: "Error updating applicant status" };
         }
     }
+    async applicantSingleJobDetails(jobId: string) {
+        try {
+            const applicantSingleJobDetails = await applicantionModel.findOne({ jobId });
+
+            if (!applicantSingleJobDetails) {
+                return { success: false, message: "Job details not found" };
+            }
+            console.log(applicantSingleJobDetails);
+
+            return applicantSingleJobDetails
+        } catch (error) {
+            console.error('Error fetching applicant job details:', error);
+            return { success: false, message: "Error fetching applicant job details" };
+        }
+    }
+
 
 }
+
 
 const jobRepository = new CompanyRepository();
 

@@ -266,7 +266,21 @@ export class CompanyController {
             next(error)
         }
     }
-
-
+    async singleJobApplicants(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
+        try {            
+            const userId = req.user?.user
+            if (userId) {
+                const { jobId } = req.query
+                const applicantDetails = await this.companyService.applicantSingleJobDetails(jobId)
+                res.status(200).send({ applicantDetails })
+            } else {
+                console.error('User ID not found');
+                throw new Error('User ID is required to fetch doctor profile.');
+            }
+        } catch (error) {
+            next(error)
+        }
+    }
+    
 
 }

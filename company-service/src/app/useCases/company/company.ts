@@ -147,6 +147,14 @@ export class CompanyService {
             throw error
         }
     }
+    async applicantSingleJobDetails(applicantId: any) {
+        try {
+            const applicantDetails = await jobRepository.applicantSingleJobDetails(applicantId)
+            return applicantDetails
+        } catch (error) {
+            throw error
+        }
+    }
     
     
 }
