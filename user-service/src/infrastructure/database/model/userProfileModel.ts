@@ -77,6 +77,9 @@ const userProfileSchema = new mongoose.Schema({
     },
     updatedAt: { 
         type: Date 
+    },
+    preferredJob:{
+        type:String
     }
 });
 

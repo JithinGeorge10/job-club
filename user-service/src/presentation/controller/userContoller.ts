@@ -211,7 +211,7 @@ export class UserController {
     }
     async removeSkill(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
-      
+
             const { skill } = req.body
             const userIdFromToken = req.user?.user;
             if (userIdFromToken) {
@@ -225,8 +225,25 @@ export class UserController {
             next(error)
         }
     }
-    
-    
+    async addPreferredJob(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
+        try {
+            const { jobTitle } = req.body
+            console.log(jobTitle);
+            
+            const userIdFromToken = req.user?.user;
+            if (userIdFromToken) {
+                const addPreferredJob = await this.userService.addPreferredJob(userIdFromToken, jobTitle)
+                res.status(200).send({ addPreferredJob })
+            } else {
+                console.error('User ID not found');
+                throw new Error('User ID is required.');
+            }
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
     async subscriberList(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> {
         try {
             console.log(req.user)

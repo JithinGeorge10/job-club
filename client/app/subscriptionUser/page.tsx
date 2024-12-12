@@ -64,7 +64,6 @@ function Page() {
   const applyFilters = () => {
     let filtered = subscribers;
 
-    // Apply search filter
     if (searchFilter) {
       filtered = filtered.filter((subscriber) => {
         const user = subscriber.userDetails[0];
@@ -76,7 +75,6 @@ function Page() {
       });
     }
 
-    // Apply date filter
     const now = dayjs();
     filtered = filtered.filter((subscriber) => {
       const paymentDate = dayjs(subscriber.paymentDetails[0]?.updatedAt);
@@ -100,12 +98,10 @@ function Page() {
     applyFilters();
   }, [searchFilter, dateFilter]);
 
-  // Calculate total
   const total = filteredSubscribers.reduce((sum, subscriber) => {
     return sum + parseInt(subscriber.paymentDetails[0]?.amount || "0", 10);
   }, 0);
 
-  // Pagination logic
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = filteredSubscribers.slice(indexOfFirstRow, indexOfLastRow);
@@ -122,10 +118,8 @@ function Page() {
       <main className="bg-white text-black w-full p-6 sm:p-8 md:p-10 ml-[200px]">
         <h1 className="text-2xl font-bold mb-4">Subscriber List</h1>
 
-        {/* Total amount */}
         <div className="mb-4 text-xl font-semibold">Total: Rs. {total}</div>
 
-        {/* Filters */}
         <div className="flex mb-4 space-x-4">
           <input
             type="text"
@@ -146,7 +140,6 @@ function Page() {
           </select>
         </div>
 
-        {/* Subscriber table */}
         <div className="overflow-x-auto">
           <table className="table-auto w-full border-collapse border border-gray-300 bg-white">
             <thead>
@@ -198,7 +191,6 @@ function Page() {
           </table>
         </div>
 
-        {/* Pagination */}
         <div className="mt-4 flex justify-center">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
             <button

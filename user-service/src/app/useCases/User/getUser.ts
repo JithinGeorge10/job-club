@@ -125,6 +125,14 @@ export class UserService {
             throw error
         }
     }
+    async addPreferredJob(userId:any,job: any) {
+        try {
+            const addPreferredJob = await UserRepository.addPreferredJob(userId,job)
+            return addPreferredJob
+        } catch (error) {
+            throw error
+        }
+    }
     
     async handleSubscriptionExpiry() {
         return await UserRepository.expireSubscriptions();

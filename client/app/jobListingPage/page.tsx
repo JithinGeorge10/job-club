@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState, useCallback } from 'react';
 import Navbar from '../components/Navbar';
-import { COMPANY_SERVICE_URL } from '@/utils/constants';
+import { COMPANY_SERVICE_URL, USER_SERVICE_URL } from '@/utils/constants';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Footer from '../components/footer/footer';
@@ -16,6 +16,9 @@ function Page() {
   const [selectedSalaryRanges, setSelectedSalaryRanges] = useState<string[]>([]);
   const [selectedEmploymentTypes, setSelectedEmploymentTypes] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [userDetails, setUserDetails] = useState<any | null>(null);
+
   const jobsPerPage = 5;
 
   const salaryRanges = [
@@ -32,19 +35,51 @@ function Page() {
     { label: 'Internship', value: 'Internship' },
     { label: 'Contract', value: 'Contract' },
   ];
-
-
+  useEffect(() => {
+    const user: string | null = localStorage.getItem('user');
+    if (user && user !== 'undefined') {
+      let userDetails = JSON.parse(user);
+      setUserId(userDetails._id);
+    }
+  }, []);
+  useEffect(() => {
+    const res = async function () {
+      if (userId) {
+        const response = await axios.get(`${USER_SERVICE_URL}/get-userDetails?id=${userId}`, {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        });
+        setUserDetails(response.data.userDetails);
+      }
+    };
+    res();
+  }, [userId]);
+  console.log(userDetails)
   useEffect(() => {
     const fetchData = async () => {
       let response = await axios.get(`${COMPANY_SERVICE_URL}/get-jobDetails`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       });
-      setJobDetails(response.data.jobDetails);
-      setFilteredJobs(response.data.jobDetails);
+  
+      let allJobs = response.data.jobDetails;
+  
+      // Filter jobs based on user's preferred job if available
+      if (userDetails?.profile?.preferredJob) {
+        allJobs = allJobs.filter((job: any) =>
+          job.jobTitle.toLowerCase().includes(userDetails.profile.preferredJob.toLowerCase())
+        );
+      }
+  
+      setJobDetails(allJobs);
+      setFilteredJobs(allJobs);
     };
+  
     fetchData();
-  }, []);
+  }, [userDetails]);
+  
 
   const debounce = <T extends (...args: any[]) => void>(func: T, delay: number) => {
     let timer: NodeJS.Timeout;
@@ -53,7 +88,7 @@ function Page() {
       timer = setTimeout(() => func(...args), delay);
     };
   };
-  
+
 
   const handleSearch = useCallback(() => {
     let filtered = jobDetails;
@@ -202,41 +237,41 @@ function Page() {
             {currentJobs.length > 0 ? (
               currentJobs.map((job: any, index: number) => (
                 <div
-                key={index}
-                className="bg-gray-800 p-6 rounded-lg flex items-center justify-between mb-4 border border-gray-600"
-              >
-                <div>
-                  <button
-                    onClick={() => handleJobClick(job._id, job.companyId._id)}
-                    className="text-2xl font-bold text-white"
-                  >
-                    {job.jobTitle}
-                  </button>
-                  <h2 className="text-xl font-semibold text-gray-300">
-                    {job.companyId.companyName}
-                  </h2>
-                  <div className="mt-2 space-x-4">
-                    <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full">
-                      {job.employmentType[0]}
-                    </span>
-                    <span className="inline-block bg-gray-700 text-white px-3 py-1 rounded-full">
-                      {job.category}
-                    </span>
-                    <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full">
-                      Salary upto &#8377;{job.maxSalary ? job.maxSalary : 'N/A'}
-                    </span>
+                  key={index}
+                  className="bg-gray-800 p-6 rounded-lg flex items-center justify-between mb-4 border border-gray-600"
+                >
+                  <div>
+                    <button
+                      onClick={() => handleJobClick(job._id, job.companyId._id)}
+                      className="text-2xl font-bold text-white"
+                    >
+                      {job.jobTitle}
+                    </button>
+                    <h2 className="text-xl font-semibold text-gray-300">
+                      {job.companyId.companyName}
+                    </h2>
+                    <div className="mt-2 space-x-4">
+                      <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full">
+                        {job.employmentType[0]}
+                      </span>
+                      <span className="inline-block bg-gray-700 text-white px-3 py-1 rounded-full">
+                        {job.category}
+                      </span>
+                      <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full">
+                        Salary upto &#8377;{job.maxSalary ? job.maxSalary : 'N/A'}
+                      </span>
+                    </div>
                   </div>
+
+                  {job.companyId.profileImage && (
+                    <img
+                      src={job.companyId.profileImage}
+                      alt="Company Logo"
+                      className="w-16 h-16 object-cover rounded-lg"
+                    />
+                  )}
                 </div>
-              
-                {job.companyId.profileImage && (
-                  <img
-                    src={job.companyId.profileImage}
-                    alt="Company Logo"
-                    className="w-16 h-16 object-cover rounded-lg"
-                  />
-                )}
-              </div>
-              
+
               ))
             ) : (
               <div className="text-white text-center text-lg">No jobs found.</div>

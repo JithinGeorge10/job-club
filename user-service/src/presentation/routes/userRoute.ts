@@ -22,6 +22,7 @@ userRoute.get('/subscriberList', adminToken,userController.subscriberList.bind(u
 userRoute.delete('/removeEmployment', authenticateToken,userController.removeEmployment.bind(userController));
 userRoute.delete('/removeEducation', authenticateToken,userController.removeEducation.bind(userController));
 userRoute.delete('/removeSkill', authenticateToken,userController.removeSkill.bind(userController));
+userRoute.post('/addPreferredJob',authenticateToken, userController.addPreferredJob.bind(userController));
 
 
 

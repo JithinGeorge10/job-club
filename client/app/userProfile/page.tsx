@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
-import { USER_SERVICE_URL } from '@/utils/constants';
+import { COMPANY_SERVICE_URL, USER_SERVICE_URL } from '@/utils/constants';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { uploadImagesToFireStore } from '../../utils/fireStore'
 import { toast } from 'react-toastify';
@@ -42,6 +42,21 @@ const Profile = () => {
   const [userDetails, setUserDetails] = useState<any | null>(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [jobDetails, setJobDetails] = useState<any[]>([]);
+  const [preferredJob, setPreferredJob] = useState(''); // State to hold the preferred job
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let response = await axios.get(`${COMPANY_SERVICE_URL}/get-jobDetails`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      });
+      setJobDetails(response.data.jobDetails);
+    };
+    fetchData();
+  }, []);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,7 +70,6 @@ const Profile = () => {
             withCredentials: true,
           }
         );
-        console.log('res')
         console.log(response)
         if (response.data.failToken) {
           console.log('failed token');
@@ -83,6 +97,7 @@ const Profile = () => {
 
     fetchData();
   }, []);
+console.log(userDetails);
 
 
   const formatDate = (dateString: string): string => {
@@ -325,6 +340,24 @@ const Profile = () => {
       Swal.fire('Error!', 'Failed to delete employment detail.', 'error');
     }
   }
+
+  const handleChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+
+    const selectedValue = event.target.value;
+    setPreferredJob(selectedValue); // Update the UI state immediately
+
+    const response=await axios.post(`${USER_SERVICE_URL}/addPreferredJob`,
+      {jobTitle: selectedValue},
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      }
+    );
+  };
+
+
   return (
     <>
       <Navbar></Navbar>
@@ -376,14 +409,66 @@ const Profile = () => {
               </div>
             </div>
             <div className="space-y-2 text-right">
-            {userDetails?.phone && userDetails.phone !== 0 ? (
-  <p>📞 {userDetails.phone}</p>
-) : null}
+              {userDetails?.phone && userDetails.phone !== 0 ? (
+                <p>📞 {userDetails.phone}</p>
+              ) : null}
 
               <p>✉️ {userDetails?.email}</p>
             </div>
           </div>
-
+          <div className="bg-gray-800 rounded-lg p-6 mt-6">
+            <div className="flex justify-between items-center">
+              <h3 className="text-xl font-semibold">Preferred Job</h3>
+            </div>
+            <div style={{ textAlign: 'center', margin: '20px' }}>
+      <label
+        htmlFor="jobTitle"
+        style={{
+          fontSize: '18px',
+          fontWeight: 'bold',
+          marginBottom: '10px',
+          display: 'block',
+          color: 'green',
+        }}
+      >
+        {userDetails ?.profile?.preferredJob? `Preferred Job: ${userDetails ?.profile?.preferredJob}` : 'Select Job Title:'}
+      </label>
+      <select
+        id="jobTitle"
+        name="jobTitle"
+        style={{
+          width: '250px',
+          padding: '10px',
+          borderRadius: '5px',
+          border: '1px solid #ccc',
+          backgroundColor: 'black',
+          color: 'white',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          appearance: 'none',
+          textAlign: 'center',
+        }}
+        onChange={handleChange}
+        value={preferredJob} // Set the value to the state
+      >
+        <option value="" disabled>
+          --Select a Job Title--
+        </option>
+        {jobDetails.map((job, index) => (
+          <option
+            key={index}
+            value={job.jobTitle}
+            style={{
+              backgroundColor: 'black',
+              color: 'white',
+            }}
+          >
+            {job.jobTitle}
+          </option>
+        ))}
+      </select>
+    </div>
+          </div>
 
           <div className="bg-gray-800 rounded-lg p-6 mt-6">
             <div className="flex justify-between items-center">

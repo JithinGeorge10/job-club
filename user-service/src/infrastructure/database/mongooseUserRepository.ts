@@ -318,6 +318,28 @@ class UserRepository {
     }
 
 
+    
+    async addPreferredJob(userId: any, job: any) {
+        try {
+            // Update the preferredJob with the new job value
+            const updatedUser = await UserProfileModel.findOneAndUpdate(
+                { userId: userId },
+                { preferredJob: job }, // Replace the field instead of pushing
+                { new: true } // Return the updated document
+            );
+            
+            if (!updatedUser) {
+                console.log('User not found');
+                return;
+            }
+            console.log('User updated successfully:', updatedUser);
+            return updatedUser
+        } catch (error) {
+            console.log('Error updating user:', error);
+        }
+    }
+    
+    
 
 
     async expireSubscriptions() {
