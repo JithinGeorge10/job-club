@@ -15,7 +15,7 @@ app.use(express.json());
 connectDB()
 const corsOptions = {
     origin: (origin: any, callback: any) => {
-        const allowedOrigins = [CLIENT_PORT];
+        const allowedOrigins = ['https://jobclub.live'];
         if (allowedOrigins.includes(origin) || !origin) {
             callback(null, true);
         } else {

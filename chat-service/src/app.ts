@@ -13,7 +13,7 @@ const app = express();
 const httpServer = createServer(app); 
 const io = new Server(httpServer, {
     cors: {
-        origin: CLIENT_PORT,
+        origin: 'https://jobclub.live',
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
         allowedHeaders: ['Content-Type', 'Authorization', 'Role'],
         credentials: true,
@@ -24,7 +24,7 @@ app.use(express.json());
 connectDB();
 const corsOptions = {
     origin: (origin: any, callback: any) => {
-        const allowedOrigins = [CLIENT_PORT];
+        const allowedOrigins = ['https://jobclub.live'];
         if (allowedOrigins.includes(origin) || !origin) {
             callback(null, true);
         } else {

@@ -13,7 +13,7 @@ app.use(express.json());
 
 connectDB()
 const corsOptions = {
-  origin: CLIENT_PORT, 
+  origin: 'https://jobclub.live', 
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   credentials: true
 };
