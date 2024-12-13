@@ -38,7 +38,7 @@ function Page() {
     }, [companyId]);
     console.log(applicants)
 
-    const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>, _id: any) => {
+    const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>, _id: any,email:any) => {
         const newStatus = e.target.value;
         console.log(newStatus)
         const result = await Swal.fire({
@@ -55,7 +55,7 @@ function Page() {
             try {
                 const response = await axios.patch(
                     `${COMPANY_SERVICE_URL}/changeStatus-Applicant`,
-                    { applicantId: _id, status: newStatus },
+                    { applicantId: _id, status: newStatus,mail:email },
                     {
                         headers: { 'Content-Type': 'application/json' },
                         withCredentials: true,
@@ -129,7 +129,7 @@ function Page() {
                                             <select
                                                 className="bg-gray-600 text-white py-1 px-4 rounded focus:outline-none focus:ring-2 focus:ring-green-900"
                                                 value=""
-                                                onChange={(e) => handleStatusChange(e, applicant._id)}
+                                                onChange={(e) => handleStatusChange(e, applicant._id,applicant.email)}
                                             >
                                                 <option value="" disabled>Change Status</option>
                                                 <option value="Hired">Hired</option>

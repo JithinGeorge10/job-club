@@ -25,5 +25,4 @@ companyRoute.get('/singleJobApplicants', authenticateToken,companyController.sin
 
 
 
-
 export default companyRoute

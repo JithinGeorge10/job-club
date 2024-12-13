@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 import { CompanyService } from '../../app/useCases/company/company'
+import sendotp from "../../infrastructure/helper/sendOtp";
 interface AuthenticatedRequest extends Request {
     user?: {
         user: string;
@@ -146,19 +147,29 @@ export class CompanyController {
 
     async changeStatusApplicant(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {
-            const userId = req.user?.user
+            const userId = req.user?.user;
             if (userId) {
-                const { applicantId, status } = req.body
-                const applicants = await this.companyService.changeStatusApplicants(applicantId, status)
-                res.status(200).send({ applicants })
+                console.log(req.body)
+                const { applicantId, status,mail } = req.body;
+                const applicants = await this.companyService.changeStatusApplicants(applicantId, status);
+    
+                if (status === 'Hired') {
+                    if (mail) {
+                        await sendotp(mail);
+                    } else {
+                        console.warn('Email is missing in applicants data');
+                    }
+                }
+                res.status(200).send({ applicants });
             } else {
                 console.error('User ID not found');
                 throw new Error('User ID is required to fetch doctor profile.');
             }
         } catch (error) {
-            next(error)
+            next(error);
         }
     }
+    
 
     async hiredCompanies(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
         try {

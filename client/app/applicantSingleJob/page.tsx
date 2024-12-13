@@ -108,7 +108,6 @@ function Page() {
                         <thead>
                             <tr className="bg-gray-700">
                                 <th className="border border-gray-600 px-4 py-2 text-left">Full Name</th>
-                                <th className="border border-gray-600 px-4 py-2 text-left">Job Role</th>
                                 <th className="border border-gray-600 px-4 py-2 text-left">Hiring Status</th>
                                 <th className="border border-gray-600 px-4 py-2 text-left">Applied Date</th>
                                 <th className="border border-gray-600 px-4 py-2 text-left">Status</th>
@@ -123,11 +122,9 @@ function Page() {
                                             className="border border-gray-600 px-4 py-2 cursor-pointer text-blue-500 hover:underline"
                                             onClick={() => handleNameClick(applicant._id)}
                                         >
-                                            {applicant.firstName} {applicant.lastName}
+                                            {applicant.firstName}
                                         </td>
-                                        <td className="border border-gray-600 px-4 py-2">
-                                            {applicant.jobDetails?.jobTitle || 'N/A'}
-                                        </td>
+                                      
                                         <td className="border border-gray-600 px-4 py-2"> {applicant.Status || 'N/A'}</td>
                                         <td className="border border-gray-600 px-4 py-2">
                                             {applicant.createdAt ? new Date(applicant.createdAt).toLocaleDateString('en-GB', {
