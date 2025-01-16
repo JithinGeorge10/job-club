@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import morgan from "morgan";
 import cookieParser from 'cookie-parser';
-import { PORT, CLIENT_PORT } from './utils/config';
+import { PORT } from './utils/config';
 import consume from './infrastructure/service/consume';
 import { connectDB } from "./infrastructure/config/databaseConfig";
 import chatRoute from './presentation/routes/chatRoute';
@@ -12,6 +12,7 @@ import { Server } from "socket.io";
 const app = express();
 const httpServer = createServer(app); 
 const io = new Server(httpServer, {
+    path: "/socket.io",
     cors: {
         origin: 'https://jobclub.live',
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
@@ -39,7 +40,7 @@ app.options("*", cors(corsOptions));
 app.use(morgan("dev"));
 app.use(cookieParser());
 consume();
-app.use("/api/chat-service", chatRoute);
+app.use("/", chatRoute);
 
 
 io.on("connection", (socket) => {

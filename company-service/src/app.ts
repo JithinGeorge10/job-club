@@ -27,7 +27,7 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 consume()
 
-app.use("/api/company-service", companyRoute);
+app.use("/", companyRoute);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)

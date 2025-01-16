@@ -5,6 +5,9 @@ import axios from 'axios';
 import { AUTH_SERVICE_URL } from '@/utils/constants';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
+import * as XLSX from 'xlsx'; // For Excel export
+import jsPDF from 'jspdf'; // For PDF export
+import 'jspdf-autotable';
 
 function Page() {
     const router = useRouter();
@@ -12,14 +15,15 @@ function Page() {
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [usersPerPage] = useState(7);
-    const [loading, setLoading] = useState(true);   
+    const [loading, setLoading] = useState(true);
+    const [filterType, setFilterType] = useState('all'); // Filter state
 
     useEffect(() => {
         const fetchData = async () => {
-            setLoading(true); 
+            setLoading(true);
             try {
                 const response = await axios.get(`${AUTH_SERVICE_URL}/get-userDetails`, {
-                    params: { adminEmail: "admin@gmail.com" }, 
+                    params: { adminEmail: "admin@gmail.com" },
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true,
                 });
@@ -27,21 +31,33 @@ function Page() {
             } catch (error) {
                 console.error("Error fetching user details:", error);
             } finally {
-                setLoading(false); 
+                setLoading(false);
             }
         };
         fetchData();
     }, []);
-    
 
-    const indexOfLastUser = currentPage * usersPerPage;
-    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+    const filteredUsers = userDetails.filter(user => {
+        const createdDate = new Date(user.createdAt);
+        const now = new Date();
 
-    const filteredUsers = userDetails.filter(user =>
+        if (filterType === 'weekly') {
+            const lastWeek = new Date();
+            lastWeek.setDate(now.getDate() - 7);
+            return createdDate >= lastWeek && createdDate <= now;
+        } else if (filterType === 'monthly') {
+            return createdDate.getMonth() === now.getMonth() && createdDate.getFullYear() === now.getFullYear();
+        } else if (filterType === 'yearly') {
+            return createdDate.getFullYear() === now.getFullYear();
+        }
+        return true; // Default (all data)
+    }).filter(user =>
         user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
     const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
     const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
@@ -53,6 +69,35 @@ function Page() {
                 return Math.min(prevPage + 1, totalPages);
             }
         });
+    };
+
+    const exportToExcel = () => {
+        const worksheet = XLSX.utils.json_to_sheet(filteredUsers);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
+        XLSX.writeFile(workbook, "user_data.xlsx");
+    };
+
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+        doc.text("User Information", 20, 10);
+        const tableColumn = ["First Name", "Last Name", "Phone", "Email", "Created Date", "Status"];
+        const tableRows: any[] = [];
+
+        filteredUsers.forEach(user => {
+            const userData = [
+                user.firstName,
+                user.lastName,
+                user.phone,
+                user.email,
+                new Date(user.createdAt).toLocaleDateString('en-GB'),
+                user.isBlocked ? "Blocked" : "Active"
+            ];
+            tableRows.push(userData);
+        });
+
+        (doc as any).autoTable(tableColumn, tableRows, { startY: 20 });
+        doc.save("user_data.pdf");
     };
 
     const blockUser = async (userId: any) => {
@@ -116,92 +161,94 @@ function Page() {
             <div className="flex-grow bg-white p-4 md:p-8 ml-[20%] sm:ml-[25%] md:ml-[20%] lg:ml-[16.67%]">
                 <h2 className="text-green-600 text-2xl md:text-3xl font-bold mb-6">User Information</h2>
 
+                <div className="flex justify-between items-center mb-4">
+                    <div>
+                        <button onClick={exportToExcel} className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2">
+                            Export to Excel
+                        </button>
+                        <button onClick={exportToPDF} className="bg-green-500 text-white px-4 py-2 rounded-md">
+                            Export to PDF
+                        </button>
+                    </div>
+                   
+                    <select
+                        className="px-4 py-2 w-full md:w-1/5 rounded-md border border-gray-300 text-black"
+                        value={filterType}
+                        onChange={(e) => setFilterType(e.target.value)}
+                    >
+                        <option value="all">All</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
+
+
+
+                </div>
+
+                {/* Search */}
                 <div className="mb-4">
                     <input
                         type="text"
-                        placeholder="Search by first name, last name, or email"
-                        className="px-4 py-2 w-full md:w-1/3 rounded-md border border-gray-300 text-black"
+                        placeholder="Search by first name or email"
+                        className="px-4 py-2 w-full md:w-1/3 rounded-md border border-gray-300"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
 
+                {/* Table */}
                 {loading ? (
-                    <div className="text-white text-center py-8">Loading...</div>
+                    <div className="text-black text-center py-8">Loading...</div>
                 ) : (
                     <div className="overflow-x-auto">
-                        {filteredUsers.length === 0 ? (
-                            <div className="text-white text-center py-8">No users found</div>
-                        ) : (
-                            <table className="min-w-full bg-gray-100 rounded-lg shadow-lg">
-                                <thead>
-                                    <tr className="bg-gray-700 text-gray-100">
-                                        <th className="px-4 py-3 text-left font-semibold text-sm sm:text-base">First Name</th>
-                                        <th className="px-4 py-3 text-left font-semibold text-sm sm:text-base">Last Name</th>
-                                        <th className="px-4 py-3 text-left font-semibold text-sm sm:text-base">Phone</th>
-                                        <th className="px-4 py-3 text-left font-semibold text-sm sm:text-base">Email</th>
-                                        <th className="px-4 py-3 text-left font-semibold text-sm sm:text-base">Created Date</th>
-                                        <th className="px-4 py-3 text-left font-semibold text-sm sm:text-base">Block/Unblock</th>
+                        {/* Same Table Code */}
+                        <table className="min-w-full bg-gray-100 rounded-lg shadow-lg">
+                            <thead>
+                                <tr className="bg-gray-700 text-gray-100">
+                                    <th className="px-4 py-3">First Name</th>
+                                    <th className="px-4 py-3">Last Name</th>
+                                    <th className="px-4 py-3">Phone</th>
+                                    <th className="px-4 py-3">Email</th>
+                                    <th className="px-4 py-3">Created Date</th>
+                                    <th className="px-4 py-3">Block/Unblock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {currentUsers.map(user => (
+                                    <tr key={user._id} className="border-b">
+                                        <td className="px-4 py-3 text-gray-800">{user.firstName}</td>
+                                        <td className="px-4 py-3 text-gray-800">{user.lastName}</td>
+                                        <td className="px-4 py-3 text-gray-800">{user.phone}</td>
+                                        <td className="px-4 py-3 text-gray-800">{user.email}</td>
+                                        <td className="px-4 py-3 text-gray-800">
+                                            {new Date(user.createdAt).toLocaleDateString('en-GB')}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            {user.isBlocked ? (
+                                                <button onClick={() => unblockUser(user._id)} className="bg-green-500 text-white px-4 py-2 rounded-md">
+                                                    Unblock
+                                                </button>
+                                            ) : (
+                                                <button onClick={() => blockUser(user._id)} className="bg-red-500 text-white px-4 py-2 rounded-md">
+                                                    Block
+                                                </button>
+                                            )}
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {currentUsers.map((user) => (
-                                        <tr key={user._id} className="border-b border-gray-300">
-                                            <td className="px-4 py-3 text-gray-800">{user.firstName}</td>
-                                            <td className="px-4 py-3 text-gray-800">{user.lastName}</td>
-                                            <td className="px-4 py-3 text-gray-800">{user.phone}</td>
-                                            <td className="px-4 py-3 text-gray-800">{user.email}</td>
-                                            <td className="px-4 py-3 text-gray-800">
-                                                {user.createdAt
-                                                    ? new Date(user.createdAt).toLocaleDateString('en-GB', {
-                                                        day: '2-digit',
-                                                        month: 'short',
-                                                        year: 'numeric',
-                                                    })
-                                                    : '07-Nov-2024'
-                                                }
-                                            </td>
-                                            <td className="px-4 py-3">
-                                                {user.isBlocked ? (
-                                                    <button
-                                                        onClick={() => unblockUser(user._id)}
-                                                        className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-md transition duration-200"
-                                                    >
-                                                        Unblock
-                                                    </button>
-                                                ) : (
-                                                    <button
-                                                        onClick={() => blockUser(user._id)}
-                                                        className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md transition duration-200"
-                                                    >
-                                                        Block
-                                                    </button>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        )}
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 )}
 
+                {/* Pagination */}
                 <div className="flex justify-between items-center mt-4">
-                    <button
-                        onClick={() => handlePagination('previous')}
-                        disabled={currentPage === 1}
-                        className={`px-4 py-2 bg-gray-700 text-white rounded-md ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    >
+                    <button onClick={() => handlePagination('previous')} disabled={currentPage === 1} className="bg-gray-700 text-white px-4 py-2 rounded-md">
                         Previous
                     </button>
-                    <span className="text-white">
-                        Page {currentPage} of {totalPages}
-                    </span>
-                    <button
-                        onClick={() => handlePagination('next')}
-                        disabled={currentPage === totalPages}
-                        className={`px-4 py-2 bg-gray-700 text-white rounded-md ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    >
+                    <span>Page {currentPage} of {totalPages}</span>
+                    <button onClick={() => handlePagination('next')} disabled={currentPage === totalPages} className="bg-gray-700 text-white px-4 py-2 rounded-md">
                         Next
                     </button>
                 </div>

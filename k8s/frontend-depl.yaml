@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: jithingeorge10/jobclub-frontend:latest
+          image: jithingeorge10/jobclub-frontend:latest200
           envFrom:
             - configMapRef:
                 name: frontend-env

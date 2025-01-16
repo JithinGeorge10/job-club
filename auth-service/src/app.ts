@@ -24,9 +24,9 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(morgan("dev"));
 
-app.use("/api/auth-service/", userRoute);
-app.use("/api/auth-service/", companyRoute);
-app.use("/api/auth-service/", adminRoute);
+app.use("/", userRoute);
+app.use("/", companyRoute);
+app.use("/", adminRoute);
 
 app.use(errorHandler)
 

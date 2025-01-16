@@ -46,6 +46,7 @@ export class UserService {
             const userDetails = await getUserRepository.verifyOtp(userOtp, email)
             if (userDetails) {
                 try {
+                    console.log("Producing to Kafka topic 'add-user':", userDetails);
                     await produce('add-user', userDetails)
                 } catch (error) {
                     console.log(error)

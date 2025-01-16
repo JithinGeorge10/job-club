@@ -6,6 +6,7 @@ import { AUTH_SERVICE_URL } from '@/utils/constants';
 import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface Company {
     _id: string;
@@ -22,6 +23,7 @@ function Page() {
     const [currentPage, setCurrentPage] = useState(1);
     const companiesPerPage = 7;
     const [loading, setLoading] = useState(true);
+    const [filterBy, setFilterBy] = useState<string>('all'); // New state for filtering
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,15 +44,37 @@ function Page() {
         fetchData();
     }, []);
 
-    const filteredCompanies = companyDetails.filter(company =>
+    // Filter by search term
+    const searchFilteredCompanies = companyDetails.filter(company =>
         company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         company.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Date Filtering Function
+    const dateFilteredCompanies = searchFilteredCompanies.filter((company) => {
+        if (!company.createdAt) return false;
+
+        const createdDate = new Date(company.createdAt);
+        const today = new Date();
+
+        switch (filterBy) {
+            case 'weekly':
+                const weekAgo = new Date(today);
+                weekAgo.setDate(today.getDate() - 7);
+                return createdDate >= weekAgo && createdDate <= today;
+            case 'monthly':
+                return createdDate.getMonth() === today.getMonth() && createdDate.getFullYear() === today.getFullYear();
+            case 'yearly':
+                return createdDate.getFullYear() === today.getFullYear();
+            default:
+                return true; // No filter applied
+        }
+    });
+
     const indexOfLastCompany = currentPage * companiesPerPage;
     const indexOfFirstCompany = indexOfLastCompany - companiesPerPage;
-    const currentCompanies = filteredCompanies.slice(indexOfFirstCompany, indexOfLastCompany);
-    const totalPages = Math.ceil(filteredCompanies.length / companiesPerPage);
+    const currentCompanies = dateFilteredCompanies.slice(indexOfFirstCompany, indexOfLastCompany);
+    const totalPages = Math.ceil(dateFilteredCompanies.length / companiesPerPage);
 
     const handlePagination = (direction: 'previous' | 'next') => {
         setCurrentPage(prevPage => {
@@ -95,39 +119,38 @@ function Page() {
 
     // Export to Excel
     const exportToExcel = () => {
-        const ws = XLSX.utils.json_to_sheet(filteredCompanies.map(company => ({
-            "Company Name": company.companyName,
-            "Company Email": company.email,
-            "Status": company.status || 'Active',
-            "Created Date": company.createdAt ? new Date(company.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A',
-            "Blocked": company.isBlocked ? 'Yes' : 'No'
+        const ws = XLSX.utils.json_to_sheet(dateFilteredCompanies.map(company => ({
+            'Company Name': company.companyName,
+            'Email': company.email,
+            'Status': company.status || 'Active',
+            'Created Date': company.createdAt
+                ? new Date(company.createdAt).toLocaleDateString()
+                : 'N/A',
+            'Blocked': company.isBlocked ? 'Yes' : 'No',
         })));
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Company Details");
-        XLSX.writeFile(wb, "CompanyDetails.xlsx");
+        XLSX.utils.book_append_sheet(wb, ws, 'Company Details');
+        XLSX.writeFile(wb, 'Company_Details.xlsx');
     };
 
     // Export to PDF
     const exportToPDF = () => {
         const doc = new jsPDF();
-        doc.setFontSize(12);
-        const title = "Company Details";
-        doc.text(title, 14, 10);
-        
-        let y = 20;
-        filteredCompanies.forEach((company, index) => {
-            const text = [
-                `Company Name: ${company.companyName}`,
-                `Company Email: ${company.email}`,
-                `Status: ${company.status || 'Active'}`,
-                `Created Date: ${company.createdAt ? new Date(company.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}`,
-                `Blocked: ${company.isBlocked ? 'Yes' : 'No'}`
-            ];
-            doc.text(text, 14, y);
-            y += 40; // space between each company's details
+        doc.text('Company Details', 14, 15);
+        autoTable(doc, {
+            startY: 20,
+            head: [['Company Name', 'Email', 'Status', 'Created Date', 'Blocked']],
+            body: dateFilteredCompanies.map(company => [
+                company.companyName,
+                company.email,
+                company.status || 'Active',
+                company.createdAt
+                    ? new Date(company.createdAt).toLocaleDateString()
+                    : 'N/A',
+                company.isBlocked ? 'Yes' : 'No',
+            ]),
         });
-
-        doc.save("CompanyDetails.pdf");
+        doc.save('Company_Details.pdf');
     };
 
     return (
@@ -137,7 +160,23 @@ function Page() {
             <div className="flex-grow bg-white p-4 md:p-8 ml-[20%] sm:ml-[25%] md:ml-[20%] lg:ml-[16.67%]">
                 <h2 className="text-green-600 text-2xl md:text-3xl font-bold mb-6">Company Information</h2>
 
-                <div className="mb-4">
+                {/* Buttons */}
+                <div className="mb-4 flex gap-4">
+                    <button
+                        onClick={exportToPDF}
+                        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-md transition duration-200"
+                    >
+                        Export to PDF
+                    </button>
+                    <button
+                        onClick={exportToExcel}
+                        className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-md transition duration-200"
+                    >
+                        Export to Excel
+                    </button>
+                </div>
+
+                <div className="mb-4 flex flex-col md:flex-row gap-4">
                     <input
                         type="text"
                         placeholder="Search by company name or email"
@@ -145,44 +184,46 @@ function Page() {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
+                    <select
+                        className="px-4 py-2 w-full md:w-1/5 rounded-md border border-gray-300 text-black"
+                        value={filterBy}
+                        onChange={(e) => setFilterBy(e.target.value)}
+                    >
+                        <option value="all">All</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
                 </div>
 
+                {/* Table */}
                 {loading ? (
                     <div className="text-white text-center py-8">Loading...</div>
                 ) : (
                     <div className="overflow-x-auto">
-                        {filteredCompanies.length === 0 ? (
+                        {dateFilteredCompanies.length === 0 ? (
                             <div className="text-white text-center py-8">No companies found</div>
                         ) : (
-                            <table className="min-w-full bg-gray-100 rounded-lg shadow-lg">
-                                <thead>
-                                    <tr className="bg-gray-700 text-gray-100">
-                                        <th className="px-4 py-3 text-left font-semibold text-sm sm:text-base">Company Name</th>
-                                        <th className="px-4 py-3 text-left font-semibold text-sm sm:text-base">Company Mail</th>
-                                        <th className="px-4 py-3 text-left font-semibold text-sm sm:text-base">Status</th>
-                                        <th className="px-4 py-3 text-left font-semibold text-sm sm:text-base">Created Date</th>
-                                        <th className="px-4 py-3 text-left font-semibold text-sm sm:text-base">Block/Unblock</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {currentCompanies.map((company) => (
-                                        <tr key={company._id} className="border-b border-gray-300">
-                                            <td className="px-4 py-3 text-gray-800">{company.companyName}</td>
-                                            <td className="px-4 py-3 text-gray-800">{company.email}</td>
-                                            <td className="px-4 py-3 text-green-600 font-medium">
-                                                {company.status || 'Active'}
-                                            </td>
-                                            <td className="px-4 py-3 text-gray-800">
-                                                {company.createdAt
-                                                    ? new Date(company.createdAt).toLocaleDateString('en-GB', {
-                                                        day: '2-digit',
-                                                        month: 'short',
-                                                        year: 'numeric',
-                                                    })
-                                                    : 'N/A'
-                                                }
-                                            </td>
-                                            <td className="px-4 py-3">
+                            <>
+                                <table className="min-w-full bg-gray-100 rounded-lg shadow-lg">
+                                    <thead>
+                                        <tr className="bg-gray-700 text-gray-100">
+                                            <th className="px-4 py-3">Company Name</th>
+                                            <th className="px-4 py-3">Company Mail</th>
+                                            <th className="px-4 py-3">Status</th>
+                                            <th className="px-4 py-3">Created Date</th>
+                                            <th className="px-4 py-3">Block/Unblock</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                   
+                                        {currentCompanies.map((company) => (
+                                            <tr key={company._id} className="border-b border-gray-300">
+                                                <td className="px-4 py-3  text-gray-800">{company.companyName}</td>
+                                                <td className="px-4 py-3  text-gray-800">{company.email}</td>
+                                                <td className="px-4 py-3  text-gray-800">{company.status || 'Active'}</td>
+                                                <td className="px-4 py-3  text-gray-800">{new Date(company.createdAt!).toLocaleDateString()}</td>
+                                                <td className="px-4 py-3">
                                                 {company.isBlocked ? (
                                                     <button
                                                         onClick={() => handleCompanyAction(company._id, 'unblock')}
@@ -199,51 +240,39 @@ function Page() {
                                                     </button>
                                                 )}
                                             </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+
+                                {/* Pagination */}
+                                <div className="flex justify-between mt-4">
+                                    <button
+                                        onClick={() => handlePagination('previous')}
+                                        disabled={currentPage === 1}
+                                        className="px-4 py-2  text-gray-800 bg-gray-300 rounded-md hover:bg-gray-400 disabled:opacity-50"
+                                    >
+                                        Previous
+                                    </button>
+                                    <span className="text-gray-700 text-lg font-medium">
+                                        Page {currentPage} of {totalPages}
+                                    </span>
+                                    <button
+                                        onClick={() => handlePagination('next')}
+                                        disabled={currentPage === totalPages}
+                                        className="px-4 py-2  text-gray-800 bg-gray-300 rounded-md hover:bg-gray-400 disabled:opacity-50"
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+                            </>
                         )}
                     </div>
                 )}
-
-                <div className="flex justify-between items-center mt-4">
-                    <button
-                        onClick={() => handlePagination('previous')}
-                        disabled={currentPage === 1}
-                        className={`px-4 py-2 bg-gray-700 text-white rounded-md ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    >
-                        Previous
-                    </button>
-                    <span className="text-white">
-                        Page {currentPage} of {totalPages}
-                    </span>
-                    <button
-                        onClick={() => handlePagination('next')}
-                        disabled={currentPage === totalPages}
-                        className={`px-4 py-2 bg-gray-700 text-white rounded-md ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    >
-                        Next
-                    </button>
-                </div>
-
-                <div className="mt-6 flex justify-end space-x-4">
-                    <button
-                        onClick={exportToExcel}
-                        className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                    >
-                        Download Excel
-                    </button>
-                    <button
-                        onClick={exportToPDF}
-                        className="px-4 py-2 bg-red-500 text-white rounded-md"
-                    >
-                        Download PDF
-                    </button>
-                </div>
             </div>
         </div>
     );
 }
 
 export default Page;
+

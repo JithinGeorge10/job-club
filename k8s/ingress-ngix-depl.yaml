@@ -13,55 +13,13 @@ spec:
     - host: jobclub.live
       http:
         paths:
-          - path: /.well-known/acme-challenge/
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: cm-acme-http-solver-jobclub
-                port:
-                  number: 8089
-          - path: /api/auth-service/
-            pathType: Prefix
-            backend:
-              service:
-                name: auth-service-srv
-                port:
-                  number: 4000
-          - path: /api/user-service/
-            pathType: Prefix
-            backend:
-              service:
-                name: user-service-srv
-                port:
-                  number: 4001
-          - path: /socket.io
-            pathType: Prefix
-            backend:
-              service:
-                name: chat-service-srv
-                port:
-                  number: 4003
-          - path: /api/chat-service/
-            pathType: Prefix
-            backend:
-              service:
-                name: chat-service-srv
-                port:
-                  number: 4003
-          - path: /api/company-service/
-            pathType: Prefix
-            backend:
-              service:
-                name: company-service-srv
-                port:
-                  number: 4002
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: frontend-srv
+                name: api-gateway-srv # Route all traffic to API Gateway
                 port:
-                  number: 3000
+                  number: 5000        # Port where the API Gateway is running
   tls:
     - hosts:
         - jobclub.live

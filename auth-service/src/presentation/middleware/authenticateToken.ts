@@ -13,7 +13,7 @@ interface AuthenticatedRequest extends Request {
 
 export const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction): any => {
     const tokens = {
-       
+        
         adminAccessToken: req.cookies['adminAccessToken'],
         adminRefreshToken: req.cookies['adminRefreshToken'],
     };

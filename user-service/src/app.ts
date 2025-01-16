@@ -1,6 +1,6 @@
 import express from 'express'
 import cron from 'node-cron';
-import { PORT, CLIENT_PORT } from './utils/constants'
+import { PORT } from './utils/constants'
 import cors from 'cors'
 import morgan from "morgan";
 import cookieParser from 'cookie-parser'
@@ -31,7 +31,7 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 consume()
 
-app.use("/api/user-service", userRoute);
+app.use("/", userRoute);
 
 app.use(errorHandler)
 
