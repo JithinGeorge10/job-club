@@ -4,7 +4,7 @@ import cors from "cors";
 
 const app = express();
 
-// Enable CORS
+
 app.use(cors());
 
 app.use((req, res, next) => {
@@ -12,11 +12,11 @@ app.use((req, res, next) => {
   next();
 });
 
-// Proxy requests to microservices
+
 app.use(
   "/api/auth-service",
   createProxyMiddleware({
-    target: "http://auth-service-srv:4000", // Kubernetes service name
+    target: "http://auth-service-srv:4000", 
     changeOrigin: true,
   })
 );
@@ -46,12 +46,12 @@ app.use(
   createProxyMiddleware({
     target: "http://chat-service-srv:4003",
     changeOrigin: true,
-    ws: true, // Enable WebSocket support
+    ws: true, 
   })
 );
 
 
-// Serve frontend (if required)
+
 app.use(
   "/",
   createProxyMiddleware({
@@ -60,7 +60,7 @@ app.use(
   })
 );
 
-// Start API Gateway
+
 const port = 5000;
 app.listen(port, () =>
   console.log(`API Gateway running on port ${port}`)

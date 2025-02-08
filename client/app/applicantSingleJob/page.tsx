@@ -8,12 +8,14 @@ import { COMPANY_SERVICE_URL } from '@/utils/constants';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 function Page() {
-    const searchParams = useSearchParams()
+    const searchParams = useSearchParams();
     const router = useRouter();
     const [companyId, setCompanyId] = useState<string | null>(null);
-    const [applicants, setApplicants] = useState<any[]>([]); 
+    const [applicants, setApplicants] = useState<any[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
     const jobId = searchParams.get('id');
-    console.log(jobId)
+
+    // Fetch company ID from localStorage
     useEffect(() => {
         const company = localStorage.getItem('company');
         if (company && company !== 'undefined') {
@@ -22,36 +24,33 @@ function Page() {
         }
     }, []);
 
+    // Fetch applicants based on companyId and jobId
     useEffect(() => {
-        if (companyId) {
-            (async () => {
-                try {
-                    const response = await axios.get(`${COMPANY_SERVICE_URL}/singleJobApplicants`, {
-                        headers: { 'Content-Type': 'application/json' },
-                        params: { companyId, jobId },
-                        withCredentials: true,
-                    });
-    
-                    // Normalize the response to ensure `applicants` is always an array
+        if (companyId && jobId) {
+            setLoading(true); // Start loading
+            axios
+                .get(`${COMPANY_SERVICE_URL}/singleJobApplicants`, {
+                    headers: { 'Content-Type': 'application/json' },
+                    params: { companyId, jobId },
+                    withCredentials: true,
+                })
+                .then((response) => {
                     const applicantData = Array.isArray(response.data.applicantDetails)
                         ? response.data.applicantDetails
                         : [response.data.applicantDetails];
-    
-                    console.log(applicantData);
                     setApplicants(applicantData);
-                } catch (error) {
+                })
+                .catch((error) => {
                     console.error('Error fetching applicants:', error);
-                }
-            })();
+                })
+                .finally(() => {
+                    setLoading(false); // End loading
+                });
         }
-    }, [companyId]);
-    
+    }, [companyId, jobId]);
 
-    console.log(applicants)
-
-    const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>, _id: any) => {
+    const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>, _id: string) => {
         const newStatus = e.target.value;
-        console.log(newStatus)
         const result = await Swal.fire({
             title: 'Are you sure?',
             text: `Change status to "${newStatus}"?`,
@@ -76,12 +75,16 @@ function Page() {
                 if (response.status === 200) {
                     Swal.fire('Updated!', 'Applicant status has been updated.', 'success');
 
-                    const updatedApplicants = await axios.get(`${COMPANY_SERVICE_URL}/applicants`, {
-                        headers: { 'Content-Type': 'application/json' },
-                        params: { companyId },
-                        withCredentials: true,
-                    });
-                    setApplicants(updatedApplicants.data.applicants);
+                    // Refetch applicants
+                    axios
+                        .get(`${COMPANY_SERVICE_URL}/singleJobApplicants`, {
+                            headers: { 'Content-Type': 'application/json' },
+                            params: { companyId, jobId },
+                            withCredentials: true,
+                        })
+                        .then((updatedResponse) => {
+                            setApplicants(updatedResponse.data.applicantDetails || []);
+                        });
                 } else {
                     Swal.fire('Error', 'Failed to update the status. Please try again.', 'error');
                 }
@@ -93,81 +96,90 @@ function Page() {
             e.target.value = '';
         }
     };
-    const handleNameClick = (userId: String) => {
-        console.log(userId)
-        router.push(`applicantDetails?id=${userId}`)
 
-    }
+    const handleNameClick = (userId: string) => {
+        router.push(`applicantDetails?id=${userId}`);
+    };
+
     return (
         <>
             <CompanyNavbar />
             <div className="flex flex-col md:flex-row min-h-screen bg-black text-white">
                 <CompanyLeftSideBar />
                 <div className="overflow-auto w-full p-4">
-                    <table className="w-full border-collapse bg-gray-800 text-white">
-                        <thead>
-                            <tr className="bg-gray-700">
-                                <th className="border border-gray-600 px-4 py-2 text-left">Full Name</th>
-                                <th className="border border-gray-600 px-4 py-2 text-left">Hiring Status</th>
-                                <th className="border border-gray-600 px-4 py-2 text-left">Applied Date</th>
-                                <th className="border border-gray-600 px-4 py-2 text-left">Status</th>
-                                <th className="border border-gray-600 px-4 py-2 text-left">See Application</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {applicants.length > 0 ? (
-                                applicants.map((applicant: any) => (
-                                    <tr key={applicant._id} className="hover:bg-gray-700">
+                    {loading ? (
+                        <div className="text-center text-gray-400">Loading applicants...</div>
+                    ) : (
+                        <table className="w-full border-collapse bg-gray-800 text-white">
+                            <thead>
+                                <tr className="bg-gray-700">
+                                    <th className="border border-gray-600 px-4 py-2 text-left">Full Name</th>
+                                    <th className="border border-gray-600 px-4 py-2 text-left">Hiring Status</th>
+                                    <th className="border border-gray-600 px-4 py-2 text-left">Applied Date</th>
+                                    <th className="border border-gray-600 px-4 py-2 text-left">Status</th>
+                                    <th className="border border-gray-600 px-4 py-2 text-left">See Application</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {applicants.length > 0 ? (
+                                    applicants.map((applicant: any) => (
+                                        <tr key={applicant._id} className="hover:bg-gray-700">
+                                            <td
+                                                className="border border-gray-600 px-4 py-2 cursor-pointer text-blue-500 hover:underline"
+                                                onClick={() => handleNameClick(applicant._id)}
+                                            >
+                                                {applicant.firstName}
+                                            </td>
+                                            <td className="border border-gray-600 px-4 py-2">
+                                                {applicant.Status || 'N/A'}
+                                            </td>
+                                            <td className="border border-gray-600 px-4 py-2">
+                                                {applicant.createdAt
+                                                    ? new Date(applicant.createdAt).toLocaleDateString('en-GB', {
+                                                          day: '2-digit',
+                                                          month: 'short',
+                                                          year: 'numeric',
+                                                      })
+                                                    : 'N/A'}
+                                            </td>
+                                            <td className="border border-gray-600 px-4 py-2">
+                                                <select
+                                                    className="bg-gray-600 text-white py-1 px-4 rounded focus:outline-none focus:ring-2 focus:ring-green-900"
+                                                    value=""
+                                                    onChange={(e) => handleStatusChange(e, applicant._id)}
+                                                >
+                                                    <option value="" disabled>
+                                                        Change Status
+                                                    </option>
+                                                    <option value="Hired">Hired</option>
+                                                    <option value="Rejected">Rejected</option>
+                                                    <option value="Inreview">In review</option>
+                                                    <option value="Interview">Interview</option>
+                                                </select>
+                                            </td>
+                                            <td className="border border-gray-600 px-4 py-2">
+                                                <button
+                                                    onClick={() => window.open(applicant.resume, '_blank')}
+                                                    className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded"
+                                                >
+                                                    See Application
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
                                         <td
-                                            className="border border-gray-600 px-4 py-2 cursor-pointer text-blue-500 hover:underline"
-                                            onClick={() => handleNameClick(applicant._id)}
+                                            colSpan={6}
+                                            className="border border-gray-600 px-4 py-2 text-center text-gray-400"
                                         >
-                                            {applicant.firstName}
-                                        </td>
-                                      
-                                        <td className="border border-gray-600 px-4 py-2"> {applicant.Status || 'N/A'}</td>
-                                        <td className="border border-gray-600 px-4 py-2">
-                                            {applicant.createdAt ? new Date(applicant.createdAt).toLocaleDateString('en-GB', {
-                                                day: '2-digit',
-                                                month: 'short',
-                                                year: 'numeric',
-                                            }) : 'N/A'}
-                                        </td>
-                                        <td className="border border-gray-600 px-4 py-2">
-                                            <select
-                                                className="bg-gray-600 text-white py-1 px-4 rounded focus:outline-none focus:ring-2 focus:ring-green-900"
-                                                value=""
-                                                onChange={(e) => handleStatusChange(e, applicant._id)}
-                                            >
-                                                <option value="" disabled>Change Status</option>
-                                                <option value="Hired">Hired</option>
-                                                <option value="Rejected">Rejected</option>
-                                                <option value="Inreview">In review</option>
-                                                <option value="Interview">Interview</option>
-                                            </select>
-                                        </td>
-                                        <td className="border border-gray-600 px-4 py-2">
-                                            <button
-                                                onClick={() => window.open(applicant.resume, '_blank')}
-                                                className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded"
-                                            >
-                                                See Application
-                                            </button>
+                                            No applicants found for this company.
                                         </td>
                                     </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td
-                                        colSpan={6}
-                                        className="border border-gray-600 px-4 py-2 text-center text-gray-400"
-                                    >
-                                        No applicants found for this company.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                                )}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             </div>
         </>

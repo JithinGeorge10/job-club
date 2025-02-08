@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+  import axios from "axios";
 import { AUTH_SERVICE_URL } from "@/utils/constants";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";

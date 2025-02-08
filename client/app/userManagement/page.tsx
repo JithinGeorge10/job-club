@@ -225,7 +225,7 @@ function Page() {
                                             {new Date(user.createdAt).toLocaleDateString('en-GB')}
                                         </td>
                                         <td className="px-4 py-3">
-                                            {user.isBlocked ? (
+                                            {user.isBlock? (
                                                 <button onClick={() => unblockUser(user._id)} className="bg-green-500 text-white px-4 py-2 rounded-md">
                                                     Unblock
                                                 </button>

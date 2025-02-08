@@ -14,7 +14,7 @@ interface Company {
     email: string;
     status?: string;
     createdAt?: string;
-    isBlocked: boolean;
+    isBlock: boolean;
 }
 
 function Page() {
@@ -126,7 +126,7 @@ function Page() {
             'Created Date': company.createdAt
                 ? new Date(company.createdAt).toLocaleDateString()
                 : 'N/A',
-            'Blocked': company.isBlocked ? 'Yes' : 'No',
+            'Blocked': company.isBlock ? 'Yes' : 'No',
         })));
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Company Details');
@@ -147,7 +147,7 @@ function Page() {
                 company.createdAt
                     ? new Date(company.createdAt).toLocaleDateString()
                     : 'N/A',
-                company.isBlocked ? 'Yes' : 'No',
+                company.isBlock ? 'Yes' : 'No',
             ]),
         });
         doc.save('Company_Details.pdf');
@@ -224,7 +224,7 @@ function Page() {
                                                 <td className="px-4 py-3  text-gray-800">{company.status || 'Active'}</td>
                                                 <td className="px-4 py-3  text-gray-800">{new Date(company.createdAt!).toLocaleDateString()}</td>
                                                 <td className="px-4 py-3">
-                                                {company.isBlocked ? (
+                                                {company.isBlock? (
                                                     <button
                                                         onClick={() => handleCompanyAction(company._id, 'unblock')}
                                                         className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-md transition duration-200"
