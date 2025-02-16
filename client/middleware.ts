@@ -9,6 +9,7 @@ export async function middleware(req: NextRequest) {
     const isValidCompany = await companyVerifyToken("companyAccessToken", req);
     const isValidadmin = await adminVerifyToken("adminAccessToken", req);
     console.log(isValidUser)
+    console.log(isValidCompany)
     if (url.pathname.startsWith('/login') || url.pathname.startsWith('/signup') || url.pathname.startsWith('/otpPage')
         || url.pathname.startsWith('/otpPage')) {
         if (isValidUser) {
