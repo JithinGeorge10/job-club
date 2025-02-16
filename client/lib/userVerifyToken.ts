@@ -6,12 +6,14 @@ export const userVerifyToken = async (userToken: string, req: NextRequest): Prom
   const secret = JWT_SECRET;
   const token = req.cookies.get(userToken);
   console.log('token'+token);
-  
+  console.log('token'+token?.value);
   if (!token?.value) {
     return false;
   }
   try {
     const { payload } = await jwtVerify(token.value, new TextEncoder().encode(secret));
+    console.log('payload'+payload);
+    
     return !!payload;
 
   } catch (error) {
