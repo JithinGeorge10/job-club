@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useForm } from "react-hook-form";
-  import axios from "axios";
+import axios from "axios";
 import { AUTH_SERVICE_URL } from "@/utils/constants";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -24,12 +24,12 @@ function Page() {
 
   const onSubmit = async (data: Login) => {
     try {
-        let response = await axios.post(`${AUTH_SERVICE_URL}/user-login`, data, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        });
+      let response = await axios.post(`${AUTH_SERVICE_URL}/user-login`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
 
       const user = response.data.user;
       if (response.data.success) {
@@ -64,7 +64,7 @@ function Page() {
   const handleGoogleLogin = async () => {
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' }); 
+    provider.setCustomParameters({ prompt: 'select_account' });
 
 
     try {

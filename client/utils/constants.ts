@@ -1,4 +1,4 @@
-const DOMAIN = "https://jobclub.live";
+const DOMAIN = "https://job-club-authservice.onrender.com";
 
 // const AUTH_SERVICE_DOMAIN = process.env.NEXT_PUBLIC_DOMAIN;
 // const USER_SERVICE_DOMAIN = process.env.NEXT_PUBLIC_USER_DOMAIN;
