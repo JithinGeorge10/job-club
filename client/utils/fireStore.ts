@@ -3,7 +3,7 @@ import { app } from "../app/firebase/config";
 import { getFirestore } from '@firebase/firestore'
 
 
-// import { apiClient } from "../lib/api-client";
+
 // import { UPLOAD_URL } from "./Constants";
 const db = getFirestore(app);
 
