@@ -8,7 +8,7 @@ export async function middleware(req: NextRequest) {
     const isValidUser = await userVerifyToken("userAccessToken", req);
     const isValidCompany = await companyVerifyToken("companyAccessToken", req);
     const isValidadmin = await adminVerifyToken("adminAccessToken", req);
-
+    console.log(isValidUser)
     if (url.pathname.startsWith('/login') || url.pathname.startsWith('/signup') || url.pathname.startsWith('/otpPage')
         || url.pathname.startsWith('/otpPage')) {
         if (isValidUser) {
@@ -56,7 +56,7 @@ export async function middleware(req: NextRequest) {
     }
 
     if (url.pathname.startsWith('/companyDashboard') || url.pathname.startsWith('/companyChat') || url.pathname.startsWith('/applicantDetails')
-        || url.pathname.startsWith('/companyApplicants') || url.pathname.startsWith('/companyJobListing') ||  url.pathname.startsWith('/companyProfile') || url.pathname.startsWith('/editJob')
+        || url.pathname.startsWith('/companyApplicants') || url.pathname.startsWith('/companyJobListing') || url.pathname.startsWith('/companyProfile') || url.pathname.startsWith('/editJob')
     ) {
         if (!isValidCompany) {
             url.pathname = '/companyLogin';
@@ -64,7 +64,7 @@ export async function middleware(req: NextRequest) {
         }
     }
 
-    if (url.pathname.startsWith('/adminDashboard') 
+    if (url.pathname.startsWith('/adminDashboard')
         || url.pathname.startsWith('/userManagement')) {
         if (!isValidadmin) {
             url.pathname = '/admin';
