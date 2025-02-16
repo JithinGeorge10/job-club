@@ -83,7 +83,7 @@ function Page() {
         localStorage.setItem("user", JSON.stringify(googleUser));
         toast.success("Welcome");
         setTimeout(() => {
-          router.replace(`jobListingPage`);
+          router.push(`jobListingPage`);
         }, 3000);
       }
       if (response.data.errorMessage === "User is blocked") {
