@@ -1,6 +1,8 @@
 // const DOMAIN = "https://jobclub.live";
 const DOMAIN = "https://api.jobclub.live";
-
+const USERDOMAIN = "https://user.jobclub.live";
+const CHATDOMAIN = "https://chat.jobclub.live";
+const COMPANYDOMAIN = "https://company.jobclub.live";
 
 // const AUTH_SERVICE_DOMAIN = process.env.NEXT_PUBLIC_DOMAIN;
 // const USER_SERVICE_DOMAIN = process.env.NEXT_PUBLIC_USER_DOMAIN;
@@ -8,9 +10,9 @@ const DOMAIN = "https://api.jobclub.live";
 // const CHAT_SERVICE_DOMAIN = process.env.NEXT_PUBLIC_CHAT_DOMAIN;
 
 const AUTH_SERVICE_DOMAIN = DOMAIN;
-const USER_SERVICE_DOMAIN = DOMAIN;
-const COMPANY_SERVICE_DOMAIN = DOMAIN;
-const CHAT_SERVICE_DOMAIN = DOMAIN;
+const USER_SERVICE_DOMAIN = USERDOMAIN;
+const COMPANY_SERVICE_DOMAIN = COMPANYDOMAIN;
+const CHAT_SERVICE_DOMAIN = CHATDOMAIN;
 
 
 export const AUTH_SERVICE_URL = `${AUTH_SERVICE_DOMAIN}/api/auth-service`
