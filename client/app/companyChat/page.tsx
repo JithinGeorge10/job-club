@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { CHAT_SERVICE_URL } from '@/utils/constants';
 import axios from 'axios';
 import io from "socket.io-client";
-const socket = io("https://jobclub.live", {
+const socket = io("https://chat.jobclub.live", {
     path: "/socket.io", // Matches the server's path
     transports: ["websocket", "polling"], // Ensure compatibility
     withCredentials: true, // Matches the server's CORS settings
