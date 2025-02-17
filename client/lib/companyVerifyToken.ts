@@ -4,7 +4,8 @@ import { jwtVerify } from 'jose';
 export const companyVerifyToken = async (companyToken: string, req: NextRequest): Promise<boolean> => {
   const secret = JWT_SECRET;
   const token = req.cookies.get(companyToken);
-
+  console.log('token'+token);
+  console.log('token'+token?.value);
   if (!token?.value) {
     return false;
   }

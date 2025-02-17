@@ -5,10 +5,10 @@ import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState, useRef } from 'react';
 import io from "socket.io-client";
 
-const socket = io("https://jobclub.live", {
-    path: "/socket.io", // Matches the server's path
-    transports: ["websocket", "polling"], // Ensure compatibility
-    withCredentials: true, // Matches the server's CORS settings
+const socket = io("https://chat.jobclub.live", {
+    path: "/socket.io", 
+    transports: ["websocket", "polling"], 
+    withCredentials: true, 
 });
 interface Message {
     sender: string;
