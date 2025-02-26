@@ -1,13 +1,16 @@
 import React from 'react';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import { AUTH_SERVICE_URL } from '@/utils/constants';
+import axios from 'axios';
 
 function AdminLeftSideBar() {
   const router = useRouter();
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
     localStorage.clear();
     Cookies.remove('adminAccessToken');
+    await axios.post(`${AUTH_SERVICE_URL}/adminLogOut`,{}, { withCredentials: true });
     router.push(`/`);
   };
 
