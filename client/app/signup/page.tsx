@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { AUTH_SERVICE_URL, USER_SERVICE_URL } from '@/utils/constants'
+import { AUTH_SERVICE_URL, CHAT_SERVICE_URL, USER_SERVICE_URL } from '@/utils/constants'
 import Link from 'next/link';
 
 
@@ -37,6 +37,12 @@ function Page() {
                 withCredentials: true
             })
             await axios.post(`${USER_SERVICE_URL}/add-user`, response, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                withCredentials: true
+            })
+            await axios.post(`${CHAT_SERVICE_URL}/add-user`, response, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
