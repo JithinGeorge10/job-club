@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import morgan from "morgan";
 import { connectDB } from "./infrastructure/config/databaseConfig"
-import { CLIENT_PORT, PORT } from './utils/constants'
+import { PORT } from './utils/constants'
 import { errorHandler } from './presentation/middleware/errorHandler'
 import userRoute from './presentation/routes/userRoute';
 import companyRoute from './presentation/routes/companyRoute';
@@ -17,7 +17,6 @@ const corsOptions = {
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   credentials: true
 };
-
 
 app.use(cors(corsOptions));
 

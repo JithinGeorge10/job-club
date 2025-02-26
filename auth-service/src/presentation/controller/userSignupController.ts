@@ -170,6 +170,7 @@ export class UserController {
 
     async userLogout(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
+            console.log('logout reached');
             localStorage.clear();
             Cookies.remove('userAccessToken');
         } catch (error) {

@@ -36,7 +36,7 @@ function Navbar() {
     try {
       localStorage.clear();
       Cookies.remove('userAccessToken');
-      await axios.post(`${AUTH_SERVICE_URL}/logOut`);
+      await axios.post(`${AUTH_SERVICE_URL}/logOut`,{}, { withCredentials: true });
       router.replace(`/`);
     } catch (error) {
       console.log(error);
