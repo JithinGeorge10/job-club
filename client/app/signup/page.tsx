@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { AUTH_SERVICE_URL } from '@/utils/constants'
+import { AUTH_SERVICE_URL, USER_SERVICE_URL } from '@/utils/constants'
 import Link from 'next/link';
 
 
@@ -27,10 +27,16 @@ function Page() {
     const onSubmit = async (data: signup) => {
 
         try {
-            setIsSubmitting(true); 
+            setIsSubmitting(true);
             localStorage.clear();
 
             let response = await axios.post(`${AUTH_SERVICE_URL}/user-signup`, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                withCredentials: true
+            })
+            await axios.post(`${USER_SERVICE_URL}/add-user`, response, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -46,8 +52,8 @@ function Page() {
             }
         } catch (error: any) {
             console.log(error);
-        }finally {
-            setIsSubmitting(false); 
+        } finally {
+            setIsSubmitting(false);
         }
     }
     return (
@@ -165,39 +171,39 @@ function Page() {
                         <p className="text-red-600">{errors.confirmPassword?.message as string}</p>
                     </div>
                     <button
-    type="submit"
-    className={`w-full ${isSubmitting ? 'bg-green-400' : 'bg-green-500 hover:bg-green-600'} 
+                        type="submit"
+                        className={`w-full ${isSubmitting ? 'bg-green-400' : 'bg-green-500 hover:bg-green-600'} 
                 text-white font-semibold py-3 rounded-lg transition-colors duration-300`}
-    disabled={isSubmitting} // Disable button while submitting
->
-    {isSubmitting ? (
-        <div className="flex justify-center items-center">
-            <svg
-                className="animate-spin h-5 w-5 text-white mr-2"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-            >
-                <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                ></circle>
-                <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                ></path>
-            </svg>
-            Please wait...
-        </div>
-    ) : (
-        "Sign Up"
-    )}
-</button>
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? (
+                            <div className="flex justify-center items-center">
+                                <svg
+                                    className="animate-spin h-5 w-5 text-white mr-2"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <circle
+                                        className="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        strokeWidth="4"
+                                    ></circle>
+                                    <path
+                                        className="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                                    ></path>
+                                </svg>
+                                Please wait...
+                            </div>
+                        ) : (
+                            "Sign Up"
+                        )}
+                    </button>
                     <div>
                         <br />
 
