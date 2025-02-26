@@ -4,7 +4,7 @@ import { UserService } from "../../app/useCases/user/user";
 import { JwtService } from '../../infrastructure/service/jwtService'
 import { User } from "../../domain/entities/user";
 import produce from "../../infrastructure/service/producer";
-
+import Cookies from 'js-cookie';
 interface AuthenticatedRequest extends Request {
     admin?: {
         user: string;
@@ -168,6 +168,13 @@ export class UserController {
     }
 
 
-
+    async userLogout(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            localStorage.clear();
+            Cookies.remove('userAccessToken');
+        } catch (error) {
+            next(error)
+        }
+    }
 
 }

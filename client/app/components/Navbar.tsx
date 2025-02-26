@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { CHAT_SERVICE_URL } from '@/utils/constants';
+import { AUTH_SERVICE_URL, CHAT_SERVICE_URL } from '@/utils/constants';
 import io from "socket.io-client";
 const socket = io('https://jobclub.live');
 
@@ -31,10 +31,17 @@ function Navbar() {
     }
   }, []);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    Cookies.remove('userAccessToken');
-    router.replace(`/`);
+  const handleLogout = async () => {
+
+    try {
+      localStorage.clear();
+      Cookies.remove('userAccessToken');
+      await axios.post(`${AUTH_SERVICE_URL}/logOut`);
+      router.replace(`/`);
+    } catch (error) {
+      console.log(error);
+
+    }
   };
 
   const handleUserProfile = () => {

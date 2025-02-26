@@ -14,7 +14,7 @@ userRoute.get('/get-userDetails', authenticateToken,userController.getUserContro
 userRoute.post('/block-user', userController.blockUserController.bind(userController));
 userRoute.post('/unBlock-user', userController.unBlockUserController.bind(userController));
 userRoute.post('/google-login', userController.googleLogin.bind(userController));
-
+userRoute.post('/logOut', userController.userLogout.bind(userController));
 
 
 export default userRoute
