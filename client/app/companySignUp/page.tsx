@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Navbar from '../components/Navbar'
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { AUTH_SERVICE_URL } from '@/utils/constants'
+import { AUTH_SERVICE_URL, COMPANY_SERVICE_URL } from '@/utils/constants'
 import Link from 'next/link';
 
 
@@ -36,11 +36,16 @@ function Page() {
           'Content-Type': 'application/json'
         }
       })
+      await axios.post(`${COMPANY_SERVICE_URL}/add-company`, response, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
       if (response.data.success) {
         toast.info('Verify OTP')
-         setTimeout(() => {
-              router.push(`companyOtpPage?id=${data.email}`)
-          }, 3000);
+        setTimeout(() => {
+          router.push(`companyOtpPage?id=${data.email}`)
+        }, 3000);
       } else {
         toast.error('Company Already exists')
       }
@@ -48,7 +53,7 @@ function Page() {
       console.log(error);
     }
   }
-  
+
   return (
     <>
 
@@ -195,7 +200,7 @@ function Page() {
             type="submit"
             className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
           >
-           Register
+            Register
           </button>
           <div>
             <br />
