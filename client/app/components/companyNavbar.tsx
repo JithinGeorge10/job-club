@@ -3,6 +3,8 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
+import { AUTH_SERVICE_URL } from '@/utils/constants';
+import axios from 'axios';
 
 function Navbar() {
   const router = useRouter()
@@ -18,10 +20,15 @@ function Navbar() {
     }
   }, []);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    Cookies.remove('companyAccessToken');
-    router.push(`/`)
+  const handleLogout = async () => {
+    try {
+      localStorage.clear();
+      Cookies.remove('companyAccessToken');
+      await axios.post(`${AUTH_SERVICE_URL}/companyLogOut`, {}, { withCredentials: true });
+      router.push(`/`)
+    } catch (error) {
+      console.log(error)
+    }
   }
   return (
 
@@ -34,18 +41,18 @@ function Navbar() {
           </div>
         </Link>
 
-        
-          <div className="flex space-x-6 items-center">
-           
-            <span className="text-green-400 font-bold text-2xl">{companyName}</span>
-            <button onClick={handleLogout}
-              className="w-20 bg-red-900 hover:bg-red-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
-            >
-              Logout
-            </button>
-          </div>
-        
-        
+
+        <div className="flex space-x-6 items-center">
+
+          <span className="text-green-400 font-bold text-2xl">{companyName}</span>
+          <button onClick={handleLogout}
+            className="w-20 bg-red-900 hover:bg-red-600 text-white font-semibold py-3 rounded-lg transition-colors duration-300"
+          >
+            Logout
+          </button>
+        </div>
+
+
 
 
         <div className="md:hidden">
