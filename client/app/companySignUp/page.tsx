@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Navbar from '../components/Navbar'
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { AUTH_SERVICE_URL, COMPANY_SERVICE_URL } from '@/utils/constants'
+import { AUTH_SERVICE_URL, CHAT_SERVICE_URL, COMPANY_SERVICE_URL } from '@/utils/constants'
 import Link from 'next/link';
 
 
@@ -37,6 +37,11 @@ function Page() {
         }
       })
       await axios.post(`${COMPANY_SERVICE_URL}/add-company`, response, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      await axios.post(`${CHAT_SERVICE_URL}/add-company`, response, {
         headers: {
           'Content-Type': 'application/json'
         }
